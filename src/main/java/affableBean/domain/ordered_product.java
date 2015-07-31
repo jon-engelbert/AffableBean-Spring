@@ -6,7 +6,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class ordered_product {
-	protected void ordered_product() {
+	protected ordered_product() {
 	};
 
 	public ordered_product(int customer_order_id, int product_id, int quantity) {
