@@ -3,12 +3,14 @@ package affableBean.domain;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+@Entity
 public class Category {
 	protected Category() {
 	};
@@ -17,11 +19,11 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name")
+//	@Column(name = "name")
 	private String name;
 	
-	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "category")
-	private List<Product> products;
+//	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "Category")
+//	private List<Product> products;
 	
 	public Category(Long id, String name) {
 		this.id = id;
@@ -36,7 +38,7 @@ public class Category {
 		return name;
 	}
 
-	public List<Product> getProducts() {
-		return products;
-	}
+//	public List<Product> getProducts() {
+//		return products;
+//	}
 }

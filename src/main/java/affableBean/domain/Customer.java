@@ -20,26 +20,26 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name")
+//	@Column(name = "name")
 	private String name;
 
-	@Column(name = "email")
+//	@Column(name = "email")
 	private String email;
 
-	@Column(name = "phone")
+//	@Column(name = "phone")
 	private String phone;
 
-	@Column(name = "address")
+//	@Column(name = "address")
 	private String address;
 
-	@Column(name = "city_region")
+//	@Column(name = "city_region")
 	private String city_region;
 
-	@Column(name = "cc")
+//	@Column(name = "cc")
 	private String cc;
 
-	@OneToMany(targetEntity = Customer_order.class, fetch = FetchType.EAGER, mappedBy = "customer")
-	private List<Customer_order> orders;
+//	@OneToMany(targetEntity = CustomerOrder.class, fetch = FetchType.EAGER, mappedBy = "Customer")
+//	private List<CustomerOrder> orders;
 
 	public Customer(Long id, String name, String email, String phone,
 			String address, String city_region, String cc) {
@@ -81,8 +81,8 @@ public class Customer {
 		return cc;
 	}
 
-	public List<Customer_order> getOrders() {
-		return orders;
-	}
+//	public List<CustomerOrder> getOrders() {
+//		return orders;
+//	}
 
 }

@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Product {
@@ -27,17 +29,22 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name")
+//	@Column(name = "name")
 	private String name;
 
-	@Column(name = "price")
+//	@Column(name = "price")
 	private Double price;
 
-	@Column(name = "description")
+//	@Column(name = "description")
 	private String description;
 
-	@Column(name = "last_update")
+//	@Column(name = "last_update")
 	private Date last_update;
+	
+//	@Column(name="categoryId")
+	@ManyToOne()
+//	@JoinColumn(name = "products")
+	private Category category;
 
 	public Long getId() {
 		return id;
