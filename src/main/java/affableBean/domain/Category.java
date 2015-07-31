@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 public class Category {
-	private Category() {
+	protected Category() {
 	};
 
 	@Id
@@ -23,7 +23,7 @@ public class Category {
 	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "category")
 	private List<Product> products;
 	
-	private Category(Long id, String name) {
+	public Category(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}

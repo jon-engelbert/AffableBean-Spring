@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class Customer {
-	private Customer() {
+	protected Customer() {
 	};
 
 	@Id

@@ -10,7 +10,17 @@ import javax.persistence.Id;
 
 @Entity
 public class Product {
-	private Product() {
+	public Product(Long id, String name, Double price, String description,
+			Date last_update) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+		this.last_update = last_update;
+	}
+
+	protected Product() {
 	};
 
 	@Id
@@ -28,5 +38,25 @@ public class Product {
 
 	@Column(name = "last_update")
 	private Date last_update;
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Date getLast_update() {
+		return last_update;
+	}
 
 }

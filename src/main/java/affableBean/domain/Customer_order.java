@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Customer_order {
-	private Customer_order() {
+	protected Customer_order() {
 	};
 
 	@Id
