@@ -35,12 +35,12 @@ public class CustomerOrder {
 //	@Column(name = "confirmation_number")
 	private Integer confirmation_number;
 
-//	@JoinColumn(name = "customer")
+	@JoinColumn(name = "customer")
 	@ManyToOne
 	private Customer customer;
 	
-//	@OneToMany(targetEntity=OrderedProduct.class, fetch = FetchType.EAGER, mappedBy = "CustomerOrder")
-//	private List<OrderedProduct> orderedProducts;
+	@OneToMany(targetEntity=OrderedProduct.class, fetch = FetchType.EAGER, mappedBy = "product")
+	private List<OrderedProduct> orderedProducts;
 
 	public CustomerOrder(Long id, Double amount, Date date_created, Integer confirmation_number) {
 		this.id = id;

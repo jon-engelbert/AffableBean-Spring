@@ -22,8 +22,8 @@ public class Category {
 //	@Column(name = "name")
 	private String name;
 	
-//	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "Category")
-//	private List<Product> products;
+	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "category")
+	private List<Product> products;
 	
 	public Category(Long id, String name) {
 		this.id = id;

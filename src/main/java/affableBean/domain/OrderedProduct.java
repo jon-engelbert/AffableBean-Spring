@@ -40,8 +40,8 @@ public class OrderedProduct {
 	}
 	
 	@ManyToOne
-	private Product orderedProductId;
+	private Product product;
 	
 	@ManyToOne
-	private CustomerOrder customerOrderId;
+	private CustomerOrder customerOrder;
 }

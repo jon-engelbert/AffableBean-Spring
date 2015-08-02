@@ -43,7 +43,7 @@ public class Product {
 	
 //	@Column(name="categoryId")
 	@ManyToOne()
-//	@JoinColumn(name = "products")
+	@JoinColumn(name = "category_id")
 	private Category category;
 
 	public Long getId() {

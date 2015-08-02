@@ -38,8 +38,8 @@ public class Customer {
 //	@Column(name = "cc")
 	private String cc;
 
-//	@OneToMany(targetEntity = CustomerOrder.class, fetch = FetchType.EAGER, mappedBy = "Customer")
-//	private List<CustomerOrder> orders;
+	@OneToMany(targetEntity = CustomerOrder.class, fetch = FetchType.EAGER, mappedBy = "customer")
+	private List<CustomerOrder> orders;
 
 	public Customer(Long id, String name, String email, String phone,
 			String address, String city_region, String cc) {
@@ -81,8 +81,8 @@ public class Customer {
 		return cc;
 	}
 
-//	public List<CustomerOrder> getOrders() {
-//		return orders;
-//	}
+	public List<CustomerOrder> getOrders() {
+		return orders;
+	}
 
 }
