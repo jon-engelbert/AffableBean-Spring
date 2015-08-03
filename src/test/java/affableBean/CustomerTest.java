@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
-import spittr.domain.Spitter;
+//import spittr.domain.Spitter;
 import affableBean.domain.Customer;
 
 
@@ -25,7 +25,7 @@ public class CustomerTest {
 	@Transactional
 	public void save_newCategory() {
 //		assertEquals(4, customerRepository.count());
-		Customer spitter = new Customer(null, "newbee", "newbee@habuma.com", "123-456-7890", "newbee Walls", "aa", "123");
+		Customer cust = new Customer(null, "newbee", "newbee@habuma.com", "123-456-7890", "newbee Walls", "aa", "123");
 //		Customer saved = customerRepository.save(spitter);
 //		assertEquals(5, customerRepository.count());
 //		assertCustomer(4, saved);
