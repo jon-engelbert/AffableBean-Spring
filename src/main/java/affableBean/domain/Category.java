@@ -1,14 +1,9 @@
 package affableBean.domain;
 
-import java.util.List;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Category {
@@ -22,11 +17,10 @@ public class Category {
 //	@Column(name = "name")
 	private String name;
 	
-	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "category")
-	private List<Product> products;
+//	@OneToMany(targetEntity=Product.class, fetch = FetchType.EAGER, mappedBy = "Category")
+//	private List<Product> products;
 	
-	public Category(Long id, String name) {
-		this.id = id;
+	public Category(String name) {
 		this.name = name;
 	}
 
@@ -36,6 +30,10 @@ public class Category {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 //	public List<Product> getProducts() {

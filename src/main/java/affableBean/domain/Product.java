@@ -1,25 +1,23 @@
 package affableBean.domain;
 
-import java.sql.Date;
+import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class Product {
-	public Product(Long id, String name, Double price, String description,
-			Date last_update) {
-		super();
-		this.id = id;
+	public Product(String name, Double price, String description,
+			Date last_update, Category category) {
+//		super();
 		this.name = name;
 		this.price = price;
 		this.description = description;
 		this.last_update = last_update;
+		this.category = category;
 	}
 
 	protected Product() {
@@ -43,7 +41,7 @@ public class Product {
 	
 //	@Column(name="categoryId")
 	@ManyToOne()
-	@JoinColumn(name = "category_id")
+//	@JoinColumn(name = "products")
 	private Category category;
 
 	public Long getId() {
@@ -64,6 +62,14 @@ public class Product {
 
 	public Date getLast_update() {
 		return last_update;
+	}
+	
+	public Category getCategory () {
+		return this.category;
+	}
+	
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 }
