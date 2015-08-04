@@ -1,5 +1,6 @@
 package affableBean.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +16,6 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-//	@Column(name = "name")
 	private String name;
 
 //	@Column(name = "email")
@@ -52,10 +52,12 @@ public class Customer {
 		return id;
 	}
 
+	@Column(name = "name", nullable = false, length = 45)
 	public String getName() {
 		return name;
 	}
 
+	@Column(name = "email", unique = true, nullable = false, length = 45)
 	public String getEmail() {
 		return email;
 	}
