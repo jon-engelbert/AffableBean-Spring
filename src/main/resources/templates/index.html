@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html" ; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="css/affablebean.css">
+	<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/affableBean.css}"></link>
 <title>The Affable Bean</title>
+
 </head>
 <body>
 	<div id="main">
@@ -11,7 +13,20 @@
 
 		<div id="indexLeftColumn">left column</div>
 
-		<div id="indexRightColumn">right column</div>
+		<div id="indexRightColumn">
+			<div class="categoryBox">
+				<a href="#"> <span class="categoryLabelText">dairy</span>
+				</a>
+			</div>
+			<div class="categoryBox">
+				<a href="#"> <span class="categoryLabelText">meats</span>
+				</a>
+			</div>
+			<div class="categoryBox">
+				<a href="#"> <span class="categoryLabelText">bakery</span>
+				</a>
+			</div>
+		</div>
 
 		<div id="footer">footer</div>
 	</div>
