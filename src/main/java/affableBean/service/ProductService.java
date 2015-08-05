@@ -26,5 +26,18 @@ public class ProductService  {
 	public Product getById(Long id) {
 		return productRepo.findById(id);
 	}
+	
+	public Product saveAndFlush(Product product) {
+		return productRepo.saveAndFlush(product);
+	}
+	
+	public Product findById(Long id) {
+		return productRepo.findById(id);
+	}
+	
+	public Product findOneByName(String name) {
+		return productRepo.findOneByName(name);
+	}
+	
 }
 

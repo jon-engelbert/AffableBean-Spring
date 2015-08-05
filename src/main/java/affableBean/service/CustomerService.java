@@ -23,4 +23,17 @@ public class CustomerService {
 		return customerRepo.findAll();
 	}
 	
+	public Customer saveAndFlush(Customer customer) {
+		return customerRepo.saveAndFlush(customer);
+	}
+	
+	public Customer findOneByName(String name) {
+		return customerRepo.findOneByName(name);
+	
+	}
+	
+	public Customer findById(Long id) {
+		return customerRepo.findById(id);
+	}
+	
 }
