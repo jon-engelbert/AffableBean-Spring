@@ -3,13 +3,16 @@ package affableBean.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;
+import affableBean.repository.ProductRepository;
 import affableBean.service.CustomerService;
 
 @Controller
@@ -18,6 +21,12 @@ public class AdminController {
 	
 	@Autowired 
 	private CustomerRepository customerRepo;
+	
+	@Autowired 
+	private ProductRepository productRepo;
+	
+	@Autowired 
+	private CategoryRepository categoryRepo;
 	
 //	@Autowired
 //	private CustomerService customerService;
@@ -68,5 +77,22 @@ public class AdminController {
 		return "admin/order";
 	}
 	
+	@RequestMapping(value = "/product", method = RequestMethod.GET)
+	public String productConsole(ModelMap mm) {
+		mm.put("productList", productRepo.findAll());
+		return "admin/product";
+	}
 
+	@RequestMapping(value = "/category", method = RequestMethod.GET)
+	public String categoryConsole(ModelMap mm) {
+		mm.put("categoryList", categoryRepo.findAll());
+		return "admin/category";
+	}
+
+	@RequestMapping("/productByCategory/{id}")
+	public String productByCategory(@PathVariable("id") Integer id, ModelMap mm) {
+		mm.put("productList", productRepo.findByCategoryId(id));
+		return "admin/product";
+	}
+	
 }

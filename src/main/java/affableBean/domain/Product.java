@@ -89,6 +89,14 @@ public class Product implements Serializable {
         this.price = price;
     }
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	// public Date getLastUpdate() {
 	// return lastUpdate;
 	// }

@@ -76,8 +76,8 @@
 					<li sec:authorize="hasRole('ROLE_USER')">
 						<a href="#"><i class="fa fa-shopping-cart fa-fw"></i> Store Management<span class="fa arrow"></span></a>
 						<ul class="nav nav-second-level">
-							<li><a href="#">Category</a></li>
-							<li><a href="#">Product</a></li>
+							<li><a th:href="@{/admin/category}">Category</a></li>
+							<li><a th:href="@{/admin/product}">Product</a></li>
 						</ul>
 					</li>
 				</ul>
