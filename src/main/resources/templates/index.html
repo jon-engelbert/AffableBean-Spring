@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/affableBean.css}"></link>
+<link rel="stylesheet" type="text/css" th:href="@{/css/affableBean.css}"></link>
 <title>The Affable Bean</title>
 
 </head>
@@ -14,18 +14,45 @@
 		<div id="indexLeftColumn">left column</div>
 
 		<div id="indexRightColumn">
-			<div class="categoryBox">
-				<a href="#"> <span class="categoryLabelText">dairy</span>
-				</a>
-			</div>
-			<div class="categoryBox">
-				<a href="#"> <span class="categoryLabelText">meats</span>
-				</a>
-			</div>
-			<div class="categoryBox">
-				<a href="#"> <span class="categoryLabelText">bakery</span>
-				</a>
-			</div>
+			        <div class="categoryBox">
+            <a href="category?1">
+                <span class="categoryLabel"></span>
+                <span class="categoryLabelText">dairy</span>
+
+                <img th:src="@{/img/dairy.jpg}"
+                     alt="dairy" class="categoryImage" />
+            </a>
+        </div>
+    
+        <div class="categoryBox">
+            <a href="category?2">
+                <span class="categoryLabel"></span>
+                <span class="categoryLabelText">meats</span>
+
+                <img th:src="@{/img/meats.jpg}"
+                     alt="meats" class="categoryImage" />
+            </a>
+        </div>
+    
+        <div class="categoryBox">
+            <a href="category?3">
+                <span class="categoryLabel"></span>
+                <span class="categoryLabelText">bakery</span>
+
+                <img th:src="@{/img/bakery.jpg}"
+                     alt="bakery" class="categoryImage" />
+            </a>
+        </div>
+    
+        <div class="categoryBox">
+            <a href="category?4">
+                <span class="categoryLabel"></span>
+                <span class="categoryLabelText">fruit and veg</span>
+
+                <img th:src="@{/img/fruit_veg.jpg}"
+                     alt="fruit and veg" class="categoryImage" />
+            </a>
+        </div>
 		</div>
 
 		<div id="footer">footer</div>

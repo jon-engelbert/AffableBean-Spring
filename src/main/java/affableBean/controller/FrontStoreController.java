@@ -39,7 +39,7 @@ public class FrontStoreController {
 	}
 
 	@RequestMapping(value = "/category", method = RequestMethod.GET)
-	public String category(@RequestParam("id") Integer id, ModelMap mm) {
+	public String category(@RequestParam(value="id",required=false) Integer id, ModelMap mm) {
 		mm.put("productList", productRepo.findByCategoryId(id));
 		mm.put("categoryList", categoryRepo.findAll());
 		mm.put("id", id);

@@ -60,7 +60,7 @@ public class AffableBeanApplicationTests {
 	@Transactional
 	public void testSaveCustomer() {
 		Customer cust = new Customer(null, "Thien", "thienman@gmail.com",
-				"7349724084", "test address", "Ann Arbor, MI",
+				"7349724084", "test address", "MI",
 				"1234 5678 9012 3456");
 
 		Customer custReturned = customerService.saveAndFlush(cust);
