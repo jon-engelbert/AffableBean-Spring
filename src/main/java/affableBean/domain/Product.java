@@ -1,75 +1,141 @@
 package affableBean.domain;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-public class Product {
-	public Product(String name, Double price, String description,
-			Date last_update, Category category) {
-//		super();
-		this.name = name;
-		this.price = price;
-		this.description = description;
-		this.last_update = last_update;
-		this.category = category;
-	}
+@Table(name = "product")
+public class Product implements Serializable {
 
-	protected Product() {
-	};
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "name")
+    private String name;
+    @Basic(optional = false)
+    @Column(name = "price")
+    private BigDecimal price;
+    @Basic(optional = false)
+    @Column(name = "description")
+    private String description;
+    @Basic(optional = false)
+    @Column(name = "last_update")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdate;
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Category category;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private Collection<OrderedProduct> orderedProductCollection;
+    
+    public Product() {
+    }
 
-//	@Column(name = "name")
-	private String name;
+    public Product(Integer id) {
+        this.id = id;
+    }
 
-//	@Column(name = "price")
-	private Double price;
+    public Product(Integer id, String name, BigDecimal price, String description, Date lastUpdate, Category category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.lastUpdate = lastUpdate;
+        this.category = category;
+    }
 
-//	@Column(name = "description")
-	private String description;
+    public Integer getId() {
+        return id;
+    }
 
-//	@Column(name = "last_update")
-	private Date last_update;
-	
-//	@Column(name="categoryId")
-	@ManyToOne()
-//	@JoinColumn(name = "products")
-	private Category category;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Double getPrice() {
-		return price;
-	}
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-	public Date getLast_update() {
-		return last_update;
-	}
-	
-	public Category getCategory () {
-		return this.category;
-	}
-	
-	public void setCategory(Category category) {
-		this.category = category;
-	}
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Collection<OrderedProduct> getOrderedProductCollection() {
+        return orderedProductCollection;
+    }
+
+    public void setOrderedProductCollection(Collection<OrderedProduct> orderedProductCollection) {
+        this.orderedProductCollection = orderedProductCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Product)) {
+            return false;
+        }
+        Product other = (Product) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entity.Product[id=" + id + "]";
+    }
 
 }

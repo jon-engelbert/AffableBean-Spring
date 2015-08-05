@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import affableBean.domain.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
 	
 	List<Product> findAll();
 	
-	Product findById(Long id);
-	List<Product> findByCategoryId(Long id);
+	Product findById(Integer id);
+	List<Product> findByCategoryId(Integer id);
 	
 	Product findOneByName(String name);
 	

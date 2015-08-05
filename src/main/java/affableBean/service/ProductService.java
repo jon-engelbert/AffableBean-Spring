@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import affableBean.domain.Category;
 import affableBean.domain.Product;
 import affableBean.repository.ProductRepository;
 
@@ -19,11 +20,11 @@ public class ProductService  {
 
 	
 	
-	public List<Product> getByCategoryId(Long id) {
+	public List<Product> getByCategoryId(Integer id) {
 		return productRepo.findByCategoryId(id);
 	}
-	
-	public Product getById(Long id) {
+
+	public Product getById(Integer id) {
 		return productRepo.findById(id);
 	}
 	
@@ -31,7 +32,7 @@ public class ProductService  {
 		return productRepo.saveAndFlush(product);
 	}
 	
-	public Product findById(Long id) {
+	public Product findById(Integer id) {
 		return productRepo.findById(id);
 	}
 	

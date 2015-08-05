@@ -1,85 +1,154 @@
 package affableBean.domain;
 
+import java.io.Serializable;
+import java.util.Collection;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 @Entity
-public class Customer {
-	protected Customer() {
-	};
+@Table(name = "customer")
+public class Customer implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "name")
+    private String name;
+    @Basic(optional = false)
+    @Column(name = "email")
+    private String email;
+    @Basic(optional = false)
+    @Column(name = "phone")
+    private String phone;
+    @Basic(optional = false)
+    @Column(name = "address")
+    private String address;
+    @Basic(optional = false)
+    @Column(name = "city_region")
+    private String cityRegion;
+    @Basic(optional = false)
+    @Column(name = "cc_number")
+    private String ccNumber;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Collection<CustomerOrder> customerOrderCollection;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    public Customer() {
+    }
 
-	private String name;
+    public Customer(Integer id) {
+        this.id = id;
+    }
 
-//	@Column(name = "email")
-	private String email;
+    public Customer(Integer id, String name, String email, String phone, String address, String cityRegion, String ccNumber) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.cityRegion = cityRegion;
+        this.ccNumber = ccNumber;
+    }
 
-//	@Column(name = "phone")
-	private String phone;
+    public Integer getId() {
+        return id;
+    }
 
-//	@Column(name = "address")
-	private String address;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-//	@Column(name = "city_region")
-	private String city_region;
+    public String getName() {
+        return name;
+    }
 
-//	@Column(name = "cc")
-	private String cc;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-//	@OneToMany(targetEntity = CustomerOrder.class, fetch = FetchType.EAGER, mappedBy = "Customer")
-//	private List<CustomerOrder> orders;
+    public String getEmail() {
+        return email;
+    }
 
-	public Customer(String name, String email, String phone,
-			String address, String city_region, String cc) {
-//		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.phone = phone;
-		this.email = email;
-		this.address = address;
-		this.city_region = city_region;
-		this.cc = cc;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	@Column(name = "name", nullable = false, length = 45)
-	public String getName() {
-		return name;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	@Column(name = "email", unique = true, nullable = false, length = 45)
-	public String getEmail() {
-		return email;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getCityRegion() {
+        return cityRegion;
+    }
 
-	public String getCity_region() {
-		return city_region;
-	}
+    public void setCityRegion(String cityRegion) {
+        this.cityRegion = cityRegion;
+    }
 
-	public String getCc() {
-		return cc;
-	}
+    public String getCcNumber() {
+        return ccNumber;
+    }
 
-//	public List<CustomerOrder> getOrders() {
-//		return orders;
-//	}
+    public void setCcNumber(String ccNumber) {
+        this.ccNumber = ccNumber;
+    }
+
+    public Collection<CustomerOrder> getCustomerOrderCollection() {
+        return customerOrderCollection;
+    }
+
+    public void setCustomerOrderCollection(Collection<CustomerOrder> customerOrderCollection) {
+        this.customerOrderCollection = customerOrderCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Customer)) {
+            return false;
+        }
+        Customer other = (Customer) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entity.Customer[id=" + id + "]";
+    }
+
 
 }

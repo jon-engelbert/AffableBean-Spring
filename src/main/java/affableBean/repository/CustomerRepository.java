@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import affableBean.domain.Customer;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 	
 	List<Customer> findAll();
 	
-	Customer findById(Long id);
+	Customer findById(Integer id);
 	
 	Customer findOneByName(String name);
 	

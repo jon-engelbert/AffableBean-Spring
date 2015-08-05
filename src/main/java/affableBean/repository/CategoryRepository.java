@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import affableBean.domain.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 	
 	List<Category> findAll();
 
-	Category findById(Long id);
+	Category findById(Integer id);
 	
 	Category findOneByName(String name);
 

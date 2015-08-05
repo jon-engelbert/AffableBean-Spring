@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import affableBean.domain.Category;
 import affableBean.domain.Product;
 import affableBean.service.Cart;
 import affableBean.service.CategoryService;
@@ -46,7 +47,7 @@ public class FrontStoreController {
 	}
 
 	@RequestMapping(value = "/category", method = RequestMethod.GET)
-	public String category(@RequestParam("id") Long id, ModelMap mm) {
+	public String category(@RequestParam("id") Integer id, ModelMap mm) {
 		mm.put("productList", productService.getByCategoryId(id));
 		mm.put("categoryList", categoryService.findAll());
 		mm.put("id", id);

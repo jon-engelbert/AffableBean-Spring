@@ -1,14 +1,11 @@
 SET MODE MySQL;
-DROP SCHEMA IF EXISTS `affablebean` ;
-CREATE SCHEMA IF NOT EXISTS `affablebean`  ;
-USE `affablebean` ;
 
 -- -----------------------------------------------------
--- Table `affablebean`.`customer`
+-- Table `customer`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `affablebean`.`customer` ;
+DROP TABLE IF EXISTS `customer` ;
 
-CREATE  TABLE IF NOT EXISTS `affablebean`.`customer` (
+CREATE  TABLE IF NOT EXISTS `customer` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
   `email` VARCHAR(45) NOT NULL ,
@@ -21,11 +18,11 @@ COMMENT = 'maintains customer details';
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`customer_order`
+-- Table .`customer_order`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `affablebean`.`customer_order` ;
+DROP TABLE IF EXISTS `customer_order` ;
 
-CREATE  TABLE IF NOT EXISTS `affablebean`.`customer_order` (
+CREATE  TABLE IF NOT EXISTS `customer_order` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `amount` DECIMAL(6,2) NOT NULL ,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -35,30 +32,30 @@ CREATE  TABLE IF NOT EXISTS `affablebean`.`customer_order` (
   INDEX `fk_customer_order_customer` (`customer_id` ASC) ,
   CONSTRAINT `fk_customer_order_customer`
     FOREIGN KEY (`customer_id` )
-    REFERENCES `affablebean`.`customer` (`id` )
+    REFERENCES `customer` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 COMMENT = 'maintains customer order details';
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`category`
+-- Table `category`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `affablebean`.`category` ;
+DROP TABLE IF EXISTS `category` ;
 
-CREATE  TABLE IF NOT EXISTS `affablebean`.`category` (
-  `id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+CREATE  TABLE IF NOT EXISTS `category` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
   PRIMARY KEY (`id`) )
 COMMENT = 'contains product categories, eg, dairy, meats, etc';
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`product`
+-- Table `product`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `affablebean`.`product` ;
+DROP TABLE IF EXISTS `product` ;
 
-CREATE  TABLE IF NOT EXISTS `affablebean`.`product` (
+CREATE  TABLE IF NOT EXISTS `product` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
   `price` DECIMAL(5,2) NOT NULL ,
@@ -69,18 +66,18 @@ CREATE  TABLE IF NOT EXISTS `affablebean`.`product` (
   INDEX `fk_product_category` (`category_id` ASC) ,
   CONSTRAINT `fk_product_category`
     FOREIGN KEY (`category_id` )
-    REFERENCES `affablebean`.`category` (`id` )
+    REFERENCES `category` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 COMMENT = 'contains product details';
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`ordered_product`
+-- Table `ordered_product`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `affablebean`.`ordered_product` ;
+DROP TABLE IF EXISTS `ordered_product` ;
 
-CREATE  TABLE IF NOT EXISTS `affablebean`.`ordered_product` (
+CREATE  TABLE IF NOT EXISTS `ordered_product` (
   `customer_order_id` INT UNSIGNED NOT NULL ,
   `product_id` INT UNSIGNED NOT NULL ,
   `quantity` SMALLINT UNSIGNED NOT NULL DEFAULT 1 ,
@@ -89,11 +86,11 @@ CREATE  TABLE IF NOT EXISTS `affablebean`.`ordered_product` (
   INDEX `fk_ordered_product_product` (`product_id` ASC) ,
   CONSTRAINT `fk_ordered_product_customer_order`
     FOREIGN KEY (`customer_order_id` )
-    REFERENCES `affablebean`.`customer_order` (`id` )
+    REFERENCES `customer_order` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ordered_product_product`
     FOREIGN KEY (`product_id` )
-    REFERENCES `affablebean`.`product` (`id` )
+    REFERENCES `product` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);

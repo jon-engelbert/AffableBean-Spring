@@ -1,71 +1,137 @@
 package affableBean.domain;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 
 @Entity
-public class CustomerOrder {
-	protected CustomerOrder() {
-	};
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-//	@Column(name = "amount")
-	private Double amount;
-
-	@Temporal(TemporalType.DATE)
-	private Date date_created;
-//	@Column(name = "date_created")
-
-//	@Column(name = "confirmation_number")
-	private Integer confirmation_number;
-
-	@JoinColumn(name = "customer")
-	@ManyToOne
-	private Customer customer;
+@Table(name = "customer_order")
+public class CustomerOrder implements Serializable {
 	
-	@OneToMany(targetEntity=OrderedProduct.class, fetch = FetchType.EAGER, mappedBy = "product")
-	private List<OrderedProduct> orderedProducts;
+    private static final long serialVersionUID = 1L;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "amount")
+    private BigDecimal amount;
+    @Basic(optional = false)
+    @Column(name = "date_created")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateCreated;
+    @Basic(optional = false)
+    @Column(name = "confirmation_number")
+    private int confirmationNumber;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerOrder")
+    private Collection<OrderedProduct> orderedProductCollection;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Customer customer;
 
-	public CustomerOrder(Long id, Double amount, Date date_created, Integer confirmation_number) {
-		this.id = id;
-		this.amount = amount;
-		this.date_created = date_created;
-		this.confirmation_number = confirmation_number;
-	}
+    public CustomerOrder() {
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public CustomerOrder(Integer id) {
+        this.id = id;
+    }
 
-	public Double getAmount() {
-		return amount;
-	}
+    public CustomerOrder(Integer id, BigDecimal amount, Date dateCreated, int confirmationNumber) {
+        this.id = id;
+        this.amount = amount;
+        this.dateCreated = dateCreated;
+        this.confirmationNumber = confirmationNumber;
+    }
 
-	public Date getDate_created() {
-		return date_created;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public Integer getConfirmation_number() {
-		return confirmation_number;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Customer getCustomer() {
-		return customer;
-	}
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public int getConfirmationNumber() {
+        return confirmationNumber;
+    }
+
+    public void setConfirmationNumber(int confirmationNumber) {
+        this.confirmationNumber = confirmationNumber;
+    }
+
+    public Collection<OrderedProduct> getOrderedProductCollection() {
+        return orderedProductCollection;
+    }
+
+    public void setOrderedProductCollection(Collection<OrderedProduct> orderedProductCollection) {
+        this.orderedProductCollection = orderedProductCollection;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof CustomerOrder)) {
+            return false;
+        }
+        CustomerOrder other = (CustomerOrder) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entity.CustomerOrder[id=" + id + "]";
+    }
+
 }

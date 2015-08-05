@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.transaction.Transactional;
@@ -58,7 +59,7 @@ public class AffableBeanApplicationTests {
 	@Test
 	@Transactional
 	public void testSaveCustomer() {
-		Customer cust = new Customer("Thien", "thienman@gmail.com",
+		Customer cust = new Customer(null, "Thien", "thienman@gmail.com",
 				"7349724084", "test address", "Ann Arbor, MI",
 				"1234 5678 9012 3456");
 
@@ -67,7 +68,7 @@ public class AffableBeanApplicationTests {
 		Customer custSaved = customerService.findOneByName("Thien");
 		Assert.assertEquals(custReturned, custSaved);
 
-		Long id = custReturned.getId();
+		Integer id = custReturned.getId();
 		Assert.assertNotNull(id);
 
 		Customer custById = customerService.findById(id);
@@ -79,7 +80,7 @@ public class AffableBeanApplicationTests {
 	@Test
 	@Transactional
 	public void testNewCategoryAndProduct() {
-		Category cat = new Category("Canned Goods");
+		Category cat = new Category(null, "Canned Goods");
 
 		Category catReturned = categoryService.saveAndFlush(cat);
 		System.out.println("******" + catReturned.getName());
@@ -87,7 +88,7 @@ public class AffableBeanApplicationTests {
 		Category catSaved = categoryService.findOneByName("Canned Goods");
 		Assert.assertEquals(catReturned, catSaved);
 
-		Product prod = new Product("Spam", new Double(3.49),
+		Product prod = new Product(null, "Spam", new BigDecimal(3.49),
 				"Pork shoulder and ham", new Date(), catSaved);
 		Product prodReturned = productService.saveAndFlush(prod);
 		System.out.println("******" + prodReturned.getName());
