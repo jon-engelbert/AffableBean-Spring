@@ -15,8 +15,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "role", catalog = "affablebean")
 public class Role implements java.io.Serializable {
-	
-	public Role() {}
+
+	public Role() {
+	}
 
 	public Role(Byte id, String name, Set<Member> members) {
 		super();
@@ -26,7 +27,7 @@ public class Role implements java.io.Serializable {
 	}
 
 	private static final long serialVersionUID = 6464512438578201997L;
-	
+
 	private Byte id;
 	private String name;
 	private Set<Member> members = new HashSet<Member>(0);
@@ -63,5 +64,5 @@ public class Role implements java.io.Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	};
-	
+
 }

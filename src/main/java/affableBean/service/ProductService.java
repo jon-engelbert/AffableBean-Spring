@@ -13,13 +13,11 @@ import affableBean.repository.ProductRepository;
 
 @Service
 @Transactional
-public class ProductService  {
+public class ProductService {
 
 	@Resource
 	private ProductRepository productRepo;
 
-	
-	
 	public List<Product> getByCategoryId(Integer id) {
 		return productRepo.findByCategoryId(id);
 	}
@@ -27,18 +25,17 @@ public class ProductService  {
 	public Product getById(Integer id) {
 		return productRepo.findById(id);
 	}
-	
+
 	public Product saveAndFlush(Product product) {
 		return productRepo.saveAndFlush(product);
 	}
-	
+
 	public Product findById(Integer id) {
 		return productRepo.findById(id);
 	}
-	
+
 	public Product findOneByName(String name) {
 		return productRepo.findOneByName(name);
 	}
-	
-}
 
+}

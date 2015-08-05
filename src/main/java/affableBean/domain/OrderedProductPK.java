@@ -16,67 +16,69 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class OrderedProductPK implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-    @Basic(optional = false)
-    @Column(name = "customer_order_id")
-    private int customerOrderId;
-    @Basic(optional = false)
-    @Column(name = "product_id")
-    private int productId;
 
-    public OrderedProductPK() {
-    }
+	@Basic(optional = false)
+	@Column(name = "customer_order_id")
+	private int customerOrderId;
+	@Basic(optional = false)
+	@Column(name = "product_id")
+	private int productId;
 
-    public OrderedProductPK(int customerOrderId, int productId) {
-        this.customerOrderId = customerOrderId;
-        this.productId = productId;
-    }
+	public OrderedProductPK() {
+	}
 
-    public int getCustomerOrderId() {
-        return customerOrderId;
-    }
+	public OrderedProductPK(int customerOrderId, int productId) {
+		this.customerOrderId = customerOrderId;
+		this.productId = productId;
+	}
 
-    public void setCustomerOrderId(int customerOrderId) {
-        this.customerOrderId = customerOrderId;
-    }
+	public int getCustomerOrderId() {
+		return customerOrderId;
+	}
 
-    public int getProductId() {
-        return productId;
-    }
+	public void setCustomerOrderId(int customerOrderId) {
+		this.customerOrderId = customerOrderId;
+	}
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
+	public int getProductId() {
+		return productId;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (int) customerOrderId;
-        hash += (int) productId;
-        return hash;
-    }
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OrderedProductPK)) {
-            return false;
-        }
-        OrderedProductPK other = (OrderedProductPK) object;
-        if (this.customerOrderId != other.customerOrderId) {
-            return false;
-        }
-        if (this.productId != other.productId) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (int) customerOrderId;
+		hash += (int) productId;
+		return hash;
+	}
 
-    @Override
-    public String toString() {
-        return "entity.OrderedProductPK[customerOrderId=" + customerOrderId + ", productId=" + productId + "]";
-    }
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof OrderedProductPK)) {
+			return false;
+		}
+		OrderedProductPK other = (OrderedProductPK) object;
+		if (this.customerOrderId != other.customerOrderId) {
+			return false;
+		}
+		if (this.productId != other.productId) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "entity.OrderedProductPK[customerOrderId=" + customerOrderId
+				+ ", productId=" + productId + "]";
+	}
 
 }

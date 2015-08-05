@@ -13,7 +13,7 @@ import affableBean.repository.CustomerRepository;
 
 @Service
 @Transactional
-public class CategoryService   {
+public class CategoryService {
 	@Resource
 	private CategoryRepository categoryRepo;
 
@@ -65,6 +65,4 @@ public class CategoryService   {
 		return categoryRepo.saveAndFlush(entity);
 	}
 
-	
-	
 }

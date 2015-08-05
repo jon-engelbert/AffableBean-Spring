@@ -19,119 +19,122 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
 @Table(name = "customer_order")
 public class CustomerOrder implements Serializable {
-	
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Basic(optional = false)
-    @Column(name = "amount")
-    private BigDecimal amount;
-    @Basic(optional = false)
-    @Column(name = "date_created")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreated;
-    @Basic(optional = false)
-    @Column(name = "confirmation_number")
-    private int confirmationNumber;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerOrder")
-    private Collection<OrderedProduct> orderedProductCollection;
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Customer customer;
 
-    public CustomerOrder() {
-    }
+	private static final long serialVersionUID = 1L;
 
-    public CustomerOrder(Integer id) {
-        this.id = id;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id")
+	private Integer id;
+	@Basic(optional = false)
+	@Column(name = "amount")
+	private BigDecimal amount;
+	@Basic(optional = false)
+	@Column(name = "date_created")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateCreated;
+	@Basic(optional = false)
+	@Column(name = "confirmation_number")
+	private int confirmationNumber;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customerOrder")
+	private Collection<OrderedProduct> orderedProductCollection;
+	@JoinColumn(name = "customer_id", referencedColumnName = "id")
+	@ManyToOne(optional = false)
+	private Customer customer;
 
-    public CustomerOrder(Integer id, BigDecimal amount, Date dateCreated, int confirmationNumber) {
-        this.id = id;
-        this.amount = amount;
-        this.dateCreated = dateCreated;
-        this.confirmationNumber = confirmationNumber;
-    }
+	public CustomerOrder() {
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public CustomerOrder(Integer id) {
+		this.id = id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public CustomerOrder(Integer id, BigDecimal amount, Date dateCreated,
+			int confirmationNumber) {
+		this.id = id;
+		this.amount = amount;
+		this.dateCreated = dateCreated;
+		this.confirmationNumber = confirmationNumber;
+	}
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Date getDateCreated() {
-        return dateCreated;
-    }
+	public BigDecimal getAmount() {
+		return amount;
+	}
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
 
-    public int getConfirmationNumber() {
-        return confirmationNumber;
-    }
+	public Date getDateCreated() {
+		return dateCreated;
+	}
 
-    public void setConfirmationNumber(int confirmationNumber) {
-        this.confirmationNumber = confirmationNumber;
-    }
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
 
-    public Collection<OrderedProduct> getOrderedProductCollection() {
-        return orderedProductCollection;
-    }
+	public int getConfirmationNumber() {
+		return confirmationNumber;
+	}
 
-    public void setOrderedProductCollection(Collection<OrderedProduct> orderedProductCollection) {
-        this.orderedProductCollection = orderedProductCollection;
-    }
+	public void setConfirmationNumber(int confirmationNumber) {
+		this.confirmationNumber = confirmationNumber;
+	}
 
-    public Customer getCustomer() {
-        return customer;
-    }
+	public Collection<OrderedProduct> getOrderedProductCollection() {
+		return orderedProductCollection;
+	}
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
+	public void setOrderedProductCollection(
+			Collection<OrderedProduct> orderedProductCollection) {
+		this.orderedProductCollection = orderedProductCollection;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
+	public Customer getCustomer() {
+		return customer;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CustomerOrder)) {
-            return false;
-        }
-        CustomerOrder other = (CustomerOrder) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 
-    @Override
-    public String toString() {
-        return "entity.CustomerOrder[id=" + id + "]";
-    }
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof CustomerOrder)) {
+			return false;
+		}
+		CustomerOrder other = (CustomerOrder) object;
+		if ((this.id == null && other.id != null)
+				|| (this.id != null && !this.id.equals(other.id))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "entity.CustomerOrder[id=" + id + "]";
+	}
 
 }

@@ -1,10 +1,7 @@
 --SET MODE MySQL;
---DROP SCHEMA IF EXISTS `affablebean` ;
---CREATE SCHEMA IF NOT EXISTS `affablebean`  ;
---USE `affablebean` ;
 
 -- -----------------------------------------------------
--- Table `affablebean`.`customer`
+-- Table `customer`
 -- -----------------------------------------------------
 drop table if exists customer ;
 
@@ -21,7 +18,7 @@ create table customer (
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`customer_order`
+-- Table `customer_order`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS customer_order ;
 
@@ -37,7 +34,7 @@ CREATE  TABLE customer_order (
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`category`
+-- Table .`category`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS category ;
 
@@ -49,7 +46,7 @@ CREATE  TABLE category (
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`product`
+-- Table `product`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS product ;
 
@@ -66,7 +63,7 @@ CREATE  TABLE IF NOT EXISTS product (
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`ordered_product`
+-- Table `ordered_product`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS ordered_product ;
 
@@ -80,7 +77,7 @@ CREATE  TABLE ordered_product (
   );
 
 -- -----------------------------------------------------
--- Table `affablebean`.`role`
+-- Table `role`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS role ;
 
@@ -92,7 +89,7 @@ CREATE  TABLE role (
 
 
 -- -----------------------------------------------------
--- Table `affablebean`.`member`
+-- Table `member`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS member ;
 

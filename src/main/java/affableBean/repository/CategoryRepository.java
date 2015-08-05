@@ -9,11 +9,11 @@ import affableBean.domain.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-	
+
 	List<Category> findAll();
 
 	Category findById(Integer id);
-	
+
 	Category findOneByName(String name);
 
 	// more methods

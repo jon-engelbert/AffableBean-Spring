@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 import affableBean.domain.Category;
 
 @Repository
-public interface CustomerOrderRepository extends JpaRepository<Category, Integer> {
-	
+public interface CustomerOrderRepository extends
+		JpaRepository<Category, Integer> {
+
 	List<Category> findAll();
 
 	Category findById(Integer id);

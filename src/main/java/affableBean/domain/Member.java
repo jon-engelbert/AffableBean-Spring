@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "member", catalog = "affablebean", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Member implements java.io.Serializable {
 
-	public Member(Role role, String name, String username,
-			String password, byte status) {
+	public Member(Role role, String name, String username, String password,
+			byte status) {
 		super();
 		this.role = role;
 		this.name = name;
@@ -17,7 +17,7 @@ public class Member implements java.io.Serializable {
 	}
 
 	private static final long serialVersionUID = 3394395703589149580L;
-	
+
 	private Integer id;
 	private Role role;
 	private String name;
