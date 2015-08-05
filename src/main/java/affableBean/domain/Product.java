@@ -39,10 +39,10 @@ public class Product implements Serializable {
     @Basic(optional = false)
     @Column(name = "description")
     private String description;
-    @Basic(optional = false)
-    @Column(name = "last_update")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdate;
+//    @Basic(optional = false)
+//    @Column(name = "last_update")
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date lastUpdate;
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Category category;
@@ -61,7 +61,7 @@ public class Product implements Serializable {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.lastUpdate = lastUpdate;
+//        this.lastUpdate = lastUpdate;
         this.category = category;
     }
 
@@ -89,14 +89,14 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
+//    public Date getLastUpdate() {
+//        return lastUpdate;
+//    }
+//
+//    public void setLastUpdate(Date lastUpdate) {
+//        this.lastUpdate = lastUpdate;
+//    }
+//
     public Category getCategory() {
         return category;
     }

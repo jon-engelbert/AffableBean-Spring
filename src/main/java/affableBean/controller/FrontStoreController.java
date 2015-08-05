@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import affableBean.domain.Category;
 import affableBean.domain.Product;
+import affableBean.repository.CategoryRepository;
+import affableBean.repository.CustomerRepository;
+import affableBean.repository.ProductRepository;
 import affableBean.service.Cart;
-import affableBean.service.CategoryService;
-import affableBean.service.CustomerService;
-import affableBean.service.ProductService;
 
 @Controller
 public class FrontStoreController {
@@ -22,34 +21,27 @@ public class FrontStoreController {
 	@Autowired
 	private Cart cart;
 
-	@Autowired
-	private CategoryService categoryService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private CustomerService customerService;
-
-//	@Autowired
-//	private OrderedProductService orderedProductService;
-//
-//	@Autowired
-//	private OrderService orderService;
+	@Autowired 
+	private CustomerRepository customerRepo;
+	
+	@Autowired 
+	private CategoryRepository categoryRepo;
+	@Autowired 
+	private ProductRepository productRepo;
 
 	/**
 	 * Category
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(ModelMap mm) {
-		mm.put("categoryList", categoryService.findAll());
+		mm.put("categoryList", categoryRepo.findAll());
 		return "front_store/home";
 	}
 
 	@RequestMapping(value = "/category", method = RequestMethod.GET)
 	public String category(@RequestParam("id") Integer id, ModelMap mm) {
-		mm.put("productList", productService.getByCategoryId(id));
-		mm.put("categoryList", categoryService.findAll());
+		mm.put("productList", productRepo.findByCategoryId(id));
+		mm.put("categoryList", categoryRepo.findAll());
 		mm.put("id", id);
 		return "front_store/category";
 	}

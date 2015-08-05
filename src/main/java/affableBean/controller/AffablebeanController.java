@@ -13,16 +13,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import affableBean.domain.Category;
 import affableBean.domain.Customer;
-import affableBean.service.CustomerService;
+import affableBean.domain.Product;
+import affableBean.repository.CategoryRepository;
+import affableBean.repository.CustomerRepository;
+import affableBean.repository.MemberRepository;
+import affableBean.repository.ProductRepository;
 
 //import AffableBean.Greeting;
 
 @Controller
 public class AffablebeanController {
 	
+	@Autowired 
+	private CustomerRepository customerRepo;
+	
+	@Autowired 
+	private CategoryRepository categoryRepo;
+	
 	@Autowired
-	CustomerService customerService;
+	private ProductRepository productRepo;
+	@Autowired
+	private MemberRepository memberRepo;
 	
 	 @RequestMapping(value = "/affable", method=RequestMethod.GET)
 	 public String index() {
@@ -32,25 +45,42 @@ public class AffablebeanController {
 	 
 	 @RequestMapping("/allcust")
 	 public @ResponseBody String showAllCustomers() {
-		 System.out.println("*******in show all customers");
-		 
 		 List<Customer> custList = new ArrayList<Customer>();
-		 
-		 custList = customerService.getAll();
-		 System.out.println("*******afer findall");
-		 assert (!custList.isEmpty());
-		 assert (custList != null);
-		 
-		 String custStr = new String("");
-		 for (Customer custit : custList) {
-			 System.out.println("*******in for loop");
-			 
-			 assert (custit != null);
-			 custStr = custit.getName() + " " + custit.getAddress() + " " + custit.getCcNumber() + " ";
-			 System.out.println("*******after string assign");
+		 custList = customerRepo.findAll();
+		 String custStr;
+		 ArrayList<String> custStrList = new ArrayList<>();
+		 for (Customer cust : custList) {
+			 custStr =new String("<p>" +cust.getName() + " " + cust.getAddress() + " " + cust.getCcNumber() + "</p>");
+			 custStrList.add(custStr);			 
+		 }
+		 return  String.join(", ", custStrList);
+	 }
+	 
+	 @RequestMapping("/allcategories")
+	 public @ResponseBody String showAllCategories() {
+		 List<Category> catList = new ArrayList<Category>();
+		 catList = categoryRepo.findAll();
+		 String catStr;
+		 ArrayList<String> catStrList = new ArrayList<>();
+		 for (Category cat : catList) {
+			 catStr =new String("<p>" +cat.getName()+ "</p>");
+			 catStrList.add(catStr);
+		 }
+		 return  String.join(", ", catStrList);
+	 }
+	 
+	 @RequestMapping("/allproducts")
+	 public @ResponseBody String showAllProducts() {
+		 List<Product> prodList = new ArrayList<Product>();
+		 prodList = productRepo.findAll();
+		 String prodStr;
+		 ArrayList<String> prodStrList = new ArrayList<>();
+		 for (Product prod : prodList) {
+			 prodStr =new String("<p>" +prod.getName()+ ". Category: " + prod.getCategory().getName() + "</p>");
+			 prodStrList.add(prodStr);
 			 
 		 }
-		 return custStr;
+		 return  String.join(", ", prodStrList);
 	 }
 	 
 	 @RequestMapping("/showdb")
