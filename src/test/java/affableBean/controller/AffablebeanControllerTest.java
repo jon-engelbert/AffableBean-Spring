@@ -21,7 +21,7 @@ public class AffablebeanControllerTest {
   public void testHomePage() throws Exception {
 	  AffablebeanController controller = new AffablebeanController();
     MockMvc mockMvc = standaloneSetup(controller).build();
-    mockMvc.perform(get("/"))
+    mockMvc.perform(get("/affable"))
            .andExpect(view().name("index"));
   }
 

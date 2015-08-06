@@ -44,19 +44,6 @@ public class AffableBeanApplicationTests {
 	}
 
 	@Test
-	public void testHomePage()  {
-		AffablebeanController controller = new AffablebeanController();
-		MockMvc mockMvc = standaloneSetup(controller).build();
-		try {
-			mockMvc.perform(get("/")).andExpect(view().name("index"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return;
-	}
-
-	@Test
 	@Transactional
 	public void testSaveCustomer() {
 		Customer cust = new Customer(null, "Thien", "thienman@gmail.com",

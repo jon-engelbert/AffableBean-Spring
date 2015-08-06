@@ -39,7 +39,6 @@ public class AffablebeanController {
 
 	@RequestMapping(value = "/affable", method = RequestMethod.GET)
 	public String index() {
-		System.out.println("in controller");
 		return "index";
 	}
 

@@ -53,7 +53,7 @@ public class AdminController {
 		} else {
 			mm.put("message", false);
 		}
-		return "admin_console/login";
+		return "admin/login";
 	}
 	
 	/**
