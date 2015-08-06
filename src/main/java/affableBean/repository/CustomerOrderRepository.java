@@ -6,14 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import affableBean.domain.Category;
+import affableBean.domain.CustomerOrder;
 
 @Repository
 public interface CustomerOrderRepository extends
-		JpaRepository<Category, Integer> {
+		JpaRepository<CustomerOrder, Integer> {
 
-	List<Category> findAll();
+	List<CustomerOrder> findAll();
 
-	Category findById(Integer id);
+	CustomerOrder findById(Integer id);
 
 	// more methods
 }

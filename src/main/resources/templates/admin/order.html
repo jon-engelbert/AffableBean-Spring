@@ -26,7 +26,7 @@
 								</thead>
 								<tbody>
 									<tr class="odd gradeX" th:each="order : ${orderList}">
-										<td th:text="${order.customer.id}"></td>
+										<td th:text="${order.getCustomer().getName()}"></td>
 										<td th:text="${order.confirmationNumber}"></td>
 										<td th:text="${order.amount}"></td>
 										<td th:text="${order.dateCreated}"></td>
