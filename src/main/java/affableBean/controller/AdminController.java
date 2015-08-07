@@ -15,6 +15,7 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.repository.RoleRepository;
 import affableBean.service.CustomerService;
 
 @Controller
@@ -41,6 +42,9 @@ public class AdminController {
 	
 	@Autowired
 	private MemberRepository memberRepo;
+	
+	@Autowired
+	private RoleRepository roleRepo;
 	
 //	@Autowired
 //	private OrderService orderService;
