@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import affableBean.Cart;
 import affableBean.CartItem;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.Cart;
 
 @Controller
 public class FrontStoreController {

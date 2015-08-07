@@ -1,9 +1,11 @@
-package affableBean;
+package affableBean.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Component;
 
+import affableBean.CartItem;
 import affableBean.domain.Product;
 
 // Synchronized (all class methods are synchronized with an implicit class-instance lock) protects the list from crazy states by only allowing one edit
