@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import affableBean.CartItem;
+import affableBean.domain.Category;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerRepository;
@@ -44,9 +45,11 @@ public class FrontStoreController {
 
 	@RequestMapping(value = "/category", method = RequestMethod.GET)
 	public String category(@RequestParam(value="id",required=false) Integer id, ModelMap mm) {
+		Category selectedCategory = categoryRepo.findById(id);
 		mm.put("productList", productRepo.findByCategoryId(id));
 		mm.put("categoryList", categoryRepo.findAll());
 		mm.put("id", id);
+		mm.put("selectedCategory", selectedCategory);
 		return "front_store/category";
 	}
 

@@ -1,51 +1,82 @@
-<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	layout:decorator="layouts/front-store">
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">
+	<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/affableBean.css}"></link>
+<title>The Affable Bean</title>
+
+</head>
 <body>
-	<div class="container" layout:fragment="content">
-		<div class="row">
-			<div class="col-xs-12 col-md-12">
-				<div class="jumbotron">
-					<h1>Affable Spring Bean!</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12 col-md-3">
-				<ul class="nav nav-pills nav-stacked">
-					<li th:each="category : ${categoryList}"
-						th:class="${id} == ${category.id} ? 'active'"><a
-						th:href="@{/category(id=${category.id})}"
-						th:text="${#strings.toUpperCase(category.name)}"></a></li>
-				</ul>
-			</div>
-			<div class="col-xs-12 col-md-9">
-				<div class="row">
-					<div class="col-xs-12 col-md-3" th:each="product : ${productList}">
-						<div class="thumbnail">
-							<img class="img-responsive"
-								th:src="@{|/resources/upload/products/${product.name}.png|}" />
-							<div class="caption">
-								<p>
-									<b>Name:</b> <span th:text="${product.name}"></span>
-								</p>
-								<p>
-									<b>Price:</b> <span th:text="|${product.price} USD|"></span>
-								</p>
-								<p>
-									<a th:title="|addItem::${product.id}|"
-										th:href="@{/addToCart(id=${product.id})}"
-										class="btn btn-primary"> Add to cart </a>
-								</p>
-							</div>
-						</div>
+	<div id="main">
+		<div id="header" th:replace="fragments/bodyHeader :: bodyHeader">header</div>
+
+			<div id="categoryLeftColumn">
+
+				<div th:each="category : ${categoryList}">
+					<div class="categoryButton" id="selectedCategory" th:if="${category.id == id}">
+						<span class="categoryText" >
+							<fmt:message key="${category.name}"/>
+						</span>
 					</div>
+					<a href="#" th:href="@{'category?id=' + ${category.id}}" class="categoryButton" th:if="${category.id != id}">
+						<span class="categoryText">
+							<fmt:message key="${category.name}"/>
+						</span>
+					</a>
 				</div>
+
+
 			</div>
-		</div>
+
+			<div id="categoryRightColumn">
+
+				<p id="categoryTitle" th:text="#{'messages/messages.' + ${selectedCategory.name}}"></p>
+
+				<table id="productTable">
+
+					
+
+						<tr th:each="product,rowStat : ${productList}"  th:class="${rowStat.even}? 'lightBlue' : 'white'"  class="white">
+							<td>
+								<img th:src="@{'/img/products/' + ${product.name} + '.png'}" th:alt="#{'messages/messages.' + ${product.name}}" />
+							</td>
+
+							<td>
+								<span th:text="${product.name}"></span>
+								<br/>
+								<span class="smallText" th:text="${product.description}"></span>
+							</td>
+
+							<td><fmt:formatNumber type="currency" currencySymbol="&euro; " value="${product.price}"/></td>
+
+							<td>
+
+							</td>
+						</tr>
+
+				</table>
+			</div>
+			
+		<div id="footer" th:replace="fragments/bodyFooter :: bodyFooter">footer</div>
 	</div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

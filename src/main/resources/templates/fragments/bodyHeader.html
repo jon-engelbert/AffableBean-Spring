@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link rel="stylesheet" type="text/css" href="css/affablebean.css"/>
+        <title>The Affable Bean</title>
+    </head>
+    <body>
+        <div id="main">
+        
+        
+            <div id="header" th:fragment="bodyHeader">
+                <div id="widgetBar">
+
+                    <div class="headerWidget">
+                        [ language toggle ]
+                    </div>
+
+                    <div class="headerWidget">
+                        [ checkout button ]
+                    </div>
+
+                    <div class="headerWidget">
+                        [ shopping cart widget ]
+                    </div>
+
+                </div>
+
+                <a href="#">
+                    <img th:src="@{/img/logo.png}" id="logo" alt="Affable Bean logo"/>
+                </a>
+
+                <img th:src="@{/img/logoText.png}" id="logoText" alt="the affable bean"/>
+            </div>
+            
+            
+            
+		</div>
+	</body>
+</html>

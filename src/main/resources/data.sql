@@ -16,7 +16,7 @@
 --
 -- Sample data for table `category`
 --
-INSERT INTO `category` (name) VALUES ('dairy'),('meats'),('bakery'),('fruit & veg');
+INSERT INTO `category` (name) VALUES ('dairy'),('meats'),('bakery'),('produce');
 
 
 --
