@@ -37,7 +37,7 @@ public class FrontStoreController {
 	/**
 	 * Category
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = {"affable", "/"}, method = RequestMethod.GET)
 	public String home(ModelMap mm) {
 		mm.put("categoryList", categoryRepo.findAll());
 		return "front_store/home";

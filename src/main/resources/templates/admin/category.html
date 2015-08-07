@@ -21,16 +21,25 @@
 									<tr>
 										<th>Name</th>
 										<th>Products</th>
+										<th/>
+										<th/>
 									</tr>
 								</thead>
 								<tbody>
 									<tr class="odd gradeX" th:each="category : ${categoryList}">
 										<td th:text="${category.name}"></td>
 										<td><a href="#" th:href="@{'/admin/productByCategory/' + ${category.id}}">List Products in this category</a></td>
+										<td><a href="#" th:href="@{'/admin/category/edit/' + ${category.id}}">Edit</a></td>
+										<td><a href="#" th:href="@{'/admin/category/delete/' + ${category.id}}">Delete</a></td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
+						<h1>Add New</h1>
+						<form action="#" th:action="@{/admin/category/add}" th:object="${category}" method="post" >
+			    		<input type="text" id="name" name= "name"/>
+						<button type="submit">Add</button>
+						</form>
 					</div>
 				</div>
 			</div>

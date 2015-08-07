@@ -3,11 +3,13 @@ package affableBean.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import affableBean.domain.Category;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
@@ -94,5 +96,23 @@ public class AdminController {
 		mm.put("productList", productRepo.findByCategoryId(id));
 		return "admin/product";
 	}
+	@RequestMapping(value = "/category/add", method = RequestMethod.POST)
+	public String addCategory(@ModelAttribute Category cat, ModelMap mm) {
+		categoryRepo.save(cat);
+		return "redirect:/admin/category";
+	}
 	
+	@RequestMapping(value = "/category/edit/{id}", method = RequestMethod.GET)
+	public String categoryEdit(@PathVariable("id") Integer id, ModelMap mm) {
+		Category selectedCategory = categoryRepo.findById(id);
+		mm.put("category", selectedCategory);
+		return "admin/editcategory";
+	}
+
+	@RequestMapping(value = "/category/delete/{id}", method = RequestMethod.GET)
+	public String categoryDelete(@PathVariable("id") Integer id, ModelMap mm) {
+		categoryRepo.delete(id);
+		return "redirect:/admin/category";
+	}
+
 }

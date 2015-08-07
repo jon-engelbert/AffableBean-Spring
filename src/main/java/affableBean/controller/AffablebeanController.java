@@ -38,11 +38,6 @@ public class AffablebeanController {
 	@Autowired
 	private MemberRepository memberRepo;
 
-	@RequestMapping(value = "/affable", method = RequestMethod.GET)
-	public String index(ModelMap mm) {
-		mm.put("categoryList", categoryRepo.findAll());
-		return "index";
-	}
 
 	@RequestMapping("/allcust")
 	public @ResponseBody String showAllCustomers() {
