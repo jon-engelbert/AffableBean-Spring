@@ -36,7 +36,7 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.US);
+        slr.setDefaultLocale(new Locale("en"));
         return slr;
     }
  

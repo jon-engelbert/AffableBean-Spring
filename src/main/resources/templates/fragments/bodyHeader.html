@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="css/affablebean.css"/>
-        <title>The Affable Bean</title>
+        <title th:text="#{title}">The Affable Bean</title>
     </head>
     <body>
         <div id="main">
@@ -14,7 +14,32 @@
                 <div id="widgetBar">
 
                     <div class="headerWidget">
-                        [ language toggle ]
+                    	<!-- language widget -->
+	                    <!--/*  if language hasn't been explicitly set then use browser's locale */-->
+	                    <span th:if="${session.language == null}">
+	                    	<!--/*  if locale is NOT cs */-->
+	                    	<span th:if="${!#strings.contains(#locale,'cs')}">english</span>
+	                    	<span class="bubble" th:if="${#strings.contains(#locale,'cs')}"><a href="chooseLanguage?lang=en">english</a></span>
+	                    	 | 
+	                    	<!--/*  if locale IS cs */-->
+	                    	<span th:if="${#strings.contains(#locale,'cs')}">česky</span>
+	                    	<span class="bubble" th:if="${!#strings.contains(#locale,'cs')}"><a href="chooseLanguage?lang=cs">česky</a></span>
+	                    </span>
+	                        
+	                    <!--/*  language has been set */-->
+	                    <span th:if="${session.language != null}">
+	                    	<!--/*  if locale is NOT cs */-->
+	                    	<span th:if="${!#strings.contains({session.language},'cs')}">english</span>
+	                    	<span class="bubble" th:if="${#strings.contains({session.language},'cs')}"><a href="chooseLanguage?lang=en">english</a></span>
+	                    	 | 
+	                    	<!--/*  if locale IS cs */-->
+	                    	<span th:if="${#strings.contains({session.language},'cs')}">česky</span>
+	                    	<span class="bubble" th:if="${!#strings.contains({session.language},'cs')}"><a href="chooseLanguage?lang=cs">česky</a></span>
+	                    </span>
+	                        
+	                   <!--/*     <div th:text="${#httpServletRequest.getAttribute('language')}">httpServletRequest.getAttribute </div> */-->
+
+                         
                     </div>
 
                     <div class="headerWidget">
@@ -27,7 +52,7 @@
 
                 </div>
 
-                <a href="#">
+                <a href="home" >
                     <img th:src="@{/img/logo.png}" id="logo" alt="Affable Bean logo"/>
                 </a>
 

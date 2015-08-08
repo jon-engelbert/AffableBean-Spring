@@ -23,7 +23,7 @@
 		<div class="categoryBox" th:each="category : ${categoryList}">
             <a href="#" th:href="@{'category?id=' + ${category.id}}">
                 <span class="categoryLabel"></span>
-                <span class="categoryLabelText" th:text="${category.name}"></span>
+                <span class="categoryLabelText" th:text="#{${category.name}}"></span>
 
                 <img th:src="@{'/img/categories/' + ${category.name} + '.jpg'}"
                      th:alt="${category.name}" class="categoryImage" />
