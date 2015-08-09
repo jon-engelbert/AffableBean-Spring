@@ -23,7 +23,6 @@ public class Member implements java.io.Serializable {
 	private String name;
 	private String username;
 	private String password;
-	private String hash;
 	private byte status;
 
 	public Member() {
@@ -75,14 +74,6 @@ public class Member implements java.io.Serializable {
 		this.password = password;
 	}
 	
-	public String getHash() {
-		return this.hash;
-	}
-	
-	public void setHash(String hash) {
-		this.hash = hash;
-	}
-
 	public byte getStatus() {
 		return status;
 	}
