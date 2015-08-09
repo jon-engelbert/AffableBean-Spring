@@ -60,7 +60,7 @@ public class FrontStoreControllerTests {
 
 	@Test
 	public void testHomePage() throws Exception {
-		mockMvc.perform(get("/affable")).andExpect(
+		mockMvc.perform(get("/home")).andExpect(
 				view().name("front_store/home"));
 		mockMvc.perform(get("/")).andExpect(view().name("front_store/home"));
 	}

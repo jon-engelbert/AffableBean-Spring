@@ -73,7 +73,7 @@ public class FrontStoreController {
 	}
 
 	@RequestMapping("/chooseLanguage")
-	public String setLanguage(@RequestParam(value="lang") String language, ModelMap mm, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public String setLanguage(@RequestParam(value="lang") String language, HttpServletRequest request, HttpSession session) {
 //		localeResolver.setLocale(request, response, new Locale(language));
 //		System.out.println(language);
 		session.setAttribute("language", language);

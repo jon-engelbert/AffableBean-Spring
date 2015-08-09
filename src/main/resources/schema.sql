@@ -97,7 +97,8 @@ CREATE  TABLE member (
   id identity,
   name VARCHAR(45) NOT NULL ,
   username VARCHAR(45) NOT NULL ,
-  password VARCHAR(100) NOT NULL ,
+  password VARCHAR(100) NOT NULL , -- this should be the hashed(password+salt)
+  --salt VARCHAR(100) NOT NULL ,
   `status` INT UNSIGNED NOT NULL ,
   `role_id` INT UNSIGNED NOT NULL ,
   foreign key (role_id) references role(id),

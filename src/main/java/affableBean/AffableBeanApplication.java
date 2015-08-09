@@ -26,7 +26,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @EnableAutoConfiguration(exclude = {
         org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class,
         org.springframework.boot.actuate.autoconfigure.ManagementSecurityAutoConfiguration.class}) //to disable security until it can be properly set up
-@ComponentScan("affableBean.*")	// For subpackage scan
+//@ComponentScan("affableBean.*")	// For subpackage scan
 public class AffableBeanApplication extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) throws SQLException {

@@ -62,6 +62,15 @@ public class AdminController {
 		return "admin/login";
 	}
 	
+	@RequestMapping(value = "/login", method= RequestMethod.POST )
+	public String loginSubmit(@RequestParam(value = "error", required = false) boolean error, ModelMap mm) {
+		if(error == true) {
+			mm.put("message", "Login Failed!");
+		} else {
+			mm.put("message", false);
+		}
+		return "admin/login";
+	}
 	/**
 	 * Login succeeded, inside AdminConsole
 	 */
@@ -84,8 +93,12 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/product", method = RequestMethod.GET)
-	public String productConsole(ModelMap mm) {
-		mm.put("productList", productRepo.findAll());
+	public String productConsole(@RequestParam(value="id", required=false) Integer id, ModelMap mm) {
+		if (id != null) {
+			mm.put("productList", productRepo.findByCategoryId(id));
+		} else {
+			mm.put("productList", productRepo.findAll());
+		}
 		return "admin/product";
 	}
 
@@ -95,11 +108,6 @@ public class AdminController {
 		return "admin/category";
 	}
 
-	@RequestMapping("/productByCategory/{id}")
-	public String productByCategory(@PathVariable("id") Integer id, ModelMap mm) {
-		mm.put("productList", productRepo.findByCategoryId(id));
-		return "admin/product";
-	}
 	@RequestMapping(value = "/category/add", method = RequestMethod.POST)
 	public String addCategory(@ModelAttribute Category cat, ModelMap mm) {
 		categoryRepo.save(cat);

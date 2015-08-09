@@ -3,7 +3,7 @@ package affableBean.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "member", catalog = "affablebean", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+@Table(name = "member", catalog = "test", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Member implements java.io.Serializable {
 
 	public Member(Role role, String name, String username, String password,
@@ -23,6 +23,7 @@ public class Member implements java.io.Serializable {
 	private String name;
 	private String username;
 	private String password;
+	private String hash;
 	private byte status;
 
 	public Member() {
@@ -73,6 +74,14 @@ public class Member implements java.io.Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getHash() {
+		return this.hash;
+	}
+	
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
 
 	public byte getStatus() {
 		return status;
@@ -85,4 +94,5 @@ public class Member implements java.io.Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 }
