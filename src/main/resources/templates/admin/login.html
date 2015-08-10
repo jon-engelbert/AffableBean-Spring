@@ -14,11 +14,17 @@
 						</h3>
 					</div>
 					<div class="panel-body">
+						<div th:if="${param.error}">
+						    Invalid username and password.
+						</div>
+						<div th:if="${param.logout}">
+						    You have been logged out.
+						</div>
 						<div class="alert alert-warning alert-dismissable" th:if="${message}">
 							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 							<strong th:text="${message}"></strong>
 						</div>
-						<form th:action="@{/login}" method="POST">
+						<form th:action="@{/admin/login}" method="POST">
 							<fieldset>
 								<div class="form-group">
 									<input class="form-control" placeholder="Username" type="text" autofocus="autofocus"
