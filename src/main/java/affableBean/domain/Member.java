@@ -3,27 +3,27 @@ package affableBean.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "member", catalog = "test", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+@Table(name = "member", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Member implements java.io.Serializable {
 
-	public Member(Role role, String name, String username, String password,
-			byte status) {
+	public Member(String name, String username, String password,
+			boolean enabled, Role role) {
 		super();
-		this.role = role;
 		this.name = name;
 		this.username = username;
 		this.password = password;
-		this.status = status;
+		this.enabled = enabled;
+		this.role = role;
 	}
 
 	private static final long serialVersionUID = 3394395703589149580L;
 
 	private Integer id;
-	private Role role;
 	private String name;
 	private String username;
 	private String password;
-	private byte status;
+	private boolean enabled;
+	private Role role;
 
 	public Member() {
 	}
@@ -37,16 +37,6 @@ public class Member implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id", nullable = false)
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 	public String getName() {
@@ -74,12 +64,22 @@ public class Member implements java.io.Serializable {
 		this.password = password;
 	}
 	
-	public byte getStatus() {
-		return status;
+	public boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setStatus(byte status) {
-		this.status = status;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role_id", nullable = false)
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public static long getSerialversionuid() {

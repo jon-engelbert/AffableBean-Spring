@@ -141,3 +141,6 @@ INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (1, 13, 1);
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (1, 10, 1);
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (1, 8, 1);
+
+INSERT INTO `role` (`name`) VALUES ('USER');
+INSERT INTO `role` (`name`) VALUES ('ADMIN');

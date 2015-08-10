@@ -97,7 +97,7 @@ public class AdminControllerIntegrationTests {
 	public void testMemberConsole() throws Exception {
 		Role newRole = new Role();
 //		roleRepo.save(newRole);
-		Member newMember = new Member(newRole, "jon", "jonny", "123", (byte) 0);
+		Member newMember = new Member("jon", "jonny", "123", true, newRole);
 		memberRepo.save(newMember);
 		mockMvc.perform(get("/admin")).andExpect(view().name("admin/member"))
 				.andExpect(status().isOk())

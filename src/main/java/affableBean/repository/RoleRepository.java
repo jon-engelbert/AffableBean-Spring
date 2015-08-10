@@ -9,11 +9,13 @@ import affableBean.domain.Member;
 import affableBean.domain.Role;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Member, Integer> {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
 
-	List<Member> findAll();
+	List<Role> findAll();
 
-	List<Member> findByUsername(String username);
+//	List<Member> findByUsername(String username);
+	
+	Role findByName(String name);
 
 
 }

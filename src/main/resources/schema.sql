@@ -79,46 +79,45 @@ CREATE  TABLE ordered_product (
 ---- -----------------------------------------------------
 ---- Table `role`
 ---- -----------------------------------------------------
---DROP TABLE IF EXISTS role ;
---
---CREATE  TABLE role (
---  id identity,
---  name VARCHAR(45) NOT NULL 
---  );
----- COMMENT = 'maintains admin console member roles';
---
---
----- -----------------------------------------------------
----- Table `member`
----- -----------------------------------------------------
---DROP TABLE IF EXISTS member ;
---
---CREATE  TABLE member (
---  id identity,
---  name VARCHAR(45) NOT NULL ,
---  username VARCHAR(45) NOT NULL ,
---  password VARCHAR(100) NOT NULL , -- this should be the hashed(password+salt)
---  --salt VARCHAR(100) NOT NULL ,
---  `status` INT UNSIGNED NOT NULL ,
---  `role_id` INT UNSIGNED NOT NULL ,
---  foreign key (role_id) references role(id),
---  UNIQUE (`username`) 
---  );
----- COMMENT = 'maintains admin console member details';
+DROP TABLE IF EXISTS role ;
 
-DROP TABLE IF EXISTS users;
-create table users (
-    username varchar(50) not null,
-    password varchar(100) not null,
-    enabled boolean not null,
-    PRIMARY KEY (`username`)
-);
+CREATE  TABLE role (
+  `id` identity,
+  `name` VARCHAR(45) NOT NULL 
+  );
+-- COMMENT = 'maintains admin console member roles';
 
-DROP TABLE IF EXISTS authorities;
-create table authorities (
-    username varchar(50) not null,
-    authority varchar(50) not null,
-    foreign key (username) references users (username),
-    unique index authorities_idx_1 (username, authority)
-);
+
+-- -----------------------------------------------------
+-- Table `member`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS member ;
+
+CREATE  TABLE member (
+  `id` identity,
+  `name` VARCHAR(45) NOT NULL ,
+  `username` VARCHAR(45) NOT NULL ,
+  `password` VARCHAR(100) NOT NULL ,
+  `enabled` boolean NOT NULL ,
+  `role_id` INT UNSIGNED NOT NULL ,
+  foreign key (`role_id`) references role(`id`),
+  UNIQUE (`username`) 
+  );
+-- COMMENT = 'maintains admin console member details';
+
+--DROP TABLE IF EXISTS users;
+--create table users (
+--    username varchar(50) not null,
+--    password varchar(100) not null,
+--    enabled boolean not null,
+--    PRIMARY KEY (`username`)
+--);
+--
+--DROP TABLE IF EXISTS authorities;
+--create table authorities (
+--    username varchar(50) not null,
+--    authority varchar(50) not null,
+--    foreign key (username) references users (username),
+--    unique index authorities_idx_1 (username, authority)
+--);
 
