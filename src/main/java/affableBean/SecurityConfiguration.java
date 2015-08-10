@@ -23,6 +23,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+<<<<<<< HEAD
+=======
+
+import affableBean.domain.Member;
+import affableBean.domain.Role;
+import affableBean.repository.MemberRepository;
+import affableBean.repository.RoleRepository;
+>>>>>>> origin/enableAuth
  
 @Configuration
 @EnableWebMvcSecurity
@@ -31,6 +39,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
  
 	@Autowired
 	private DataSource datasource;
+<<<<<<< HEAD
+=======
+	
+	@Autowired
+	private RoleRepository roleRepo;
+	
+	@Autowired
+	private MemberRepository memberRepo;
+>>>>>>> origin/enableAuth
     
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -51,6 +68,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+<<<<<<< HEAD
         JdbcUserDetailsManager userDetailsService = new JdbcUserDetailsManager();
         userDetailsService.setDataSource(datasource);
         PasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -73,6 +91,33 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             User userDetails = new User("admin", encoder.encode("admin"), authorities);
  
             userDetailsService.createUser(userDetails);
+=======
+//        JdbcUserDetailsManager userDetailsService = new JdbcUserDetailsManager();
+//        userDetailsService.setDataSource(datasource);
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+ 
+//        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
+        auth
+        	.jdbcAuthentication().dataSource(datasource)
+        	.usersByUsernameQuery("select username, password, enabled from member where username=?")
+        	.authoritiesByUsernameQuery("select member.username, role.name from member join role on member.role_id = role.id where username=?")
+        	.passwordEncoder(encoder);
+        
+        
+        // adding two members for testing purposes
+        Role userRole = roleRepo.findByName("USER");
+        Role adminRole = roleRepo.findByName("ADMIN");
+        
+        Member adminMember = memberRepo.findByUsername("admin");
+        Member userMember = memberRepo.findByUsername("user");
+ 
+        if(userMember == null) {
+            memberRepo.saveAndFlush(new Member("user", "user", encoder.encode("user"), true, userRole));
+        }
+        
+        if(adminMember == null) {
+            memberRepo.saveAndFlush(new Member("admin", "admin", encoder.encode("admin"), true, adminRole));
+>>>>>>> origin/enableAuth
         }
         
     }

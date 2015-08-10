@@ -19,8 +19,6 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
-import affableBean.repository.RoleRepository;
-import affableBean.service.CustomerService;
 
 @Controller
 @RequestMapping("/admin")
@@ -43,12 +41,12 @@ public class AdminController {
 	
 //	@Autowired
 //	private MemberService memberService;
-	
+
 	@Autowired
 	private MemberRepository memberRepo;
-	
-	@Autowired
-	private RoleRepository roleRepo;
+
+//	@Autowired
+//	private RoleRepository roleRepo;
 	
 //	@Autowired
 //	private OrderService orderService;
@@ -72,7 +70,11 @@ public class AdminController {
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String loginConsole(HttpSession session) {
+<<<<<<< HEAD
 		System.out.println("in /logout");
+=======
+
+>>>>>>> origin/enableAuth
 		if(session!=null)
 			session.invalidate();
 		return "redirect:front_store/home";
