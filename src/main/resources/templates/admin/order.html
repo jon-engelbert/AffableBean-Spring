@@ -2,8 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	  layout:decorator="layouts/admin">
+>
+<head th:include="fragments/adminHeader :: adminHeader0"> ... </head>
 <body>
+	<div id="header" th:replace= "fragments/adminHeader :: adminHeader1"> ... </div>
 	<div id="page-wrapper" layout:fragment="content">
 		<div class="row">
 			<div class="col-lg-12">

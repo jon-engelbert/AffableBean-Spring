@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+<head th:fragment="adminHeader0">
+<link rel="stylesheet" type="text/css" href="../css/affablebean.css"/>
+<link rel="shortcut icon" href="../img/favicon.ico"/>
+
+<script src="../js/jquery-1.4.2.js" type="text/javascript"></script>
+<script src="../js/jquery.corners.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.rounded').corners();
+
+		$('tr.tableRow').hover(function() {
+			$(this).addClass('selectedRow');
+		}, function() {
+			$(this).removeClass('selectedRow');
+		});
+	});
+</script>
+
+<title>The Affable Bean :: Admin Console</title>
+</head>
+
+<body>
+	<div id="main">
+		<div id="header" th:fragment="adminHeader1">
+			<div id="widgetBar"></div>
+
+			<a href="../index.html/"> <img
+				src="../img/logo.png" alt="Affable Bean logo" id="adminLogo"> </img>
+			</a> 
+			<img src="../img/logoText.png" id="logoText" alt="the affable bean"></img>
+		</div>
+
+		<h2>admin console</h2>
+	</div>
+</body>
+</html>
