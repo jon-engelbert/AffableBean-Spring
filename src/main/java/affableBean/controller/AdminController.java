@@ -70,11 +70,7 @@ public class AdminController {
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String loginConsole(HttpSession session) {
-<<<<<<< HEAD
-		System.out.println("in /logout");
-=======
 
->>>>>>> origin/enableAuth
 		if(session!=null)
 			session.invalidate();
 		return "redirect:front_store/home";

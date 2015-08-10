@@ -17,15 +17,11 @@
 						</h3>
 					</div>
 					<div class="panel-body">
-<<<<<<< HEAD
-<<<<<<< HEAD
 						<div class="alert alert-warning alert-dismissable"
 							th:if="${message}">
 							<button type="button" class="close" data-dismiss="alert"
 								aria-hidden="true">&times;</button>
-=======
-=======
->>>>>>> origin/enableAuth
+						</div>
 						<div th:if="${param.error}">
 						    Invalid username and password.
 						</div>
@@ -34,7 +30,6 @@
 						</div>
 						<div class="alert alert-warning alert-dismissable" th:if="${message}">
 							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
->>>>>>> origin/enableAuth
 							<strong th:text="${message}"></strong>
 						</div>
 						<form th:action="@{/admin/login}" method="POST">
