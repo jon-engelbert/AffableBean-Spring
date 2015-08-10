@@ -1,6 +1,10 @@
 package affableBean.controller;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,28 +53,32 @@ public class AdminController {
 //	@Autowired
 //	private OrderService orderService;
 	
+	@Autowired
+	DataSource datasource;
+	
 	/**
 	 * Auth process
 	 */
-	@RequestMapping(value = "/login", method= RequestMethod.GET )
-	public String loginConsole(@RequestParam(value = "error", required = false) boolean error, ModelMap mm) {
-		if(error == true) {
+	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
+
+		if(error != null) {
 			mm.put("message", "Login Failed!");
 		} else {
 			mm.put("message", false);
 		}
-		return "admin/login";
+		return "/admin/login";
 	}
 	
-	@RequestMapping(value = "/login", method= RequestMethod.POST )
-	public String loginSubmit(@RequestParam(value = "error", required = false) boolean error, ModelMap mm) {
-		if(error == true) {
-			mm.put("message", "Login Failed!");
-		} else {
-			mm.put("message", false);
-		}
-		return "admin/login";
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String loginConsole(HttpSession session) {
+		System.out.println("in /logout");
+		if(session!=null)
+			session.invalidate();
+		return "redirect:front_store/home";
 	}
+
+
 	/**
 	 * Login succeeded, inside AdminConsole
 	 */

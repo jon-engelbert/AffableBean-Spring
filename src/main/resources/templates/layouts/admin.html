@@ -38,13 +38,7 @@
 				</button>
 				<div class="navbar-brand">AffableBean Admin Console</div>
 			</div>
-			<form id="f_logout" method="POST" th:action="@{/admin/logout}">
-				<ul class="nav navbar-top-links navbar-right">
-					<li class="dropdown">
-						<a><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-					</li>
-				</ul>
-			</form>
+			<div><a href="/admin/logout/" th:href="@{/admin/logout}">Logout</a></div>
 		</nav>
 
 		<nav class="navbar-default navbar-static-side" role="navigation">
