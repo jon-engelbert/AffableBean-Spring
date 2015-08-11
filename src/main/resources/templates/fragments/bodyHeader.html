@@ -20,22 +20,22 @@
 	                    <span th:if="${session.language == null}">
 	                    	<!--/*  if locale is NOT cs */-->
 	                    	<span th:if="${!#strings.contains(#locale,'cs')}">english</span>
-	                    	<span class="bubble" th:if="${#strings.contains(#locale,'cs')}"><a href="chooseLanguage?lang=en">english</a></span>
+	                    	<span class="bubble" th:if="${#strings.contains(#locale,'cs')}"><a href="chooseLanguage?lang=en" th:href="@{/chooseLanguage?lang=en}">english</a></span>
 	                    	 | 
 	                    	<!--/*  if locale IS cs */-->
 	                    	<span th:if="${#strings.contains(#locale,'cs')}">česky</span>
-	                    	<span class="bubble" th:if="${!#strings.contains(#locale,'cs')}"><a href="chooseLanguage?lang=cs">česky</a></span>
+	                    	<span class="bubble" th:if="${!#strings.contains(#locale,'cs')}"><a href="chooseLanguage?lang=cs" th:href="@{/chooseLanguage?lang=cs}">česky</a></span>
 	                    </span>
 	                        
 	                    <!--/*  language has been set */-->
 	                    <span th:if="${session.language != null}">
 	                    	<!--/*  if locale is NOT cs */-->
 	                    	<span th:if="${!#strings.contains({session.language},'cs')}">english</span>
-	                    	<span class="bubble" th:if="${#strings.contains({session.language},'cs')}"><a href="chooseLanguage?lang=en">english</a></span>
+	                    	<span class="bubble" th:if="${#strings.contains({session.language},'cs')}"><a href="chooseLanguage?lang=en" th:href="@{/chooseLanguage?lang=en}">english</a></span>
 	                    	 | 
 	                    	<!--/*  if locale IS cs */-->
 	                    	<span th:if="${#strings.contains({session.language},'cs')}">česky</span>
-	                    	<span class="bubble" th:if="${!#strings.contains({session.language},'cs')}"><a href="chooseLanguage?lang=cs">česky</a></span>
+	                    	<span class="bubble" th:if="${!#strings.contains({session.language},'cs')}"><a href="chooseLanguage?lang=cs" th:href="@{/chooseLanguage?lang=cs}">česky</a></span>
 	                    </span>
 	                        
 	                   <!--/*     <div th:text="${#httpServletRequest.getAttribute('language')}">httpServletRequest.getAttribute </div> */-->

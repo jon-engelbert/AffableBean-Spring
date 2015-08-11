@@ -2,37 +2,27 @@ package affableBean.controller;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import affableBean.cart.Cart;
 import affableBean.cart.CartItem;
-import affableBean.domain.Category;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.ValidatorService;
 
 @Controller
 public class FrontStoreController {
@@ -50,6 +40,8 @@ public class FrontStoreController {
 	
 	@Autowired
 	LocaleResolver localeResolver;
+	
+	private ValidatorService validator = new ValidatorService();
 
 	/**
 	 * Category
@@ -83,10 +75,13 @@ public class FrontStoreController {
 		return "front_store/category";
 	}
 
-	@RequestMapping("/chooseLanguage")
+	@RequestMapping(value = "/chooseLanguage", method = RequestMethod.GET)
 	public String setLanguage(@RequestParam(value="lang") String language, HttpServletRequest request, HttpSession session) {
+		
+		//TODO: this does not work correctly when you click on it from a POST page, such as after updating the cart
+		// need to find a way around this
+		
 //		localeResolver.setLocale(request, response, new Locale(language));
-//		System.out.println(language);
 		session.setAttribute("language", language);
 		//code below is to parse referring URL to return user to same page
 		String referrerStr = request.getHeader("referer");
@@ -147,18 +142,23 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value= "/updateCart", method = RequestMethod.POST) 
-	public String updateCart(@ModelAttribute CartItem cartItem, Model model) {
+	public String updateCart(@RequestParam(value="productId", required=true) String productId, 
+			@RequestParam(value="quantity") String quantity, 
+			HttpSession session,
+			ModelMap mm) {
 
-            // get input from request
+		Cart cart = (Cart) session.getAttribute("cart");
+        boolean validationErrorFlag = validator.validateQuantity(productId, quantity);
 
-            boolean invalidEntry = false;	// validator.validateQuantity(cartItem.getProduct().getId(), cartItem.getQuantity());
+        if (!validationErrorFlag) {
 
-            if (!invalidEntry) {
+            Product product = productRepo.findById(Integer.valueOf(productId));
+            cart.update(product, quantity);
+        }
+        
+        mm.put("validationErrorFlag",validationErrorFlag);
+        mm.put("orderFailureFlag", false);
 
-                Product product = cartItem.getProduct();
-//                cart.update(product, cartItem.getQuantity());
-            }
-
-            return "/cart";
+        return "front_store/cart";
 	}
 }

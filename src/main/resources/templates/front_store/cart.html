@@ -32,7 +32,7 @@
 		    
 
 			<div th:if="${session.cart} != null and ${session.cart.numberOfItems} != 0">
-				<h4 id="subtotal" th:text="|subtotal: $${session.cart.getSubtotal()}|">subtotal</h4>
+				<h4 id="subtotal" th:text="|#{subtotal}: $${session.cart.getSubtotal()}|">subtotal</h4>
 
 				<table id="cartTable">
 
