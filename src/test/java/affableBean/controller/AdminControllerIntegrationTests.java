@@ -99,11 +99,11 @@ public class AdminControllerIntegrationTests {
 //		roleRepo.save(newRole);
 		Member newMember = new Member("jon", "jonny", "123", true, adminRole);
 		memberRepo.save(newMember);
-		mockMvc.perform(get("/admin")).andExpect(view().name("admin/member"))
+		mockMvc.perform(get("/admin/member")).andExpect(view().name("admin/member"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"))
 				.andExpect(model().attributeExists("memberList"))
-				.andExpect(model().attribute("memberList", hasSize(15)));
+				.andExpect(model().attribute("memberList", is(not(empty()))));
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testProductByCategory() throws Exception {
-		mockMvc.perform(get("/admin/productByCategory/1")).andExpect(view().name("admin/product"))
+		mockMvc.perform(get("/admin/product?id=1")).andExpect(view().name("admin/product"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))

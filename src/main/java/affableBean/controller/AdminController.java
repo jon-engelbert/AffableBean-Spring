@@ -65,11 +65,11 @@ public class AdminController {
 		} else {
 			mm.put("message", false);
 		}
-		return "/admin/login";
+		return "admin/login";
 	}
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String loginConsole(HttpSession session) {
+	public String logoutConsole(HttpSession session) {
 
 		if(session!=null)
 			session.invalidate();

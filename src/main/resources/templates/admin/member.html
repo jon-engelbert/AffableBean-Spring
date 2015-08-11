@@ -30,7 +30,7 @@
 									<tr class="odd gradeX" th:each="member : ${memberList}">
 										<td th:text="${member.name}"></td>
 										<td th:text="${member.username}"></td>
-										<td th:text="${member.status}"></td>
+										<td th:text="${member.enabled}"></td>
 										<td th:text="${member.role.id}"></td>
 									</tr>
 								</tbody>
