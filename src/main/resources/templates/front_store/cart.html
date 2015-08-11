@@ -1,68 +1,79 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	layout:decorator="layouts/front_store">
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">
+	<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/affableBean.css}"></link>
+<title>The Affable Bean</title>
+
+</head>
 <body>
-	<div class="container" layout:fragment="content">
-		<div class="row" th:switch="${itemList.size()}">
-			<div class="col-xs-12 col-md-12" th:case="0">
-				<div class="jumbotron">
-					<h1>Affable Spring Bean!</h1>
-					<p>There's no item in your shopping cart!</p>
-					<p><a th:href="@{/}" class="btn btn-warning">Keep Shopping</a></p>
-				</div>
+	<div id="main">
+		<div id="header" th:replace="fragments/bodyHeader :: bodyHeader">header</div>
+
+		<div id="singleColumn">
+    		<p class="horizontalMargin" th:text="#{yourCartEmpty}" th:if="${session.cart.numberOfItems} == 0">cart</p>
+            <p class="horizontalMargin" th:text="|#{yourCartContains} ${session.cart.numberOfItems} #{item}|" th:if="${session.cart.numberOfItems} == 1">cart</p>
+            <p class="horizontalMargin" th:text="|#{yourCartContains} ${session.cart.numberOfItems} #{items}|" th:if="${session.cart.numberOfItems} > 1">cart</p>
+
+            
+            <div id="actionBar">
+           		<!-- shopping cart widget -->
+		        <a href="/viewCart?clear=true" class="bubble hMargin" th:text="#{clearCart}" th:if="${session.cart != null} and ${session.cart.numberOfItems != 0}">Clear Cart</a>
+
+		
+		        <!-- continue shopping widget -->
+		        <a href="category" class="bubble hMargin" th:href="@{'/category?' + ${session.selectedCategory.id}}" th:if="${session.selectedCategory != null}" th:text="#{continueShopping}">continueShopping</a>
+		        <a href="category" class="bubble hMargin" th:href="@{/home}" th:if="${session.selectedCategory == null}" th:text="#{continueShopping}">continueShopping</a>
+		
+		        <!-- checkout widget -->
+		        <a href="checkout" class="bubble hMargin" th:href="@{/checkout}" th:utext="#{proceedCheckout}" th:if="${session.cart} != null and ${session.cart.numberOfItems} != 0">Proceed to Checkout</a>
+		    </div>
+		    
+
+			<div th:if="${session.cart} != null and ${session.cart.numberOfItems} != 0">
+				<h4 id="subtotal" th:text="|subtotal: $${session.cart.getSubtotal()}|">subtotal</h4>
+
+				<table id="cartTable">
+
+					<tr class="header">
+						<th th:text="#{product}">product</th>
+						<th th:text="#{name}">name</th>
+						<th th:text="#{price}">price</th>
+						<th th:text="#{quantity}">quantity</th>
+					</tr>
+
+					<tr th:each="cartItem,rowStat : ${session.cart.items}"  th:class="${rowStat.even}? 'lightBlue' : 'white'"  class="white">
+						<td><img th:src="@{'/img/products/' + ${cartItem.product.name} + '.png'}" th:alt="#{${cartItem.product.name}}" /></td>
+
+						<td th:utext="#{${cartItem.product.name}}">product name</td>
+
+						<td><span th:text="'$' + ${cartItem.total}">subtotal</span><br/>
+							<span class="smallText" th:text="|($${cartItem.product.price} / #{unit})|">( price / unit )</span>
+						</td>
+
+						<td>
+							<form action="updateCart" th:action="@{/updateCart}" method="post">
+								<input type="hidden" name="productId" th:value="${cartItem.product.id}"/>
+								<input type="text" maxlength="2" size="2"
+									th:value="${cartItem.quantity}" name="quantity"
+									style="margin: 5px"/>
+								<input type="submit"
+									name="submit" value="update" th:value="#{update}"/>
+							</form>
+						</td>
+					</tr>
+
+				</table>
 			</div>
-			<div class="col-xs-12 col-md-12" th:case="*">
-				<div class="jumbotron">
-					<h1>Affable Spring Bean!</h1>
-					<p>Your shopping cart contains $numOfItems item(s).</p>
-					<p>If you want to remove any item, just update its quantity to 0.</p>
-					<p>
-						<a th:href="@{/}" class="btn btn-info">Keep Shopping</a>
-						<a th:href="@{/checkout}" class="btn btn-warning">Checkout</a>
-					</p>
-				</div>
-			</div>
+
+		    
+		    
 		</div>
-		<div class="row" th:unless="${itemList.isEmpty()}">
-			<div class="col-xs-12 col-md-4">
-				<div class="jumbotron">
-					<h4 th:text="|Subtotal: ${subTotal} USD|"></h4>
-					<p><a th:href="@{/clearCart}" class="btn btn-danger">Clear Cart</a></p>
-				</div>
-			</div>
-			<div class="col-xs-12 col-md-8">
-				<div class="table-responsive">
-					<table class="table table-condensed">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Name</th>
-								<th>Price</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="item : ${itemList}">
-								<td><img th:src="@{|/resources/upload/products/${item.getName()}.png|}" /></td>
-								<td th:text="${item.getName()}"></td>
-								<td th:text="|${item.getProductPrice()} USD per Unit|"></td>
-								<td>
-									<form th:action="@{/updateCart}" method="POST" class="form-inline">
-										<div class="form-group">
-											<input type="hidden" name="id" th:value="${item.getName()}" />
-											<input class="form-control" type="text" name="quantity"	th:value="${item.getQuantity()}" size="2" maxlength="2" />
-										</div>
-										<button type="submit" class="btn btn-primary">Update</button>
-									</form>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
+
+		<div id="footer" th:replace="fragments/bodyFooter :: bodyFooter">footer</div>
 	</div>
 </body>
 </html>
+
+                        

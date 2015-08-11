@@ -1,4 +1,4 @@
-package affableBean;
+package affableBean.cart;
 
 import affableBean.domain.Product;
 

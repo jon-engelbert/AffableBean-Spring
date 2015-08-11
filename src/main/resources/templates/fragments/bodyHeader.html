@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <link rel="stylesheet" type="text/css" href="css/affablebean.css"/>
@@ -42,12 +43,34 @@
                          
                     </div>
 
+					<!-- checkout widget -->
                     <div class="headerWidget">
-                        [ checkout button ]
+                        <a href="checkout" class="bubble" th:href="@{/checkout}" th:utext="#{proceedCheckout}" 
+                        	th:if="${session.cart} != null and 
+                        	${session.cart.numberOfItems} != 0 and
+                        	${!#strings.contains({#httpServletRequest.getServletPath()}, '/checkout')} and 
+	                      	${!#strings.contains({#httpServletRequest.getServletPath()}, '/viewCart')} and
+	                      	${#vars['validationErrorFlag'] != true} and
+	                      	${#vars['orderFailureFlag'] != true}">Proceed to Checkout</a>
                     </div>
 
-                    <div class="headerWidget">
-                        [ shopping cart widget ]
+					
+					<!-- shopping cart widget -->
+                    <div class="headerWidget" id="viewCart">
+                    	<img src="/img/cart.gif" th:src="@{/img/cart.gif}" alt="shopping cart icon" id="cart" />
+                        
+
+                        <span class="horizontalMargin" th:text="|0  #{items}|" th:if="${session.cart.numberOfItems} == 0">cart</span>
+                        <span class="horizontalMargin" th:text="|1  #{item}|" th:if="${session.cart.numberOfItems} == 1">cart</span>
+                        <span class="horizontalMargin" th:text="|${session.cart.numberOfItems} #{items}|" th:if="${session.cart.numberOfItems} > 1">cart</span>
+
+ 	                    <a href="viewCart" th:href="@{/viewCart}" class="bubble" th:text="#{cart}" 
+	                    	th:if="${session.cart} != null and 
+	                      		${session.cart.numberOfItems} != 0 and 
+	                      		${!#strings.contains({#httpServletRequest.getServletPath()}, '/viewCart')}">
+	                          view cart
+	                    </a>
+
                     </div>
 
                 </div>

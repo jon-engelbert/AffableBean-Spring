@@ -28,36 +28,34 @@
 
 			<div id="categoryRightColumn">
 				
-				<p id="categoryTitle" th:text="${selectedCategory.name}"></p>
+				<p id="categoryTitle" th:text="${session.selectedCategory.name}"></p>
 
 				<table id="productTable">
 
-					
+					<tr th:each="product,rowStat : ${productList}"  th:class="${rowStat.even}? 'lightBlue' : 'white'"  class="white">
+						<td>
+							<img th:src="@{'/img/products/' + ${product.name} + '.png'}" th:alt="#{${product.name}}" />
+						</td>
 
-						<tr th:each="product,rowStat : ${productList}"  th:class="${rowStat.even}? 'lightBlue' : 'white'"  class="white">
-							<td>
-								<img th:src="@{'/img/products/' + ${product.name} + '.png'}" th:alt="#{'messages/messages.' + ${product.name}}" />
-							</td>
+						<td>
+							<span th:text="#{${product.name}}"></span>
+							<br/>
+							<span class="smallText" th:utext="#{${product.name} + 'Description'}"></span>
+						</td>
 
-							<td>
-								<span th:text="#{${product.name}}"></span>
-								<br/>
-								<span class="smallText" th:utext="#{${product.name} + 'Description'}"></span>
-							</td>
+						<td th:text="${'$'+#numbers.formatDecimal(product.getPrice(), 0, 'COMMA', 2, 'POINT')}"></td>
 
-							<td th:text="${'$'+#numbers.formatDecimal(product.getPrice(), 0, 'COMMA', 2, 'POINT')}"></td>
-
-							<td>
-								<form action="addToCart" method="post">
-                        			<input type="hidden"
-                               			name="productId"
-                               			th:value="${product.id}" />
-                        			<input type="submit"
-                               			name="submit"
-                               			value = "add to cart" th:value="#{addToCart}" />
-                    			</form>
-							</td>
-						</tr>
+						<td>
+							<form action="addToCart" th:action="@{/addToCart}" method="post">
+                       			<input type="hidden"
+                              			name="productId"
+                              			th:value="${product.id}" />
+                       			<input type="submit"
+                              			name="submit"
+                              			value = "add to cart" th:value="#{addToCart}" />
+                   			</form>
+						</td>
+					</tr>
 
 				</table>
 			</div>
