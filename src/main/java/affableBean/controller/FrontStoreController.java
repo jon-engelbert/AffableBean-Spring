@@ -24,7 +24,9 @@ import affableBean.cart.CartItem;
 import affableBean.domain.Customer;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
+import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
+import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
 import affableBean.service.OrderService;
 import affableBean.service.ValidatorService;
@@ -47,7 +49,13 @@ public class FrontStoreController {
 	@Autowired
 	LocaleResolver localeResolver;
 	
-    private OrderService orderService = new OrderService();
+	@Autowired 
+	private CustomerOrderRepository customerOrderRepo;
+	@Autowired 
+	private OrderedProductRepository orderedProductRepo;
+	
+	@Autowired
+    private OrderService orderService;
 	
 	private ValidatorService validator = new ValidatorService();
 
@@ -171,9 +179,13 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value="/checkout", method=RequestMethod.GET)
-	public String checkout(HttpSession session) {
+	public String checkout(HttpSession session,
+			ModelMap mm) {
 		Cart cart = (Cart) session.getAttribute("cart");
-		cart.calculateTotal(cart._deliverySurcharge.toString());
+		if (cart != null) 
+			cart.calculateTotal(cart._deliverySurcharge.toString());
+//        mm.put("validationErrorFlag",false);
+//        mm.put("orderFailureFlag", false);
 		return "front_store/checkout";
 	}
 	

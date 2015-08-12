@@ -60,9 +60,9 @@
                     	<img src="/img/cart.gif" th:src="@{/img/cart.gif}" alt="shopping cart icon" id="cart" />
                         
 
-                        <span class="horizontalMargin" th:text="|0  #{items}|" th:if="${session.cart.numberOfItems} == 0">cart</span>
-                        <span class="horizontalMargin" th:text="|1  #{item}|" th:if="${session.cart.numberOfItems} == 1">cart</span>
-                        <span class="horizontalMargin" th:text="|${session.cart.numberOfItems} #{items}|" th:if="${session.cart.numberOfItems} > 1">cart</span>
+                        <span class="horizontalMargin" th:text="|0  #{items}|" th:if="${session.cart} == null or ${session.cart.numberOfItems} == 0">cart</span>
+                        <span class="horizontalMargin" th:text="|1  #{item}|" th:if="${session.cart} != null and ${session.cart.numberOfItems} == 1">cart</span>
+                        <span class="horizontalMargin" th:text="|${session.cart.numberOfItems} #{items}|" th:if="${session.cart} != null and ${session.cart.numberOfItems} > 1">cart</span>
 
  	                    <a href="viewCart" th:href="@{/viewCart}" class="bubble" th:text="#{cart}" 
 	                    	th:if="${session.cart} != null and 

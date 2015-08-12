@@ -2,6 +2,7 @@ package affableBean.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class OrderService {
 	
 	@Autowired
 	private ProductRepository productRepo;
-
+	
     public int placeOrder(String name, String email, String phone, String address, String cityRegion, String ccNumber, Cart cart) {
     	
         try {
@@ -80,6 +81,7 @@ public class OrderService {
         Random random = new Random();
         int i = random.nextInt(999999999);
         order.setConfirmationNumber(i);
+        order.setDateCreated(new Date());
 
 //        em.persist(order);
 
