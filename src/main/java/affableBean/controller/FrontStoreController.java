@@ -192,6 +192,7 @@ public class FrontStoreController {
 	@RequestMapping(value= "/purchase", method = RequestMethod.POST) 
 	public String purchase(HttpSession session, HttpServletRequest request) {
 		Cart cart = (Cart) session.getAttribute("cart");
+		Double surcharge;
 
 		if (cart != null) {
 
@@ -202,6 +203,7 @@ public class FrontStoreController {
             String address = request.getParameter("address");
             String cityRegion = request.getParameter("cityRegion");
             String ccNumber = request.getParameter("creditcard");
+            surcharge = cart._deliverySurcharge;
             
 
             // validate user data
@@ -252,6 +254,7 @@ public class FrontStoreController {
                     request.setAttribute("products", orderMap.get("products"));
                     request.setAttribute("orderRecord", orderMap.get("orderRecord"));
                     request.setAttribute("orderedProducts", orderMap.get("orderedProducts"));
+                    request.setAttribute("deliverySurcharge", surcharge);
 
                     return "front_store/confirmation";
 
