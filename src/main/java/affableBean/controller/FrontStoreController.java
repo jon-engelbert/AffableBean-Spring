@@ -133,9 +133,7 @@ public class FrontStoreController {
 		
 		if (product != null) {
 			cart.addItem(product);
-		}		
-//		request.setAttribute("validationErrorFlag", false);
-//		request.setAttribute("orderFailureFlag", false);
+		}
 		
 		return "redirect:" + request.getHeader("Referer");
 	}
@@ -146,14 +144,7 @@ public class FrontStoreController {
 		if (clear) {
 			cart.clear();
 		}
-		// request.setAttribute("validationErrorFlag", false);
-		// request.setAttribute("orderFailureFlag", false);
-//		List<CartItem> items = cart.getItems();
-//		double subTotal = cart.getSubtotal();
-//		Integer numOfItems = cart.getNumberOfItems();
-//		mm.put("itemList", items);
-//		mm.put("numOfItems", numOfItems);
-//		mm.put("subTotal", subTotal);
+
 		return "front_store/cart";
 	}
 	
@@ -164,16 +155,13 @@ public class FrontStoreController {
 			ModelMap mm) {
 
 		Cart cart = (Cart) session.getAttribute("cart");
-        boolean validationErrorFlag = validator.validateQuantity(productId, quantity);
+        boolean invalidEntry = validator.validateQuantity(productId, quantity);
 
-        if (!validationErrorFlag) {
+        if (!invalidEntry) {
 
             Product product = productRepo.findById(Integer.valueOf(productId));
             cart.update(product, quantity);
         }
-        
-        mm.put("validationErrorFlag",validationErrorFlag);
-        mm.put("orderFailureFlag", false);
 
         return "front_store/cart";
 	}
@@ -184,8 +172,7 @@ public class FrontStoreController {
 		Cart cart = (Cart) session.getAttribute("cart");
 		if (cart != null) 
 			cart.calculateTotal(cart._deliverySurcharge.toString());
-//        mm.put("validationErrorFlag",false);
-//        mm.put("orderFailureFlag", false);
+
 		return "front_store/checkout";
 	}
 	
@@ -218,9 +205,8 @@ public class FrontStoreController {
                 // otherwise, save order to database
             } else {
 
-                System.out.println(" name: " + name + " email: " + email + " phone: " + phone + " address: " + address + " cityRegion: " + cityRegion + " ccNumber: " + ccNumber);
-//                Customer newCust = customerRepo.saveAndFlush(new Customer(null, name, email, phone, address, cityRegion, ccNumber));
-//                System.out.println("after saveandflush " + newCust.getName() + " " + newCust.getId());
+//                System.out.println(" name: " + name + " email: " + email + " phone: " + phone + " address: " + address + " cityRegion: " + cityRegion + " ccNumber: " + ccNumber);
+
                 Integer orderId = orderService.placeOrder(name, email, phone, address, cityRegion, ccNumber, cart);
 
                 // if order processed successfully send user to confirmation page

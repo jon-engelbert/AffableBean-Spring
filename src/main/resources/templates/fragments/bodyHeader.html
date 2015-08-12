@@ -50,8 +50,8 @@
                         	${session.cart.numberOfItems} != 0 and
                         	${!#strings.contains({#httpServletRequest.getServletPath()}, '/checkout')} and 
 	                      	${!#strings.contains({#httpServletRequest.getServletPath()}, '/viewCart')} and
-	                      	${#vars['validationErrorFlag'] != null} and
-	                      	${#vars['orderFailureFlag'] != null}">Proceed to Checkout</a>
+	                      	${validationErrorFlag} != true and
+	                      	${orderFailureFlag} != true">Proceed to Checkout</a>
                     </div>
 
 					

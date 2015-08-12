@@ -45,7 +45,7 @@ public class OrderService {
     	
         try {
             Customer customer = addCustomer(name, email, phone, address, cityRegion, ccNumber);
-            System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
+//            System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
 
             CustomerOrder order = addOrder(customer, cart);
             addOrderedItems(order, cart);
