@@ -6,7 +6,7 @@ public class CartItem {
 
 
     Product product;
-    short quantity;
+    int quantity;
 
     public CartItem(Product product) {
         this.product = product;
@@ -17,11 +17,11 @@ public class CartItem {
         return product;
     }
 
-    public short getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(short quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

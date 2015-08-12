@@ -2,7 +2,10 @@ package affableBean.controller;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -18,10 +21,12 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import affableBean.cart.Cart;
 import affableBean.cart.CartItem;
+import affableBean.domain.Customer;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.OrderService;
 import affableBean.service.ValidatorService;
 
 @Controller
@@ -35,11 +40,14 @@ public class FrontStoreController {
 	
 	@Autowired 
 	private CategoryRepository categoryRepo;
+	
 	@Autowired 
 	private ProductRepository productRepo;
 	
 	@Autowired
 	LocaleResolver localeResolver;
+	
+    private OrderService orderService = new OrderService();
 	
 	private ValidatorService validator = new ValidatorService();
 
@@ -118,8 +126,8 @@ public class FrontStoreController {
 		if (product != null) {
 			cart.addItem(product);
 		}		
-		request.setAttribute("validationErrorFlag", false);
-		request.setAttribute("orderFailureFlag", false);
+//		request.setAttribute("validationErrorFlag", false);
+//		request.setAttribute("orderFailureFlag", false);
 		
 		return "redirect:" + request.getHeader("Referer");
 	}
@@ -130,8 +138,8 @@ public class FrontStoreController {
 		if (clear) {
 			cart.clear();
 		}
-		request.setAttribute("validationErrorFlag", false);
-		request.setAttribute("orderFailureFlag", false);
+		// request.setAttribute("validationErrorFlag", false);
+		// request.setAttribute("orderFailureFlag", false);
 //		List<CartItem> items = cart.getItems();
 //		double subTotal = cart.getSubtotal();
 //		Integer numOfItems = cart.getNumberOfItems();
@@ -161,4 +169,90 @@ public class FrontStoreController {
 
         return "front_store/cart";
 	}
+	
+	@RequestMapping(value="/checkout", method=RequestMethod.GET)
+	public String checkout(HttpSession session) {
+		Cart cart = (Cart) session.getAttribute("cart");
+		cart.calculateTotal(cart._deliverySurcharge.toString());
+		return "front_store/checkout";
+	}
+	
+	@RequestMapping(value= "/purchase", method = RequestMethod.POST) 
+	public String purchase(HttpSession session, HttpServletRequest request) {
+		Cart cart = (Cart) session.getAttribute("cart");
+
+		if (cart != null) {
+
+            // extract user data from request
+            String name = request.getParameter("name");
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            String cityRegion = request.getParameter("cityRegion");
+            String ccNumber = request.getParameter("creditcard");
+            
+
+            // validate user data
+            boolean validationErrorFlag = false;
+            validationErrorFlag = validator.validateForm(name, email, phone, address, cityRegion, ccNumber, request);
+
+            // if validation error found, return user to checkout
+            if (validationErrorFlag == true) {
+                request.setAttribute("validationErrorFlag", validationErrorFlag);
+                return "front_store/checkout";
+
+                // otherwise, save order to database
+            } else {
+
+                System.out.println(" name: " + name + " email: " + email + " phone: " + phone + " address: " + address + " cityRegion: " + cityRegion + " ccNumber: " + ccNumber);
+//                Customer newCust = customerRepo.saveAndFlush(new Customer(null, name, email, phone, address, cityRegion, ccNumber));
+//                System.out.println("after saveandflush " + newCust.getName() + " " + newCust.getId());
+                Integer orderId = orderService.placeOrder(name, email, phone, address, cityRegion, ccNumber, cart);
+
+                // if order processed successfully send user to confirmation page
+                if (orderId != 0) {
+
+                    // in case language was set using toggle, get language choice before destroying session
+                    Locale locale = (Locale) session.getAttribute("javax.servlet.jsp.jstl.fmt.locale.session");
+                    String language = "";
+
+                    if (locale != null) {
+
+                        language = (String) locale.getLanguage();
+                    }
+
+                    // dissociate shopping cart from session
+                    cart = null;
+
+                    // end session
+                    session.invalidate();
+
+                    if (!language.isEmpty()) {                       // if user changed language using the toggle,
+                                                                     // reset the language attribute - otherwise
+                        request.setAttribute("language", language);  // language will be switched on confirmation page!
+                    }
+
+                    // get order details
+                    Map<String, Object> orderMap = orderService.getOrderDetails(orderId);
+
+                    // place order details in request scope
+                    request.setAttribute("customer", orderMap.get("customer"));
+                    request.setAttribute("products", orderMap.get("products"));
+                    request.setAttribute("orderRecord", orderMap.get("orderRecord"));
+                    request.setAttribute("orderedProducts", orderMap.get("orderedProducts"));
+
+                    return "front_store/confirmation";
+
+                // otherwise, send back to checkout page and display error
+                } else {
+                    request.setAttribute("orderFailureFlag", true);
+                    return "front_store/checkout";
+                }
+            }
+        }
+		
+		return "front_store/cart";
+		
+	}
+
 }

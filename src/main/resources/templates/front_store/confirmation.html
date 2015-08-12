@@ -32,7 +32,7 @@
 		    
 
 			<div th:if="${session.cart} != null and ${session.cart.numberOfItems} != 0">
-				<h4 id="subtotal" th:text="|#{subtotal}: $${#numbers.formatDecimal(session.cart.getSubtotal(), 0, 'COMMA', 2, 'POINT')}|">subtotal</h4>
+				<h4 id="subtotal" th:text="|#{subtotal}: $${session.cart.getSubtotal()}|">subtotal</h4>
 
 				<table id="cartTable">
 
@@ -48,8 +48,8 @@
 
 						<td th:utext="#{${cartItem.product.name}}">product name</td>
 
-						<td><span th:text="|($${#numbers.formatDecimal(cartItem.total, 0, 'COMMA', 2, 'POINT')}">subtotal</span><br/>
-							<span class="smallText" th:text="|($${#numbers.formatDecimal(cartItem.product.price, 0, 'COMMA', 2, 'POINT')} / #{unit})|">( price / unit )</span>
+						<td><span th:text="'$' + ${cartItem.total}">subtotal</span><br/>
+							<span class="smallText" th:text="|($${cartItem.product.price} / #{unit})|">( price / unit )</span>
 						</td>
 
 						<td>

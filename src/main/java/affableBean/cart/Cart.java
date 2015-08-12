@@ -13,6 +13,9 @@ public class Cart implements java.io.Serializable {
     /**
 	 * 
 	 */
+	
+	public final Double _deliverySurcharge = 3.00d;
+	
 	private static final long serialVersionUID = 1L;
 	List<CartItem> items;
     int numberOfItems;
