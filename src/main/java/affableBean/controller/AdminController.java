@@ -84,7 +84,7 @@ public class AdminController {
 
 		if(session!=null)
 			session.invalidate();
-		return "front_store/home";
+		return "redirect:/home";
 	}
 
 
