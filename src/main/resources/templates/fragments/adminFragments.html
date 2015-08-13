@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+	<head th:fragment="adminHeader0">
+	<link rel="stylesheet" type="text/css" href="../css/affablebean.css" />
+	<link rel="shortcut icon" href="../img/favicon.ico" />
+	
+	<script src="../js/jquery-1.4.2.js" type="text/javascript"></script>
+	<script src="../js/jquery.corners.js" type="text/javascript"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.rounded').corners();
+	
+			$('tr.tableRow').hover(function() {
+				$(this).addClass('selectedRow');
+			}, function() {
+				$(this).removeClass('selectedRow');
+			});
+		});
+	</script>
+	
+	<title>The Affable Bean :: Admin Console</title>
+	</head>
+	
+	<body>
+		<div id="main">
+			<div id="header" th:fragment="adminHeader1">
+				<div id="widgetBar"></div>
+	
+				<a href="home"> <img src="../img/logo.png"
+					th:src="@{/img/logo.png}" alt="Affable Bean logo" id="adminLogo"> </img>
+				</a> <img src="../img/logoText.png" th:src="@{/img/logoText.png}" id="logoText" alt="the affable bean"></img>
+			</div>
+	
+			<h2>admin console</h2>
+			<div id="adminMenu" class="alignLeft" th:fragment="adminMenu">
+				<p><a href="viewCustomers" th:href="@{/admin/viewCustomers}">view all customers</a></p>
+
+				<p><a href="viewOrders" th:href="@{/admin/viewOrders}">view all orders</a></p>
+
+				<p><a href="logout" th:href="@{/admin/logout}">log out</a></p>
+			</div>
+			
+			<div id="footer" th:fragment="adminFooter"></div>
+		</div>
+	</body>
+</html>

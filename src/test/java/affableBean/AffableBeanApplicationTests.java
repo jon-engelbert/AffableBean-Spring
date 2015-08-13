@@ -51,8 +51,6 @@ public class AffableBeanApplicationTests {
 		Integer id = custReturned.getId();
 		Assert.assertNotNull(id);
 
-		Customer custById = customerService.findById(id);
-
 		return;
 
 	}

@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import affableBean.domain.Category;
 import affableBean.domain.Product;
 import affableBean.repository.ProductRepository;
 

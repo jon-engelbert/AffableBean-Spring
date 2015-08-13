@@ -41,11 +41,11 @@ public class OrderService {
 	@Autowired
 	private ProductRepository productRepo;
 	
-    public int placeOrder(String name, String email, String phone, String address, String cityRegion, String ccNumber, Cart cart) {
+    public int placeOrder(Customer newCust, Cart cart) {
     	
         try {
-            Customer customer = addCustomer(name, email, phone, address, cityRegion, ccNumber);
-//            System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
+            Customer customer = addCustomer(newCust);
+            System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
 
             CustomerOrder order = addOrder(customer, cart);
             addOrderedItems(order, cart);
@@ -57,17 +57,17 @@ public class OrderService {
         }
     }
 
-    private Customer addCustomer(String name, String email, String phone, String address, String cityRegion, String ccNumber) {
+    private Customer addCustomer(Customer newCust) {
 
-        Customer customer = new Customer();
-        customer.setName(name);
-        customer.setEmail(email);
-        customer.setPhone(phone);
-        customer.setAddress(address);
-        customer.setCityRegion(cityRegion);
-        customer.setCcNumber(ccNumber);
+//        Customer customer = new Customer();
+//        customer.setName(name);
+//        customer.setEmail(email);
+//        customer.setPhone(phone);
+//        customer.setAddress(address);
+//        customer.setCityRegion(cityRegion);
+//        customer.setCcNumber(ccNumber);
 
-        return customerRepo.saveAndFlush(customer);
+        return customerRepo.saveAndFlush(newCust);
     }
 
     private CustomerOrder addOrder(Customer customer, Cart cart) {

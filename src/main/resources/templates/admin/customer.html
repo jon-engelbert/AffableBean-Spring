@@ -1,49 +1,120 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	  >
-<head th:include="fragments/adminHeader :: adminHeader0"> ... </head>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/adminFragments :: adminHeader0"> ... </head>
 <body>
-	<div id="header" th:replace= "fragments/adminHeader :: adminHeader1"> ... </div>
-	<div id="page-wrapper" layout:fragment="content">
-		<div class="row">
-			<div class="col-lg-12">
-				<h1 class="page-header">Customer Information</h1>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="table-responsive">
-							<table class="table table-striped table-bordered table-hover" id="dataTables-example">
-								<thead>
-									<tr>
-										<th>Name</th>
-										<th>Phone</th>
-										<th>Email</th>
-										<th>Address</th>
-										<th>Region Code</th>
-										<th>Credit Card</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr class="odd gradeX" th:each="customer : ${customerList}">
-										<td th:text="${customer.name}"></td>
-										<td th:text="${customer.phone}"></td>
-										<td th:text="${customer.email}"></td>
-										<td th:text="${customer.address}"></td>
-										<td th:text="${customer.cityRegion}"></td>
-										<td th:text="${customer.ccNumber}"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div id="main">
+		<div id="header" th:include="fragments/adminFragments :: adminHeader1"> ... </div>
+		<h2>Edit Customer</h2>
+		<div th:replace="fragments/adminFragments :: adminMenu"></div>
+		
+		<!-- content begin -->
+		<span th:if="${error}">There was a problem updating this customer</span>
+		<span th:if="${success}">Customer successfully updated</span>
+
+			<form id="customerForm" th:action="@{/admin/customerEdit}" th:object="${customer}" method="post">
+				<input type="hidden" name="id" th:value="${customer.id}" />
+		        <table id="customerTable">
+		            <tr th:if="${#vars['validationErrorFlag'] != null}">
+		                <td colspan="2" style="text-align:left">
+		                    <span class="error smallText"><span th:text="#{validationErrorMessage"/>
+		
+		                      <span th:if="${nameError} != null">
+		                        <br/><span class="indent" th:text="#{nameError}"></span>
+		                      </span>
+		                      <span th:if="${emailError} != null">
+		                        <br/><span class="indent" th:text="#{emailError}"></span>
+		                      </span>
+		                      <span th:if="${phoneError} != null">\
+		                        <br/><span class="indent" th:text="#{phoneError}"></span>
+		                      </span>
+		                      <span th:if="${addressError} != null">\
+		                        <br/><span class="indent" th:text="#{addressError}"></span>
+		                      </span>
+		                      <span th:if="${cityRegionError} != null">\
+		                        <br/><span class="indent" th:text="#{cityRegionError}"></span>
+		                      </span>
+		                      <span th:if="${ccNumberError} != null">\
+		                        <br/><span class="indent" th:text="#{ccNumberError}"></span>
+		                      </span>
+		
+		                    </span>
+		                </td>
+		            </tr>
+
+		            <tr>
+		                <td><label for="name" th:text="|#{customerName}:|">name</label></td>
+		                <td class="inputField">
+		                    <input type="text"
+		                           size="31"
+		                           maxlength="45"
+		                           id="name"
+		                           name="name"
+		                           th:value="${customer.name}" />
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label for="email" th:text="|#{email}:|">email</label></td>
+		                <td class="inputField">
+		                    <input type="text"
+		                           size="31"
+		                           maxlength="45"
+		                           id="email"
+		                           name="email"
+		                           th:value="${customer.email}" />
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label for="phone" th:text="|#{phone}:|"></label></td>
+		                <td class="inputField">
+		                    <input type="text"
+		                           size="31"
+		                           maxlength="16"
+		                           id="phone"
+		                           name="phone"
+		                           th:value="${customer.phone}" />
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label for="address" th:text="|#{address}:|">address</label></td>
+		                <td class="inputField">
+		                    <input type="text"
+		                           size="31"
+		                           maxlength="45"
+		                           id="address"
+		                           name="address"
+		                           th:value="${customer.address}" />
+		
+		                    <br/>
+		                    <span th:text="#{prague}"></span>
+		                    <select name="cityRegion">
+								<option th:each="regionNumber : ${#numbers.sequence(1,10)}" th:value="${regionNumber}" th:text="${regionNumber}" th:selected="${customer.cityRegion eq (regionNumber)}"></option>
+		                    </select>
+		                </td>
+		            </tr>
+		            <tr>
+		                <td><label for="ccNumber" th:text="|#{creditCard}:|">credit card</label></td>
+		                <td class="inputField">
+		                    <input type="text"
+		                           size="31"
+		                           maxlength="19"
+		                           id="ccNumber"
+		                           name="ccNumber"
+		                           class="creditcard"
+		                           th:value="${customer.ccNumber}" />
+		                </td>
+		            </tr>
+		            <tr>
+		                <td colspan="2">
+		                    <input type="submit" value="submit" />
+		                </td>
+		            </tr>
+		        </table>
+		    </form>
+
+		<!-- content end -->
+		
+		<div id="footer" th:include="fragments/adminFragments :: adminFooter"></div>
 	</div>
 </body>
 </html>

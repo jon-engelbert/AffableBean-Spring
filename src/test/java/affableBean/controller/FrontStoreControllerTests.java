@@ -1,6 +1,5 @@
 package affableBean.controller;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -19,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 
 import affableBean.domain.Category;
-import affableBean.domain.Customer;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;

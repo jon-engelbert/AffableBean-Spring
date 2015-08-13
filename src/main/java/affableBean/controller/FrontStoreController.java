@@ -5,22 +5,19 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
 
 import affableBean.cart.Cart;
-import affableBean.cart.CartItem;
 import affableBean.domain.Customer;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
@@ -57,7 +54,8 @@ public class FrontStoreController {
 	@Autowired
     private OrderService orderService;
 	
-	private ValidatorService validator = new ValidatorService();
+	@Autowired
+	private ValidatorService validator;
 
 	/**
 	 * Category
@@ -171,26 +169,32 @@ public class FrontStoreController {
 			ModelMap mm) {
 		Cart cart = (Cart) session.getAttribute("cart");
 		if (cart != null) 
-			cart.calculateTotal(cart._deliverySurcharge.toString());
+			cart.calculateTotal(Cart._deliverySurcharge.toString());
 
 		return "front_store/checkout";
 	}
 	
 	@RequestMapping(value= "/purchase", method = RequestMethod.POST) 
-	public String purchase(HttpSession session, HttpServletRequest request) {
+	public String purchase(final Customer customer, final BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
 		Cart cart = (Cart) session.getAttribute("cart");
 		Double surcharge;
-
+		
+		if (bindingResult.hasErrors()) {
+			System.out.println("bindingResult error");
+			request.setAttribute("validationErrorFlag", true);
+            return "front_store/checkout"; 
+		}
+		
 		if (cart != null) {
 
             // extract user data from request
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String cityRegion = request.getParameter("cityRegion");
-            String ccNumber = request.getParameter("creditcard");
-            surcharge = cart._deliverySurcharge;
+            String name = customer.getName();
+            String email = customer.getEmail();
+            String phone = customer.getPhone();
+            String address = customer.getAddress();
+            String cityRegion = customer.getCityRegion();
+            String ccNumber = customer.getCcNumber();
+            surcharge = Cart._deliverySurcharge;
             
 
             // validate user data
@@ -204,10 +208,7 @@ public class FrontStoreController {
 
                 // otherwise, save order to database
             } else {
-
-//                System.out.println(" name: " + name + " email: " + email + " phone: " + phone + " address: " + address + " cityRegion: " + cityRegion + " ccNumber: " + ccNumber);
-
-                Integer orderId = orderService.placeOrder(name, email, phone, address, cityRegion, ccNumber, cart);
+                Integer orderId = orderService.placeOrder(customer, cart);
 
                 // if order processed successfully send user to confirmation page
                 if (orderId != 0) {
