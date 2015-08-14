@@ -81,11 +81,14 @@ INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_nu
 INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (10.22, '2010-05-14 18:40:38.0', 3, 344549009);
 INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (12.16, '2010-05-14 18:51:58.0', 2, 475644436);
 INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (10.75, '2010-05-14 18:56:13.0', 1, 247455344);
+INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (100.75, '2011-05-14 19:56:13.0', 1, 347455344);
 
 
 --
 -- Sample data for table `ordered_product`
 --
+INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (16, 5, 10);
+INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (16, 11, 2);
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (15, 1, 1);
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (15, 15, 3);
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (15, 3, 2);

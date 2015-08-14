@@ -1,5 +1,6 @@
 package affableBean.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -118,15 +119,19 @@ public class AdminController {
         mm.put("customerRecord", customer);
 
         // get customer order details
-        CustomerOrder order = orderRepo.findByCustomer(customer);
-        mm.put("order", order);
+        List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
+        System.out.println("Number of orders: " + String.valueOf(orders.size()));
+        if (orders.size() == 1)
+        	mm.put("order", orders.get(0));
+        else 
+        	mm.put("orders", orders);
         
         return "admin/index";
     }
 	
 	@RequestMapping(value = "/orderRecord", method = RequestMethod.GET)
 	public String getOrderRecord(@RequestParam("id") Integer id, ModelMap mm) {
-
+		System.out.println("id");
         // get order details
         Map<String, Object> orderMap = orderService.getOrderDetails(id);
 
@@ -138,6 +143,27 @@ public class AdminController {
         mm.put("deliverySurcharge", Cart._deliverySurcharge);
         
         return "admin/index";
+    }
+	
+	@RequestMapping(value = "/viewCustomerOrders", method = RequestMethod.GET)
+	public String getCustomerOrders(@RequestParam("id") Integer id, ModelMap mm) {
+
+		Customer customer = customerRepo.findById(id);
+        List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
+        mm.put("orderRecords", orders);
+        mm.put("customer", customer);
+        mm.put("deliverySurcharge", Cart._deliverySurcharge);
+//        // get order details
+//        Map<String, Object> orderMap = orderService.getOrderDetails(id);
+//
+//        // place order details in request scope
+//        mm.put("customer", orderMap.get("customer"));
+//        mm.put("products", orderMap.get("products"));
+//        mm.put("orderRecord", orderMap.get("orderRecord"));
+//        mm.put("orderedProducts", orderMap.get("orderedProducts"));
+//        mm.put("deliverySurcharge", Cart._deliverySurcharge);
+        
+        return "admin/customerOrders";
     }
 	
 	@RequestMapping(value = "/customerEdit", method = RequestMethod.GET)

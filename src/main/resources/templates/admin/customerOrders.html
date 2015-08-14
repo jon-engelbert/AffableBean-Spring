@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/adminFragments :: adminHeader0">...
+</head>
+<body>
+	<div id="main">
+		<div id="header" th:include="fragments/adminFragments :: adminHeader1">
+			...</div>
+		<h2>admin console</h2>
+		<div th:replace="fragments/adminFragments :: adminMenu"></div>
+
+		<!-- content begin -->
+
+		<div th:if="${orderRecords != null and orderRecords.size() > 1}">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">Customer Orders</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table table-striped table-bordered table-hover"
+									id="dataTables-example">
+									<thead>
+										<tr>
+											<th>Customer</th>
+											<th>Confirmation Number</th>
+											<th>Amount</th>
+											<th>Date Created</th>
+											<th>&nbsp;</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="odd gradeX" th:each="order : ${orderRecords}">
+											<td th:text="${order.getCustomer().getName()}"></td>
+											<td th:text="${order.confirmationNumber}"></td>
+											<td th:text="${order.amount}"></td>
+											<td th:text="${order.dateCreated}"></td>
+											<td><a href="orderDetails"
+												th:href="@{/admin/orderRecord(id=${order.id})}"
+												class="noDecoration">Details</a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- orderRecords are requested -->
+		<div th:if="${orderRecords != null and orderRecords.size() == 1}">
+
+			<table id="adminTable" class="detailsTable"
+				th:each="orderRecord : ${orderRecords}">
+
+				<tr class="header">
+					<th colspan="2">order summary</th>
+				</tr>
+				<tr>
+					<td><strong>order id:</strong></td>
+					<td th:text="${orderRecord.id}">orderRecord.id</td>
+				</tr>
+				<tr>
+					<td><strong>confirmation number:</strong></td>
+					<td th:text="${orderRecord.confirmationNumber}">orderRecord.confirmationNumber</td>
+				</tr>
+				<tr>
+					<td><strong>date processed:</strong></td>
+					<td><span
+						th:text="${#dates.format({orderRecord.dateCreated}, 'dd/MMM/yyyy')}">date</span></td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<table class="embedded detailsTable">
+							<tr class="tableHeading">
+								<td class="rigidWidth">product</td>
+								<td class="rigidWidth">quantity</td>
+								<td>price</td>
+							</tr>
+
+							<tr>
+								<td colspan="3" style="padding: 0 20px"><hr /></td>
+							</tr>
+
+							<tr th:each="orderedProduct,rowStat : ${orderedProducts}">
+								<td th:text="#{${products[{rowStat.index}].name}}">name</td>
+								<td th:text="${orderedProduct.quantity}">orderedProduct.quantity</td>
+								<td class="confirmationPriceColumn"><span
+									th:text="|$${#numbers.formatDecimal({products[{rowStat.index}].price * orderedProduct.quantity}, 0, 'COMMA', 2, 'POINT')}|">price</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="3" style="padding: 0 20px"><hr /></td>
+							</tr>
+
+							<tr>
+								<td colspan="2" id="deliverySurchargeCellLeft"><strong>delivery
+										surcharge:</strong></td>
+								<td id="deliverySurchargeCellRight"><span
+									th:text="|$${#numbers.formatDecimal({deliverySurcharge}, 0, 'COMMA', 2, 'POINT')}|">price</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="2" id="totalCellLeft"><strong>total
+										amount:</strong></td>
+								<td id="totalCellRight"><span
+									th:text="|$${#numbers.formatDecimal({orderRecord.amount}, 0, 'COMMA', 2, 'POINT')}|">price</span>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="3" style="padding: 0 20px"><hr /></td>
+				</tr>
+
+			</table>
+			<table id="adminTable" class="detailsTable">
+				<tr class="tableRow"
+					th:onclick="|document.location.href='admin/orderRecord?${customer.id}'|">
+					<td colspan="2">
+						<!-- Anchor tag is provided in case JavaScript is disabled --> <a
+						href="customerRecord"
+						th:href="@{/admin/customerRecord(id=${customer.id})}"
+						class="noDecoration"> <strong>view customer details
+								&#x279f;</strong></a>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+
+
+		<!-- content end -->
+
+		<div id="footer" th:include="fragments/adminFragments :: adminFooter"></div>
+	</div>
+</body>
+</html>

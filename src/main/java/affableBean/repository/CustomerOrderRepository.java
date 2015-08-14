@@ -16,7 +16,7 @@ public interface CustomerOrderRepository extends
 
 	CustomerOrder findById(Integer id);
 	
-	CustomerOrder findByCustomer(Customer customer);
+	List<CustomerOrder> findByCustomer(Customer customer);
 
 	// more methods
 }

@@ -86,7 +86,7 @@ public class AdminControllerIntegrationTests {
 		// Customer newCust = new Customer(0, "ted", "t@t.com", "123", "street",
 		// "aa", "4567");
 		// customerRepo.save(newCust);
-		mockMvc.perform(get("/admin")).andExpect(view().name("admin/customer"))
+		mockMvc.perform(get("/admin")).andExpect(view().name("admin/index"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"))
 				.andExpect(model().attributeExists("customerList"))
