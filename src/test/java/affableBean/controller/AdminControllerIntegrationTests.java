@@ -11,6 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -93,11 +98,17 @@ public class AdminControllerIntegrationTests {
 				.andExpect(model().attribute("customerList", hasSize(15)));
 	}
 
+//	Member(String firstName, String lastName, String email,
+//			String username, String password, boolean enabled,
+//			boolean tokenExpired, Role role) 
 	@Test
 	public void testMemberConsole() throws Exception {
 		Role adminRole = roleRepo.findByName("ADMIN");
+        Set<Role> adminRoles = new HashSet<Role>();
+        adminRoles.add(adminRole);
 //		roleRepo.save(newRole);
-		Member newMember = new Member("jon", "jonny", "123", true, adminRole);
+		Member newMember = new Member("jon", "e", "jon@j.com", "jonny", "123", true, false);
+		newMember.setRoles(adminRoles);
 		memberRepo.save(newMember);
 		mockMvc.perform(get("/admin/member")).andExpect(view().name("admin/member"))
 				.andExpect(status().isOk())
@@ -106,10 +117,14 @@ public class AdminControllerIntegrationTests {
 				.andExpect(model().attribute("memberList", is(not(empty()))));
 	}
 
-	@Test
-	public void testOrderConsole() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testCustomerOrderConsole() {
+//		mockMvc.perform(get("/admin/customerOrder")).andExpect(view().name("admin/product"))
+//		.andExpect(status().isOk())
+//		.andExpect(content().contentType("text/html;charset=UTF-8"))
+//		.andExpect(model().attributeExists("productList"))
+//		.andExpect(model().attribute("productList", hasSize(16)));
+//	}
 
 	@Test
 	public void testProductConsole() throws Exception {

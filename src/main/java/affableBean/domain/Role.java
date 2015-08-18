@@ -1,14 +1,20 @@
 package affableBean.domain;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -16,25 +22,37 @@ import javax.persistence.Table;
 @Table(name = "role")
 public class Role implements java.io.Serializable {
 
-	public Role() {
-	}
-
-	public Role(Byte id, String name, Set<Member> members) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.members = members;
-	}
-
 	private static final long serialVersionUID = 6464512438578201997L;
-
-	private Byte id;
-	private String name;
-	private Set<Member> members = new HashSet<Member>(0);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
+	@Column(name = "role_id", unique = true, nullable = false)
+	private Byte id;
+	@Column(name = "name", nullable = false, length = 45)
+	private String name;
+//	@JoinTable(name = "member_role", joinColumns = @JoinColumn(name = "member_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ManyToMany(mappedBy="roles")
+	private Set<Member> members = new HashSet<Member>();
+
+	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
+	// private Collection<MemberRole> memberRolesCollection;
+	// private Collection<Member> members;
+
+	// @ManyToMany
+	// @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name =
+	// "role_id", referencedColumnName = "id") , inverseJoinColumns =
+	// @JoinColumn(name = "privilege_id", referencedColumnName = "id") )
+	// private Collection<Privilege> privileges;
+
+	public Role() {
+	}
+
+	public Role(Byte id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
 	public Byte getId() {
 		return id;
 	}
@@ -43,7 +61,6 @@ public class Role implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "name", nullable = false, length = 45)
 	public String getName() {
 		return name;
 	}
@@ -52,7 +69,6 @@ public class Role implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
 	public Set<Member> getMembers() {
 		return members;
 	}
@@ -63,6 +79,6 @@ public class Role implements java.io.Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	};
+	}
 
 }

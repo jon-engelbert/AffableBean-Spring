@@ -12,7 +12,8 @@ create table customer (
   phone varchar(45) not null ,
   address varchar(45) not null ,
   city_region varchar(2) not null ,
-  cc_number varchar(19) not null 
+  cc_number varchar(19) not null ,
+  UNIQUE (`email`) 
   );
 --COMMENT = 'maintains customer details';
 
@@ -41,6 +42,20 @@ DROP TABLE IF EXISTS category ;
 CREATE  TABLE category (
   id identity,
   name VARCHAR(45) NOT NULL
+  );
+--COMMENT = 'contains product categories, eg, dairy, meats, etc';
+
+-- -----------------------------------------------------
+-- Table .`category`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS verification_token ;
+
+CREATE  TABLE verification_token (
+  id identity,
+  token VARCHAR(45) NOT NULL,
+  expiry_date DATE NOT NULL,
+  member_id TINYINT UNSIGNED NOT NULL ,
+  foreign key (member_id) references member(member_id)
   );
 --COMMENT = 'contains product categories, eg, dairy, meats, etc';
 
@@ -83,7 +98,7 @@ CREATE  TABLE ordered_product (
 DROP TABLE IF EXISTS role ;
 
 CREATE  TABLE role (
-  `id` identity,
+  `role_id` identity,
   `name` VARCHAR(45) NOT NULL 
   );
 -- COMMENT = 'maintains admin console member roles';
@@ -95,15 +110,27 @@ CREATE  TABLE role (
 DROP TABLE IF EXISTS member ;
 
 CREATE  TABLE member (
-  `id` identity,
-  `name` VARCHAR(45) NOT NULL ,
+  `member_id` identity,
+  `firstname` VARCHAR(45) NOT NULL ,
+  `lastname` VARCHAR(45) NOT NULL ,
+  `email` VARCHAR(255) NOT NULL ,
   `username` VARCHAR(45) NOT NULL ,
   `password` VARCHAR(100) NOT NULL ,
   `enabled` boolean NOT NULL ,
-  `role_id` INT UNSIGNED NOT NULL ,
-  foreign key (`role_id`) references role(`id`),
-  UNIQUE (`username`) 
+  `tokenexpired` boolean NOT NULL ,
+  UNIQUE (`email`) 
   );
 -- COMMENT = 'maintains admin console member details';
 
+DROP TABLE IF EXISTS member_role;
+CREATE TABLE member_role (
+  member_id INT UNSIGNED NOT NULL,
+  role_id INT UNSIGNED NOT NULL,
+  PRIMARY KEY (member_id, role_id),
+--  INDEX fk_role (role_id),
+--  foreign key (member_id) references member(id),
+--  foreign key (role_id) references role(id)
+    CONSTRAINT fk_member FOREIGN KEY (member_id) REFERENCES member (member_id),
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role (role_id)
+  );
 

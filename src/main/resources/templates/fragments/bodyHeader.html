@@ -13,6 +13,16 @@
         
             <div id="header" th:fragment="bodyHeader">
                 <div id="widgetBar">
+	                <div class="headerWidget">
+	                <!-- signup - signin- signout widget -->
+	                <span th:if="${session.user == null}">
+	                	<a href="/signup" th:href="@{/signup}">sign up</a>
+	                	<a href="/admin/login" th:href="@{/admin/login}">login</a>
+	                </span>
+	                <span th:if="${session.user != null}">
+	                	<a href="/admin/logout" th:href="@{/admin/logout}">logout</a>
+	                </span>
+	                </div>
 
                     <div class="headerWidget">
                     	<!-- language widget -->

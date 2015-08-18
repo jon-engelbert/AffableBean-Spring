@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/affableBean.css}"></link>
+<title>The Affable Bean</title>
+</head>
+<body>
+	<div id="main">
+		<div id="header" th:replace="fragments/bodyHeader :: bodyHeader">header</div>
+		<h2>Register</h2>
+		<div th:replace="fragments/adminFragments :: adminMenu"></div>
+
+		<!-- content begin -->
+		<span th:if="${error}">There was a problem signing up this
+			member</span> <span th:if="${success}">Member successfully updated</span>
+
+		<form id="memberForm" th:action="@{/register/member/registration}" th:object="${member}"
+			method="post">
+			<table id="customerTable">
+				<tr th:if="${#vars['validationErrorFlag'] != null}">
+					<td colspan="2" style="text-align: left"><span
+						class="error smallText"><span
+							th:text="#{validationErrorMessage}" /> <span
+							th:if="${emailError} != null"> <br />
+							<span class="indent" th:text="#{emailError}"></span>
+						</span> <span th:if="${firstnameError} != null"> <br />
+							<span class="indent" th:text="#{firstnameError}"></span>
+						</span> <span th:if="${lastnameError} != null"> <br />
+							<span class="indent" th:text="#{lastnameError}"></span>
+						</span> <span th:if="${passwordError} != null">\ <br />
+							<span class="indent" th:text="#{passwordError}"></span>
+						</span> </span></td>
+				</tr>
+
+				<tr>
+					<td><label for="firstName" th:text="|#{memberFirstname}:|">firstname</label></td>
+					<td class="inputField"><input type="text" size="31"
+						maxlength="45" th:field="*{firstName}" />
+					</td>
+				</tr>
+				<tr>
+					<td><label for="lastName" th:text="|#{memberLastname}:|">lastname</label></td>
+					<td class="inputField"><input type="text" size="31"
+						maxlength="45" th:field="*{lastName}" />
+					</td>
+				</tr>
+				<tr>
+					<td><label for="email" th:text="|#{memberEmail}:|">email</label></td>
+					<td class="inputField"><input type="text" size="31"
+						maxlength="45" th:field="*{email}" />
+					</td>
+				</tr>
+<!--
+ 				<tr>
+					<td><label for="name" th:text="|#{memberUsername}:|">name</label></td>
+					<td class="inputField"><input type="text" size="31"
+						maxlength="45" id="name" name="name" th:value="${member.username}" />
+					</td>
+				</tr>
+ -->
+
+				<tr>
+					<td><label for="password" th:text="|#{memberPassword}:|">password</label></td>
+					<td class="inputField">
+					<input path="password" type="password" th:field="*{password}" />
+					</td>
+				</tr>
+ 				<tr>
+					<td><label for="matchingPassword" th:text="|#{memberMatchingPassword}:|">matching password</label></td>
+					<td class="inputField">
+					<input path="matchingPassword" value=""
+							type="password"  th:field="*{matchingPassword}"/></td>
+				</tr>
+
+ 				<tr>
+					<td colspan="2"><input type="submit" value="submit" /></td>
+				</tr>
+			</table>
+		</form>
+
+		<!-- content end -->
+
+		<div id="footer" th:include="fragments/bodyFooter :: bodyFooter"></div>
+	</div>
+</body>
+</html>

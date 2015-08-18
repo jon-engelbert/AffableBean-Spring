@@ -6,7 +6,7 @@
 	<groupId>org.test</groupId>
 	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>ejb</packaging>
 
 	<name>AffableBean</name>
 	<description>AffableBean project, from Java EE Netbeans example, uses Spring Boot</description>
@@ -21,6 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
+		<guava.version>18.0</guava.version>
 	</properties>
 
 	<dependencies>
@@ -63,6 +64,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
 	</dependencies>
 	
 	<dependencyManagement>

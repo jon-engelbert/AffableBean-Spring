@@ -25,6 +25,7 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.MemberDto;
 import affableBean.service.OrderService;
 import affableBean.service.ValidatorService;
 
@@ -256,5 +257,12 @@ public class FrontStoreController {
 		return "front_store/cart";
 		
 	}
+	@RequestMapping(value = "/signup", method = RequestMethod.GET)
+	public String signup(HttpSession session, ModelMap mm) {
+		System.out.println("In signup");
+		mm.put("member", new MemberDto());
+		return "front_store/signup";
+	}
+
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.WebRequest;
 
 import affableBean.cart.Cart;
 import affableBean.domain.Category;
@@ -26,6 +27,7 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.MemberDto;
 import affableBean.service.OrderService;
 import affableBean.service.ValidatorService;
 
@@ -88,6 +90,13 @@ public class AdminController {
 		return "redirect:/home";
 	}
 
+	@RequestMapping(value = "/signup", method = RequestMethod.GET)
+	public String signupConsole(HttpSession session, WebRequest request, ModelMap mm) {
+		MemberDto memberDto = new MemberDto();
+	    mm.put("user", memberDto);
+	    return "front_store/signup";
+	}
+
 
 	/**
 	 * Login succeeded, inside AdminConsole
@@ -120,7 +129,6 @@ public class AdminController {
 
         // get customer order details
         List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
-        System.out.println("Number of orders: " + String.valueOf(orders.size()));
         if (orders.size() == 1)
         	mm.put("order", orders.get(0));
         else 

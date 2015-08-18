@@ -20,19 +20,24 @@
 							<table class="table table-striped table-bordered table-hover" id="dataTables-example">
 								<thead>
 									<tr>
-										<th>Name</th>
+										<th>First Name</th>
+										<th>Last Name</th>
 										<th>Username</th>
+										<th>Email</th>
 										<th>Status</th>
-										<th>Role</th>
+										<th>Role #1</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr class="odd gradeX" th:each="member : ${memberList}">
-										<td th:text="${member.name}"></td>
+										<td th:text="${member.firstName}"></td>
+										<td th:text="${member.lastName}"></td>
 										<td th:text="${member.username}"></td>
+										<td th:text="${member.email}"></td>
 										<td th:text="${member.enabled}"></td>
-										<td th:text="${member.role.id}"></td>
-									</tr>
+										<td th:text="${member.enabled}"></td>
+<!-- 										<td th:text="${member.getRoles().get(0).name}" th:if="${member.getRoles().size() > 0}"></td>
+ -->									</tr>
 								</tbody>
 							</table>
 						</div>

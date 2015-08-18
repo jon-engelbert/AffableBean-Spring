@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/affableBean.css}"></link>
+<title>The Affable Bean</title>
+</head>
+<body>
+	<div id="main">
+		<div id="header" th:replace="fragments/bodyHeader :: bodyHeader">header</div>
+		<div th:replace="fragments/adminFragments :: adminMenu"></div>
+            <h1 class="alert alert-success">
+				<th:text="#{message.regSucc}">
+			</h1>
+			<a href="<c:url value="/login.html" />"><th:href="@{/login.html}"></a>
+		<!-- content end -->
+
+		<div id="footer" th:include="fragments/bodyFooter :: bodyFooter"></div>
+	</div>
+</body>
+</html>
