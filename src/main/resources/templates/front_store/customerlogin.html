@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag"> ... </head>
+<body>
+<script>
+function validateFields() {
+    //Store the password field objects into variables ...
+    var email = document.getElementById('email');
+    var password = document.getElementById('confpassword');
+    if (email.length == 0) {
+        alert("please enter your email");
+        return false;
+    }
+    if (password.value == 0){
+        alert("please enter a password");
+        return false;
+    }
+
+    return true;
+}
+
+</script>
+	<div id="main">
+		<div id="header" th:include="fragments/bodyHeader :: bodyHeader"> ... </div>
+		<h2>Sign into your account</h2>
+		
+		<!-- content begin -->
+		<span th:if="${loginerror}">email or password incorrect</span>
+
+			<form id="customerLoginForm" th:action="@{/login}" method="post" onsubmit="return validateFields();">
+		        <table id="customerTable">
+		            <tr>
+		                <td><label for="email" th:text="|#{email}:|">email</label></td>
+		                <td class="inputField">
+		                    <input type="text"
+		                           size="31"
+		                           maxlength="45"
+		                           id="email"
+		                           name="email" />
+		                </td>
+		            </tr>
+					<tr>
+		                <td><label for="password">password:</label></td>
+		                <td class="inputField">
+		                    <input type="password"
+		                           size="31"
+		                           id="password"
+		                           name="password"
+		                           class="password" />
+		                </td>
+		            </tr>
+		            <tr>
+		                <td colspan="2">
+		                    <input type="submit" value="submit" />
+		                </td>
+		            </tr>
+		        </table>
+		    </form>
+
+		<!-- content end -->
+		
+		<div id="footer" th:include="fragments/bodyFooter :: bodyFooter"></div>
+	</div>
+</body>
+</html>

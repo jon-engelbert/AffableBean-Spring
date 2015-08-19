@@ -64,6 +64,7 @@
 		    <p class="error" th:text="#{orderFailureError}" th:if="${#vars['orderFailureFlag'] != null}">order failure error</p>
 		
 		    <form id="checkoutForm" th:action="@{/purchase}" th:object="${customer}" method="post">
+		    	<span th:if="${session.isSignedIn} == true"><input type="hidden" name="id" id="id" th:value="${session.customerLoggedIn.id}"/></span>
 		        <table id="checkoutTable">
 		            <tr th:if="${#vars['validationErrorFlag'] != null}">
 		                <td colspan="2" style="text-align:left">
@@ -99,7 +100,7 @@
 		                           size="31"
 		                           maxlength="45"
 		                           id="name"
-		                           name="name" />
+		                           name="name" th:value="${session.customerLoggedIn.name}" />
 		                </td>
 		            </tr>
 		            <tr>
@@ -109,7 +110,8 @@
 		                           size="31"
 		                           maxlength="45"
 		                           id="email"
-		                           name="email" />
+		                           name="email" 
+		                           th:value="${session.customerLoggedIn.email}" />
 		                </td>
 		            </tr>
 		            <tr>
@@ -119,7 +121,8 @@
 		                           size="31"
 		                           maxlength="16"
 		                           id="phone"
-		                           name="phone" />
+		                           name="phone" 
+		                            th:value="${session.customerLoggedIn.phone}" />
 		                </td>
 		            </tr>
 		            <tr>
@@ -129,12 +132,13 @@
 		                           size="31"
 		                           maxlength="45"
 		                           id="address"
-		                           name="address" />
+		                           name="address"
+		                           th:value="${session.customerLoggedIn.address}"  />
 		
 		                    <br/>
 		                    <span th:text="#{prague}"></span>
 		                    <select name="cityRegion">
-								<option th:each="regionNumber : ${#numbers.sequence(1,10)}" th:value="${regionNumber}" th:text="${regionNumber}" th:selected="${cityRegion eq (regionNumber)}"></option>
+								<option th:each="regionNumber : ${#numbers.sequence(1,10)}" th:value="${regionNumber}" th:text="${regionNumber}" th:selected="${session.customerLoggedIn.cityRegion eq (regionNumber)}"></option>
 		                    </select>
 		                </td>
 		            </tr>
@@ -146,7 +150,8 @@
 		                           maxlength="19"
 		                           id="ccNumber"
 		                           name="ccNumber"
-		                           class="creditcard" />
+		                           class="creditcard" 
+		                           th:value="${session.customerLoggedIn.ccNumber}" />
 		                </td>
 		            </tr>
 		            <tr>

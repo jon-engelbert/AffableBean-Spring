@@ -25,6 +25,7 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.CustomerService;
 import affableBean.service.OrderService;
 import affableBean.service.ValidatorService;
 
@@ -48,6 +49,10 @@ public class FrontStoreController {
 	
 	@Autowired 
 	private CustomerOrderRepository customerOrderRepo;
+	
+	@Autowired 
+	CustomerService customerService;
+	
 	@Autowired 
 	private OrderedProductRepository orderedProductRepo;
 	
@@ -256,5 +261,81 @@ public class FrontStoreController {
 		return "front_store/cart";
 		
 	}
+	
+	@RequestMapping(value= "/newcust", method = RequestMethod.GET) 
+	public String newCust(ModelMap mm) {
+
+		Customer customer = new Customer();
+		
+		mm.put("customer", customer);
+		
+		return "front_store/customerregistration";
+		
+	}
+	
+	@RequestMapping(value="/newCustSubmit", method = RequestMethod.POST)
+	public String newCustSubmit(final Customer customer, final BindingResult bindingResult, HttpServletRequest request, ModelMap mm) {
+		
+		if (bindingResult.hasErrors()) {
+			System.out.println("bindingResult error");
+			mm.put("validationErrorFlag", true);
+            return "front_store/customerregistration"; 
+		}
+
+        // validate user data
+        boolean validationErrorFlag = false;
+        validationErrorFlag = validator.validateCustomer(customer, request);
+
+        // if validation error found, return user to checkout
+        if (validationErrorFlag == true) {
+        	mm.put("validationErrorFlag", validationErrorFlag);
+            return "front_store/customerregistration";
+        } else {
+        	Customer newcust = customerService.saveNewCustomer(customer);
+        	newcust.setPassword(""); //do not send password back to the browser!
+        	mm.put("customer", newcust);
+        	mm.put("success", true);
+        }
+	
+		return "front_store/customerregistration";
+	}
+	
+	@RequestMapping(value="/login", method = RequestMethod.GET)
+	public String custLogin() {
+		
+		return "front_store/customerlogin";
+	}
+
+	
+	@RequestMapping(value="/login", method = RequestMethod.POST)
+	public String custLogin(@RequestParam("email") String email,
+			@RequestParam("password") String password, 
+			HttpSession session,
+			ModelMap mm) {
+		Customer customer = new Customer();
+		customer = customerRepo.findByEmail(email);
+		if (customer == null || customer.getId() == null) {
+			mm.put("loginerror", true);
+			System.out.println("customer by email not found");
+			return "front_store/customerlogin";
+		}
+		
+		boolean isPasswordValid = customerService.validatePassword(password, customer.getPassword());
+		
+		if (!isPasswordValid) {
+			mm.put("loginerror", true);
+			System.out.println("password not valid");
+			return "front_store/customerlogin";
+		}
+
+    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
+
+		session.setAttribute("isSignedIn", true);
+		customer.setPassword("");
+		session.setAttribute("customerLoggedIn", customer);
+		return "redirect: /home";
+		
+	}
+	
 
 }

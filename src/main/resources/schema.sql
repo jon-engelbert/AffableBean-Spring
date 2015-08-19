@@ -12,7 +12,8 @@ create table customer (
   phone varchar(45) not null ,
   address varchar(45) not null ,
   city_region varchar(2) not null ,
-  cc_number varchar(19) not null 
+  cc_number varchar(19) not null ,
+  password varchar(75)
   );
 --COMMENT = 'maintains customer details';
 

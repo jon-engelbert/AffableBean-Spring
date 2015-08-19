@@ -41,7 +41,10 @@ public class Customer implements Serializable {
     @Basic(optional = false)
     @Column(name = "cc_number")
     private String ccNumber;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    @Basic(optional = false)
+    @Column(name = "password")
+    private String password;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private Collection<CustomerOrder> customerOrderCollection;
 
     public Customer() {
@@ -116,6 +119,14 @@ public class Customer implements Serializable {
     public void setCcNumber(String ccNumber) {
         this.ccNumber = ccNumber;
     }
+
+    public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
     public Collection<CustomerOrder> getCustomerOrderCollection() {
         return customerOrderCollection;
