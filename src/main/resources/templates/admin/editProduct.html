@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head th:include="fragments/adminFragments :: adminHeader0">...
+</head>
+<body>
+	<div id="header" th:replace="fragments/adminFragments :: adminHeader1">
+		...</div>
+	<div id="page-wrapper" layout:fragment="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Edit Product</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<form action="#" th:action="@{/admin/product/update}"  enctype="multipart/form-data"
+							th:object="${productDto}" method="post">
+							<table id="productTable">
+								<tr><td>
+<!-- 									<input type="text" hidden="hidden" th:field="*{id}" />
+ -->
+ 									<label for="name" th:text="|#{name}:|">name</label>
+									<input type="text" th:field="*{name}" th:text="${#name}" />
+								</td></tr>
+								<tr><td>
+									<label for="description" th:text="|#{productDescription}:|">description</label>
+									<input type="text" th:field="*{categoryName}"/>
+								</td></tr>
+								<tr><td>
+									<label for="categoryName" th:text="|#{catName}:|">categoryName</label>
+									<input type="text" th:field="*{description}" />
+								</td></tr>
+								<tr><td>
+									<label for="price" th:text="|#{productPrice}:|">price</label>
+									<input type="text" th:field="*{price}" />
+								</td></tr>
+								<tr><td>
+									<label for="image" th:text="|#{productImage}:|">image</label>
+									<img th:src="@{'/img/products/' + *{name} + '.png'}" th:alt="#{*{name}}" />
+								</td></tr>
+								<tr><td>
+									<label for="imagefile" th:text="|#{productImagePath}:|">image path</label>
+									<input type="file" name="file" />
+								</td></tr>
+								<tr><td>
+									<button type="submit">Submit</button>
+								</td></tr>
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

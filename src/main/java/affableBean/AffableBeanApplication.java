@@ -1,5 +1,6 @@
 package affableBean;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Locale;
 
@@ -11,6 +12,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -81,6 +84,10 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
         ds.setPassword(databasePassword);
  
         return ds;
+    }
+    @Bean
+    public MultipartResolver multipartResolver() throws IOException {
+      return new StandardServletMultipartResolver();
     }
     
 }
