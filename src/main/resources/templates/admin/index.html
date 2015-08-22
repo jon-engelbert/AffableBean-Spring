@@ -15,7 +15,7 @@
 			<table id="adminTable" class="detailsTable">
 	
 				<tr class="header">
-					<th colspan="5">customers</th>
+					<th colspan="6">customers</th>
 				</tr>
 	
 				<tr class="tableHeading">
@@ -27,26 +27,58 @@
 					<td>&nbsp;</td>
 				</tr>
 		
-					<tr th:each="customer,rowStat : ${customerList}"
-						th:class="${rowStat.even}? 'lightBlue' : 'white'" th:attappend="class='tablerow'"  class="white tablerow" 
-						th:onclick="|document.location.href='admin/customerRecord?id=${customer.id}'|">
-	
-						<!-- Below anchor tags are provided in case JavaScript is disabled -->
-						<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
-							class="noDecoration" th:utext="${customer.id}">${customer.id}</a></td>
-						<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
-							class="noDecoration" th:utext="${customer.name}">${customer.name}</a></td>
-						<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
-							class="noDecoration" th:utext="${customer.email}">${customer.email}</a></td>
-						<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
-							class="noDecoration" th:utext="${customer.phone}">${customer.phone}</a></td>
-						<td><a href="customerRecord" th:href="@{/admin/customerEdit(id=${customer.id})}"
-							class="noDecoration">EDIT</a></td>
-						<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
-							class="noDecoration">DETAILS</a></td>
-					</tr>
+				<tr th:each="customer,rowStat : ${customerList}"
+					th:class="${rowStat.even}? 'lightBlue' : 'white'" th:attappend="class='tablerow'"  class="white tablerow" 
+					th:onclick="|document.location.href='admin/customerRecord?id=${customer.id}'|">
+
+					<!-- Below anchor tags are provided in case JavaScript is disabled -->
+					<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
+						class="noDecoration" th:utext="${customer.id}">${customer.id}</a></td>
+					<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
+						class="noDecoration" th:utext="${customer.name}">${customer.name}</a></td>
+					<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
+						class="noDecoration" th:utext="${customer.email}">${customer.email}</a></td>
+					<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
+						class="noDecoration" th:utext="${customer.phone}">${customer.phone}</a></td>
+					<td><a href="customerRecord" th:href="@{/admin/customerEdit(id=${customer.id})}"
+						class="noDecoration">EDIT</a></td>
+					<td><a href="customerRecord" th:href="@{/admin/customerRecord(id=${customer.id})}"
+						class="noDecoration">DETAILS</a></td>
+				</tr>
+				<tr>
+					<td colspan="6" align="center">
+						<span th:if="${currentIndex == 1}" >
+			                &lt;&lt;&nbsp;
+			                &lt;&nbsp;
+				        </span>
+				        <span th:if="${currentIndex != 1}" >
+							<a th:href="@{/admin/viewCustomer?page=1}">&lt;&lt;</a>&nbsp;
+							<a th:href="@{/admin/viewCustomer?page=} + ${currentIndex - 1}">&lt;</a>&nbsp;
+				        </span>
+				        <span th:each="i : ${#numbers.sequence( {beginIndex}, {endIndex})}">
+							<span th:if="${i == currentIndex}">
+								<a th:href="@{/admin/viewCustomer?page=} + ${i}" th:text="${i}"></a>&nbsp;
+							</span>
+							<span th:if="${i != currentIndex}">
+								<a th:href="@{/admin/viewCustomer?page=} + ${i}" th:text="${i}"></a>&nbsp;
+				            </span>
+				        </span>
+			            <span th:if="${currentIndex == customerPage.totalPages}">
+			                &gt;&nbsp;
+			                &gt;&gt;
+			            </span>
+			            <span th:if="${currentIndex != customerPage.totalPages}">
+			                <a th:href="@{/admin/viewCustomer?page=} + ${currentIndex + 1}">&gt;</a>&nbsp;
+			                <a th:href="@{/admin/viewCustomer?page=} + ${customerPage.totalPages}">&gt;&gt;</a>
+			            </span>
+		            </td>
+				</tr>
 	
 			</table>
+
+			
+			
+			
 		</div>
 		
 		<!-- order list -->

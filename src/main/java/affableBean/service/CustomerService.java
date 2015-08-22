@@ -5,6 +5,9 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,15 @@ public class CustomerService {
 	private CustomerRepository customerRepo;
 	
 	private PasswordEncoder encoder = new BCryptPasswordEncoder();
+	
+	
+	private static final int PAGE_SIZE = 5;
+
+    public Page<Customer> findAllCustomers(Integer pageNumber) {
+        PageRequest request =
+            new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "name");
+        return customerRepo.findAll(request);
+    }
 
 	public List<Customer> getAll() {
 		return customerRepo.findAll();

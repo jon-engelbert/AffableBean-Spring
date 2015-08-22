@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.CustomerService;
 import affableBean.service.OrderService;
 import affableBean.service.ProductDto;
 import affableBean.service.ProductDtoService;
@@ -54,8 +56,8 @@ public class AdminController {
 	@Autowired
 	private CategoryRepository categoryRepo;
 
-	// @Autowired
-	// private CustomerService customerService;
+	 @Autowired
+	 private CustomerService customerService;
 
 	@Autowired
 	private CustomerOrderRepository orderRepo;
@@ -106,15 +108,19 @@ public class AdminController {
 	/**
 	 * Login succeeded, inside AdminConsole
 	 */
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public String customerConsole(ModelMap mm) {
-		mm.put("customerList", customerRepo.findAll());
-		return "admin/index";
-	}
-
-	@RequestMapping(value = "/viewCustomers", method = RequestMethod.GET)
-	public String viewCustomers(ModelMap mm) {
-		mm.put("customerList", customerRepo.findAll());
+	@RequestMapping(value = {"", "/viewCustomer"}, method = RequestMethod.GET)
+	public String customerConsole(@RequestParam(value="page", required=false, defaultValue="1") Integer pageNumber, ModelMap mm) {
+		Page<Customer> page = customerService.findAllCustomers(pageNumber);
+		
+		int current = page.getNumber() + 1;
+	    int begin = Math.max(1, current - 5);
+	    int end = Math.min(begin + 10, page.getTotalPages());
+		
+	    mm.put("customerList", page.getContent());
+	    mm.put("customerPage", page);
+	    mm.put("beginIndex", begin);
+	    mm.put("endIndex", end);
+	    mm.put("currentIndex", current);
 		return "admin/index";
 	}
 
