@@ -218,26 +218,8 @@ public class FrontStoreController {
                 // if order processed successfully send user to confirmation page
                 if (orderId != 0) {
 
-                    // in case language was set using toggle, get language choice before destroying session
-                    Locale locale = (Locale) session.getAttribute("javax.servlet.jsp.jstl.fmt.locale.session");
-                    String language = "";
-
-                    if (locale != null) {
-
-                        language = (String) locale.getLanguage();
-                    }
-
-                    // dissociate shopping cart from session
-                    cart = null;
-
-                    // end session
-                    session.invalidate();
-
-                    if (!language.isEmpty()) {                       // if user changed language using the toggle,
-                                                                     // reset the language attribute - otherwise
-                        request.setAttribute("language", language);  // language will be switched on confirmation page!
-                    }
-
+                	// session and request invalidate and reset
+                	DoInvalidateSession(request, session);
                     // get order details
                     Map<String, Object> orderMap = orderService.getOrderDetails(orderId);
 
@@ -274,27 +256,44 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value="/newCustSubmit", method = RequestMethod.POST)
-	public String newCustSubmit(final Customer customer, final BindingResult bindingResult, HttpServletRequest request, ModelMap mm) {
+	public String newCustSubmit(final Customer customer, 
+			final BindingResult bindingResult, 
+			HttpServletRequest request, 
+			HttpSession session,
+			ModelMap mm) {
 		
 		if (bindingResult.hasErrors()) {
 			System.out.println("bindingResult error");
 			mm.put("validationErrorFlag", true);
-            return "front_store/customerregistration"; 
 		}
 
         // validate user data
         boolean validationErrorFlag = false;
         validationErrorFlag = validator.validateCustomer(customer, request);
+        
+        // check for existing email
+        boolean emailExists = false;
+        if (!validationErrorFlag) {
+        	emailExists = customerService.checkEmailExists(customer.getEmail());
+        	if (emailExists) {
+        		mm.put("customer", customer);
+        		mm.put("emailExists", emailExists);
+        	}
+        }
 
         // if validation error found, return user to checkout
         if (validationErrorFlag == true) {
         	mm.put("validationErrorFlag", validationErrorFlag);
-            return "front_store/customerregistration";
         } else {
         	Customer newcust = customerService.saveNewCustomer(customer);
         	newcust.setPassword(""); //do not send password back to the browser!
         	mm.put("customer", newcust);
         	mm.put("success", true);
+        	
+    		session.setAttribute("isSignedIn", true);
+    		newcust.setPassword("");
+    		session.setAttribute("customerLoggedIn", newcust);
+
         }
 	
 		return "front_store/customerregistration";
@@ -333,9 +332,45 @@ public class FrontStoreController {
 		session.setAttribute("isSignedIn", true);
 		customer.setPassword("");
 		session.setAttribute("customerLoggedIn", customer);
-		return "redirect: /home";
+		return "redirect:/home";
 		
 	}
 	
+	@RequestMapping("/logout")
+	public String customerLogout (HttpServletRequest request, HttpSession session) {
+		
+		DoInvalidateSession(request, session);
+		
+		return "redirect:/home";
+	}
+	
+
+
+	private void DoInvalidateSession(HttpServletRequest request,
+			HttpSession session) {
+		Cart cart = (Cart) session.getAttribute("cart");
+        // in case language was set using toggle, get language choice before destroying session
+        Locale locale = (Locale) session.getAttribute("javax.servlet.jsp.jstl.fmt.locale.session");
+        String language = "";
+
+        if (locale != null) {
+
+            language = (String) locale.getLanguage();
+        }
+
+        // dissociate shopping cart from session
+        cart = null;
+
+        // end session
+        session.invalidate();
+
+        if (!language.isEmpty()) {                       // if user changed language using the toggle,
+                                                         // reset the language attribute - otherwise
+            request.setAttribute("language", language);  // language will be switched on confirmation page!
+        }
+
+	}
+
+
 
 }

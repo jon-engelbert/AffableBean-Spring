@@ -52,15 +52,15 @@
 			                &lt;&nbsp;
 				        </span>
 				        <span th:if="${currentIndex != 1}" >
-							<a th:href="@{/admin/viewCustomer?page=1}">&lt;&lt;</a>&nbsp;
-							<a th:href="@{/admin/viewCustomer?page=} + ${currentIndex - 1}">&lt;</a>&nbsp;
+							<a th:href="@{/admin/viewCustomers?page=1}">&lt;&lt;</a>&nbsp;
+							<a th:href="@{/admin/viewCustomers?page=} + ${currentIndex - 1}">&lt;</a>&nbsp;
 				        </span>
 				        <span th:each="i : ${#numbers.sequence( {beginIndex}, {endIndex})}">
 							<span th:if="${i == currentIndex}">
-								<a th:href="@{/admin/viewCustomer?page=} + ${i}" th:text="${i}"></a>&nbsp;
+								<a th:href="@{/admin/viewCustomers?page=} + ${i}" th:text="${i}"></a>&nbsp;
 							</span>
 							<span th:if="${i != currentIndex}">
-								<a th:href="@{/admin/viewCustomer?page=} + ${i}" th:text="${i}"></a>&nbsp;
+								<a th:href="@{/admin/viewCustomers?page=} + ${i}" th:text="${i}"></a>&nbsp;
 				            </span>
 				        </span>
 			            <span th:if="${currentIndex == customerPage.totalPages}">
@@ -68,8 +68,8 @@
 			                &gt;&gt;
 			            </span>
 			            <span th:if="${currentIndex != customerPage.totalPages}">
-			                <a th:href="@{/admin/viewCustomer?page=} + ${currentIndex + 1}">&gt;</a>&nbsp;
-			                <a th:href="@{/admin/viewCustomer?page=} + ${customerPage.totalPages}">&gt;&gt;</a>
+			                <a th:href="@{/admin/viewCustomers?page=} + ${currentIndex + 1}">&gt;</a>&nbsp;
+			                <a th:href="@{/admin/viewCustomers?page=} + ${customerPage.totalPages}">&gt;&gt;</a>
 			            </span>
 		            </td>
 				</tr>

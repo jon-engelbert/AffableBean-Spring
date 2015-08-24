@@ -108,7 +108,7 @@ public class AdminController {
 	/**
 	 * Login succeeded, inside AdminConsole
 	 */
-	@RequestMapping(value = {"", "/viewCustomer"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"", "/viewCustomers"}, method = RequestMethod.GET)
 	public String customerConsole(@RequestParam(value="page", required=false, defaultValue="1") Integer pageNumber, ModelMap mm) {
 		Page<Customer> page = customerService.findAllCustomers(pageNumber);
 		
@@ -210,8 +210,6 @@ public class AdminController {
 		Integer id = 0;
 		if (customer != null) {
 			id = customer.getId();
-			System.out.println("id: " + customer.getId() + " name: "
-					+ customer.getName());
 		}
 
 		if (bindingResult.hasErrors()) {

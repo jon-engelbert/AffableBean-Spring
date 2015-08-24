@@ -4,6 +4,12 @@
 <head th:replace="fragments/headTag :: headTag"> ... </head>
 <body>
 <script>
+
+function loginRedirect() {
+	alert("Account successfully created.\n You will now be directed to the home page");
+	window.location = "/home";
+}
+
 function validatePassword() {
     //Store the password field objects into variables ...
     var pass1 = document.getElementById('password');
@@ -26,12 +32,13 @@ function validatePassword() {
 		<h2>Create Account</h2>
 		
 		<!-- content begin -->
-		<span th:if="${error}">There was a problem updating this customer</span>
-		<span th:if="${success}">Your account was created!</span>
+		<span class="error" th:if="${error}">There was a problem updating this customer</span>
+		<span class="error" th:if="${success}">Your account was created!</span>
+		<span class="error" th:if="${emailExists}">This email address has already been registered</span>
 
 			<form id="customerForm" th:action="@{/newCustSubmit}" th:object="${customer}" method="post" onsubmit="return validatePassword();">
 				<input type="hidden" name="id" th:value="${customer.id}" />
-		        <table id="customerTable">
+		        <table class="formTable">
 		            <tr th:if="${#vars['validationErrorFlag'] != null}">
 		                <td colspan="2" style="text-align:left">
 		                    <span class="error smallText"><span th:text="#{validationErrorMessage"/>
@@ -156,5 +163,10 @@ function validatePassword() {
 		
 		<div id="footer" th:include="fragments/bodyFooter :: bodyFooter"></div>
 	</div>
+<span class="error" th:if="${success}">
+	<script type="text/javascript">
+		loginRedirect();
+	</script>
+</span>
 </body>
 </html>

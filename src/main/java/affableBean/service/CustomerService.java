@@ -1,5 +1,6 @@
 package affableBean.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -56,8 +57,10 @@ public class CustomerService {
 		
 		
 		String encodedPw = encoder.encode(password);
+		System.out.println("password: " + password + " encoded password: " + encodedPw);
 		
 		customer.setPassword(encodedPw);
+		
 		
 		return customerRepo.saveAndFlush(customer);
 	}
@@ -65,6 +68,14 @@ public class CustomerService {
 	public boolean validatePassword(String rawPassword, String encodeddPassword) {
 
 		return (encoder.matches(rawPassword, encodeddPassword));
+	}
+
+	public boolean checkEmailExists(String email) {
+		Customer cust = new Customer();
+		cust = customerRepo.findByEmail(email);
+		if (cust != null && cust.getId() != null)
+			return true;
+		else return false;
 	}
 	
 }

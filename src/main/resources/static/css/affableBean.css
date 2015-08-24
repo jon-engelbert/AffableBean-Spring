@@ -17,13 +17,13 @@ body {
     text-align: center;
     margin: 20px auto;
     color: #444;
-    width: 1082px;
+    width: 1182px;
 }
 
 #main {
     background: #f7f7e9;
     float: left;
-    width: 880px;
+    width: 1030px;
 }
 
 .noteBubble {
@@ -55,6 +55,10 @@ table {
     border-spacing: 0;
     text-align: center;
     border: solid 1px #f5eabe;
+}
+table.formTable {
+	margin: auto;
+	border: none;
 }
 
 a {
@@ -126,7 +130,7 @@ label.error {
 /* styles for elements contained in the header, i.e.,
    shopping cart widget, language toggle, and logo */
 #header {
-    width: 850px;
+    width: 1000px;
     height: 250px;
     background: url(../img/stalk.png) no-repeat 28px 28px;
 }
@@ -148,7 +152,7 @@ label.error {
 
 #widgetBar {
     height: 50px;
-    width: 850px;
+    width: 1000px;
     float: right;
 }
 
@@ -164,12 +168,12 @@ label.error {
 
 #viewCart {
     text-align: left;
-    width: 175px;
+    width: 200px;
 }
 
 #login {
     text-align: left;
-    width: 100px;
+    width: 150px;
 }
 
 .headerWidget {
@@ -278,7 +282,7 @@ label.error {
 
 #categoryTitle {
     margin-top: -40px;
-    right: 180px;
+    right: 480px;
     font-size: x-large;
     position: absolute;
     background-color: #f5eabe;
