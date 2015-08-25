@@ -32,7 +32,7 @@ public class ProductDto {
 
 	public ProductDto(Product product) {
 		super();
-		this.id = product.getId();
+		this.setId(product.getId());
 		this.name = product.getName();
 		this.description = product.getDescription();
 		this.price = product.getPrice();
@@ -137,6 +137,12 @@ public class ProductDto {
 		}
 		public void setPicture(MultipartFile picture) {
 			this.picture = picture;
+		}
+		public Integer getId() {
+			return id;
+		}
+		public void setId(Integer id) {
+			this.id = id;
 		}
 	    
 

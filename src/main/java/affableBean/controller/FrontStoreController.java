@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,8 +26,11 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.CustomerDto;
+import affableBean.service.CustomerDtoService;
 import affableBean.service.CustomerService;
 import affableBean.service.OrderService;
+import affableBean.service.ProductDto;
 import affableBean.service.ValidatorService;
 
 @Controller
@@ -35,6 +39,9 @@ public class FrontStoreController {
 //	@Autowired
 //	private Cart cart;
 
+	@Autowired
+	private CustomerDtoService customerDtoService;
+	
 	@Autowired 
 	private CustomerRepository customerRepo;
 	
@@ -175,6 +182,12 @@ public class FrontStoreController {
 		Cart cart = (Cart) session.getAttribute("cart");
 		if (cart != null) 
 			cart.calculateTotal(Cart._deliverySurcharge.toString());
+		Object ob = session.getAttribute("customerLoggedIn");
+		Customer newCust = new Customer();
+		if (ob instanceof Customer)
+			newCust = (Customer)ob;
+		CustomerDto customerDto = new CustomerDto(newCust);
+		mm.put("customerDto", customerDto);
 
 		return "front_store/checkout";
 	}
@@ -245,18 +258,21 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value= "/newcust", method = RequestMethod.GET) 
-	public String newCust(ModelMap mm) {
+	public String newCust(HttpSession session, ModelMap mm) {
 
-		Customer customer = new Customer();
-		
-		mm.put("customer", customer);
+		Object ob = session.getAttribute("customerLoggedIn");
+		Customer newCust = new Customer();
+		if (ob instanceof Customer)
+			newCust = (Customer)ob;
+		CustomerDto customerDto = new CustomerDto(newCust);
+		mm.put("customerDto", customerDto);
 		
 		return "front_store/customerregistration";
 		
 	}
 	
 	@RequestMapping(value="/newCustSubmit", method = RequestMethod.POST)
-	public String newCustSubmit(final Customer customer, 
+	public String newCustSubmit(@ModelAttribute final CustomerDto customerDto, 
 			final BindingResult bindingResult, 
 			HttpServletRequest request, 
 			HttpSession session,
@@ -269,6 +285,7 @@ public class FrontStoreController {
 
         // validate user data
         boolean validationErrorFlag = false;
+        Customer customer = customerDtoService.addNewCustomer(customerDto);
         validationErrorFlag = validator.validateCustomer(customer, request);
         
         // check for existing email

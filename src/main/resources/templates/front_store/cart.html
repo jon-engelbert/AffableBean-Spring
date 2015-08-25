@@ -12,9 +12,9 @@
 		<div id="header" th:replace="fragments/bodyHeader :: bodyHeader">header</div>
 
 		<div id="singleColumn">
-    		<p class="horizontalMargin" th:text="#{yourCartEmpty}" th:if="${session.cart.numberOfItems} == 0">cart</p>
-            <p class="horizontalMargin" th:text="|#{yourCartContains} ${session.cart.numberOfItems} #{item}|" th:if="${session.cart.numberOfItems} == 1">cart</p>
-            <p class="horizontalMargin" th:text="|#{yourCartContains} ${session.cart.numberOfItems} #{items}|" th:if="${session.cart.numberOfItems} > 1">cart</p>
+    		<p class="horizontalMargin" th:text="#{yourCartEmpty}" th:if="${session.cart} != null and ${session.cart.numberOfItems} == 0">cart</p>
+            <p class="horizontalMargin" th:text="|#{yourCartContains} ${session.cart.numberOfItems} #{item}|" th:if="${session.cart} != null and ${session.cart.numberOfItems} == 1">cart</p>
+            <p class="horizontalMargin" th:text="|#{yourCartContains} ${session.cart.numberOfItems} #{items}|" th:if="${session.cart} != null and ${session.cart.numberOfItems} > 1">cart</p>
 
             
             <div id="actionBar">
