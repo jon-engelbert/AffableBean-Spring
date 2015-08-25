@@ -90,7 +90,7 @@ public class AdminControllerIntegrationTests {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"))
 				.andExpect(model().attributeExists("customerList"))
-				.andExpect(model().attribute("customerList", hasSize(15)));
+				.andExpect(model().attribute("customerList", hasSize(5)));
 	}
 
 	@Test
@@ -113,7 +113,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testProductConsole() throws Exception {
-		mockMvc.perform(get("/admin/product")).andExpect(view().name("admin/product"))
+		mockMvc.perform(get("/admin/product")).andExpect(view().name("admin/products"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))
@@ -131,7 +131,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testProductByCategory() throws Exception {
-		mockMvc.perform(get("/admin/product?id=1")).andExpect(view().name("admin/product"))
+		mockMvc.perform(get("/admin/product?id=1")).andExpect(view().name("admin/products"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))

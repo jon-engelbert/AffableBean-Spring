@@ -248,7 +248,7 @@ public class AdminController {
 		return "admin/order";
 	}
 
-	@RequestMapping(value = "/viewProducts", method = RequestMethod.GET)
+	@RequestMapping(value = "/product", method = RequestMethod.GET)
 	public String productConsole(
 			@RequestParam(value = "id", required = false) Integer id,
 			ModelMap mm) {
@@ -282,7 +282,7 @@ public class AdminController {
 			e.printStackTrace();
 		}
 
-		return "redirect:/admin/product";
+		return "redirect:/admin/products";
 	}
 
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
@@ -306,7 +306,7 @@ public class AdminController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "redirect:/admin/product";
+		return "redirect:/admin/products";
 	}
 
 	@RequestMapping(value = "/product/edit/{id}", method = RequestMethod.GET)
@@ -320,7 +320,7 @@ public class AdminController {
 	@RequestMapping(value = "/product/delete/{id}", method = RequestMethod.GET)
 	public String productDelete(@PathVariable("id") Integer id, ModelMap mm) {
 		productRepo.delete(id);
-		return "redirect:/admin/product";
+		return "redirect:/admin/products";
 	}
 
 	@RequestMapping(value = "/category", method = RequestMethod.GET)
