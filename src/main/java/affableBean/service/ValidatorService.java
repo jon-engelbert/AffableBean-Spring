@@ -101,7 +101,7 @@ public class ValidatorService {
     }
     
     // performs simple validation on checkout form
-    public boolean validateCustomer(Customer customer,
+    public boolean validateCustomer(CustomerDto customerDto,
                                 HttpServletRequest request) {
 
         boolean errorFlag = false;
@@ -112,12 +112,12 @@ public class ValidatorService {
         boolean cityRegionError;
         boolean ccNumberError;
         
-        String name = customer.getName();
-        String email = customer.getEmail();
-        String phone = customer.getPhone();
-        String address = customer.getAddress();
-        String cityRegion = customer.getCityRegion();
-        String ccNumber = customer.getCcNumber();
+        String name = customerDto.getName();
+        String email = customerDto.getEmail();
+        String phone = customerDto.getPhone();
+        String address = customerDto.getAddress();
+        String cityRegion = customerDto.getCityRegion();
+        String ccNumber = customerDto.getCcNumber();
 
         if (name == null
                 || name.equals("")

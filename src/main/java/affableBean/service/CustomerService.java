@@ -57,7 +57,6 @@ public class CustomerService {
 		
 		
 		String encodedPw = encoder.encode(password);
-		System.out.println("password: " + password + " encoded password: " + encodedPw);
 		
 		customer.setPassword(encodedPw);
 		
@@ -71,9 +70,9 @@ public class CustomerService {
 	}
 
 	public boolean checkEmailExists(String email) {
-		Customer cust = new Customer();
-		cust = customerRepo.findByEmail(email);
-		if (cust != null && cust.getId() != null)
+		List<Customer> custs = new ArrayList<Customer>();
+		custs = customerRepo.findByEmail(email);
+		if (custs.size() > 0)
 			return true;
 		else return false;
 	}

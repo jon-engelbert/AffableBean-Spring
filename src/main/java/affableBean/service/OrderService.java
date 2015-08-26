@@ -41,11 +41,13 @@ public class OrderService {
 	@Autowired
 	private ProductRepository productRepo;
 	
-    public int placeOrder(Customer newCust, Cart cart) {
+	@Autowired
+	private CustomerDtoService customerDtoService;
+	
+    public int placeOrder(CustomerDto newCustDto, Cart cart) {
     	
         try {
-            Customer customer = addCustomer(newCust);
-            System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
+            Customer customer = addCustomer(newCustDto);
 
             CustomerOrder order = addOrder(customer, cart);
             addOrderedItems(order, cart);
@@ -57,7 +59,7 @@ public class OrderService {
         }
     }
 
-    private Customer addCustomer(Customer newCust) {
+    private Customer addCustomer(CustomerDto newCustDto) {
 
 //        Customer customer = new Customer();
 //        customer.setName(name);
@@ -67,7 +69,7 @@ public class OrderService {
 //        customer.setCityRegion(cityRegion);
 //        customer.setCcNumber(ccNumber);
 
-        return customerRepo.saveAndFlush(newCust);
+        return customerDtoService.addNewCustomer(newCustDto);
     }
 
     private CustomerOrder addOrder(Customer customer, Cart cart) {

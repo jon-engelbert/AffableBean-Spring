@@ -34,6 +34,8 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.CustomerRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.CustomerDto;
+import affableBean.service.CustomerDtoService;
 import affableBean.service.CustomerService;
 import affableBean.service.OrderService;
 import affableBean.service.ProductDto;
@@ -46,6 +48,9 @@ public class AdminController {
 
 	@Autowired
 	private CustomerRepository customerRepo;
+	
+	@Autowired
+	private CustomerDtoService customerDtoService;
 
 	@Autowired
 	private ProductRepository productRepo;
@@ -202,14 +207,14 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/customerEdit", method = RequestMethod.POST)
-	public String editCustomerPost(final Customer customer,
+	public String editCustomerPost(final CustomerDto customerDto,
 			final BindingResult bindingResult, ModelMap mm,
 			HttpServletRequest request) {
 
 		System.out.println("in customerEdit post");
 		Integer id = 0;
-		if (customer != null) {
-			id = customer.getId();
+		if (customerDto != null) {
+			id = customerDto.getId();
 		}
 
 		if (bindingResult.hasErrors()) {
@@ -220,7 +225,7 @@ public class AdminController {
 
 		// validate customer data
 		boolean validationErrorFlag = false;
-		validationErrorFlag = validator.validateCustomer(customer, request);
+		validationErrorFlag = validator.validateCustomer(customerDto, request);
 
 		if (validationErrorFlag == true) {
 			mm.put("validationErrorFlag", validationErrorFlag);
@@ -228,7 +233,7 @@ public class AdminController {
 
 			// otherwise, update customer to database
 		} else {
-			Customer updatedCustomer = customerRepo.save(customer);
+			Customer updatedCustomer = customerDtoService.addNewCustomer(customerDto);
 			mm.put("success", true);
 			mm.put("customer", updatedCustomer);
 		}

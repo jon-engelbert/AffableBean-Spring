@@ -2,6 +2,8 @@ package affableBean.controller;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -193,7 +195,7 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value= "/purchase", method = RequestMethod.POST) 
-	public String purchase(final Customer customer, final BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
+	public String purchase(final CustomerDto customerDto, final BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
 		Cart cart = (Cart) session.getAttribute("cart");
 		Double surcharge;
 		
@@ -206,12 +208,12 @@ public class FrontStoreController {
 		if (cart != null) {
 
             // extract user data from request
-            String name = customer.getName();
-            String email = customer.getEmail();
-            String phone = customer.getPhone();
-            String address = customer.getAddress();
-            String cityRegion = customer.getCityRegion();
-            String ccNumber = customer.getCcNumber();
+            String name = customerDto.getName();
+            String email = customerDto.getEmail();
+            String phone = customerDto.getPhone();
+            String address = customerDto.getAddress();
+            String cityRegion = customerDto.getCityRegion();
+            String ccNumber = customerDto.getCcNumber();
             surcharge = Cart._deliverySurcharge;
             
 
@@ -226,7 +228,7 @@ public class FrontStoreController {
 
                 // otherwise, save order to database
             } else {
-                Integer orderId = orderService.placeOrder(customer, cart);
+                Integer orderId = orderService.placeOrder(customerDto, cart);
 
                 // if order processed successfully send user to confirmation page
                 if (orderId != 0) {
@@ -285,16 +287,16 @@ public class FrontStoreController {
 
         // validate user data
         boolean validationErrorFlag = false;
-        Customer customer = customerDtoService.addNewCustomer(customerDto);
-        validationErrorFlag = validator.validateCustomer(customer, request);
+        validationErrorFlag = validator.validateCustomer(customerDto, request);
         
         // check for existing email
         boolean emailExists = false;
         if (!validationErrorFlag) {
-        	emailExists = customerService.checkEmailExists(customer.getEmail());
+        	emailExists = customerService.checkEmailExists(customerDto.getEmail());
         	if (emailExists) {
-        		mm.put("customer", customer);
+        		mm.put("customerDto", customerDto);
         		mm.put("emailExists", emailExists);
+        		return "front_store/customerregistration";
         	}
         }
 
@@ -302,7 +304,7 @@ public class FrontStoreController {
         if (validationErrorFlag == true) {
         	mm.put("validationErrorFlag", validationErrorFlag);
         } else {
-        	Customer newcust = customerService.saveNewCustomer(customer);
+        	Customer newcust = customerDtoService.addNewCustomer(customerDto);
         	newcust.setPassword(""); //do not send password back to the browser!
         	mm.put("customer", newcust);
         	mm.put("success", true);
@@ -329,8 +331,9 @@ public class FrontStoreController {
 			HttpSession session,
 			ModelMap mm) {
 		Customer customer = new Customer();
-		customer = customerRepo.findByEmail(email);
-		if (customer == null || customer.getId() == null) {
+		List<Customer> custList = new ArrayList<Customer>();
+		custList = customerRepo.findByEmail(email);
+		if (custList.isEmpty()) {
 			mm.put("loginerror", true);
 			System.out.println("customer by email not found");
 			return "front_store/customerlogin";
