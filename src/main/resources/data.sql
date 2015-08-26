@@ -44,24 +44,42 @@ INSERT INTO `product` (`name`, price, description, category_id) VALUES ('seedles
 
 
 --
--- Sample data for table `customer`
+-- Sample data for table `member`
 --
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1', '4224311324421331');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('MC Hammer', 'hammer@hammertime.com', '226884562', 'Ruská 11', '2', '4321123443211234');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Karel Gott', 'gott@karelgott.com', '224517995', 'Kostelní 83', '7', '3311332222444411');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Helena Vondráčková', 'h.vondrackova@seznam.cz', '224517995', 'Letohradská 18', '7', '1111222244443333');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Sawyer Ford', 'sawyer.ford@gmail.com', '204888845', 'Dušní 87', '1', '2222333311114444');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Dalibor Janda', 'dalibor@dalibor.cz', '728331184', 'Krkonošská 9', '3', '3111444222212334');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Richard Genzer', 'r.genzer@nova.cz', '737610775', 'Plzeňská 131', '5', '2244443321123311');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Iveta Bartošová', 'i.bartosova@volny.cz', '734556133', 'Prokopská 60', '1', '3333111144442222');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Jin-Soo Kwon', 'jin.kwon@hotmail.kr', '606338909', 'Ve Střešovičkách 49', '6', '1111222233334444');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Benjamin Linus', 'b.linus@lost.com', '222756448', 'Družstevní 77', '4', '4444222233331111');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Leoš Mareš', 'mares@ferrari.it', '608995383', 'Pařížská 89', '1', '2222444411113333');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('John Locke', 'maninblack@lostpedia.com', '413443727', 'Valečovská 20', '9', '2244331133114422');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8', '3333444422221111');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10', '5490123456789128');
-INSERT INTO `customer` (`name`, email, phone, address, city_region, cc_number) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3', '4539992043491562');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('MC Hammer', 'hammer@hammertime.com', '226884562', 'Ruská 11', '2');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Karel Gott', 'gott@karelgott.com', '224517995', 'Kostelní 83', '7');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Helena Vondráčková', 'h.vondrackova@seznam.cz', '224517995', 'Letohradská 18', '7');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Sawyer Ford', 'sawyer.ford@gmail.com', '204888845', 'Dušní 87', '1');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Dalibor Janda', 'dalibor@dalibor.cz', '728331184', 'Krkonošská 9', '3');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Richard Genzer', 'r.genzer@nova.cz', '737610775', 'Plzeňská 131', '5');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Iveta Bartošová', 'i.bartosova@volny.cz', '734556133', 'Prokopská 60', '1');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Jin-Soo Kwon', 'jin.kwon@hotmail.kr', '606338909', 'Ve Střešovičkách 49', '6');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Benjamin Linus', 'b.linus@lost.com', '222756448', 'Družstevní 77', '4');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Leoš Mareš', 'mares@ferrari.it', '608995383', 'Pařížská 89', '1');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('John Locke', 'maninblack@lostpedia.com', '413443727', 'Valečovská 20', '9');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10');
+INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3');
 
+--
+-- Sample data for table `payment_info`
+--
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Charlie Pace', 1, 'Široká 45', '1', '4224311324421331');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('MC Hammer', 2, 'Ruská 11', '2', '4321123443211234');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Karel Gott', 3, 'Kostelní 83', '7', '3311332222444411');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Helena Vondráčková', 4, 'Letohradská 18', '7', '1111222244443333');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Sawyer Ford', 5, 'Dušní 87', '1', '2222333311114444');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Dalibor Janda', 6, 'Krkonošská 9', '3', '3111444222212334');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Richard Genzer', 7, 'Plzeňská 131', '5', '2244443321123311');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Iveta Bartošová', 8, 'Prokopská 60', '1', '3333111144442222');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Jin-Soo Kwon', 9, 'Ve Střešovičkách 49', '6', '1111222233334444');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Benjamin Linus', 10, 'Družstevní 77', '4', '4444222233331111');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Leoš Mareš', 11, 'Pařížská 89', '1', '2222444411113333');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('John Locke', 12, 'Valečovská 20', '9', '2244331133114422');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Lucie Bílá', 13, 'Na hájku 3', '8', '3333444422221111');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Sayid Jarrah', 14, 'Kodaňská 78', '10', '5490123456789128');
+INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) VALUES ('Hugo Reyes', 15, 'Žerotínova 64', '3', '4539992043491562');
 
 --
 -- Sample data for table `customer_order`

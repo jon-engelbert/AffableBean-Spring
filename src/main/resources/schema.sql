@@ -3,19 +3,16 @@
 -- -----------------------------------------------------
 -- Table `customer`
 -- -----------------------------------------------------
-drop table if exists customer ;
+drop table if exists payment_info ;
 
-create table customer (
+create table payment_info (
   id identity,
   name varchar(45) not null ,
-  email varchar(45) not null ,
-  phone varchar(45) not null ,
-  address varchar(45) not null ,
-  city_region varchar(2) not null ,
-  cc_number varchar(19) not null ,
-  password varchar(75)
+  address varchar(100) not null ,
+  city_region varchar(45) not null ,
+  cc_number varchar(19) not null
   );
---COMMENT = 'maintains customer details';
+--COMMENT = 'maintains customer payment info details';
 
 
 -- -----------------------------------------------------
@@ -28,8 +25,8 @@ CREATE  TABLE customer_order (
   `amount` DECIMAL(6,2) NOT NULL ,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `confirmation_number` INT UNSIGNED NOT NULL ,
-  `customer_id` INT UNSIGNED NOT NULL ,
-  foreign key (customer_id) references customer(id)
+  `member_id` INT UNSIGNED NOT NULL ,
+  foreign key (member_id) references member(id)
 );
 --COMMENT = 'maintains customer order details';
 
@@ -101,6 +98,12 @@ CREATE  TABLE member (
   `username` VARCHAR(45) NOT NULL ,
   `password` VARCHAR(100) NOT NULL ,
   `enabled` boolean NOT NULL ,
+  email varchar(45) not null ,
+  phone varchar(45) not null ,
+  address varchar(100) not null ,
+  city_region varchar(45) not null ,
+  `payment_info_id` INT UNSIGNED NOT NULL ,
+  foreign key (`payment_info_id`) references payment_info(`id`),
   `role_id` INT UNSIGNED NOT NULL ,
   foreign key (`role_id`) references role(`id`),
   UNIQUE (`username`) 

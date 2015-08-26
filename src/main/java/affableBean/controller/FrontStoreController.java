@@ -19,16 +19,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
 
 import affableBean.cart.Cart;
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerOrderRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.MemberRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
 import affableBean.service.CustomerDto;
 import affableBean.service.CustomerDtoService;
-import affableBean.service.CustomerService;
+import affableBean.service.MemberService;
 import affableBean.service.OrderService;
 import affableBean.service.ProductDto;
 import affableBean.service.ValidatorService;
@@ -43,7 +45,10 @@ public class FrontStoreController {
 	private CustomerDtoService customerDtoService;
 	
 	@Autowired 
-	private CustomerRepository customerRepo;
+	private PaymentInfoRepository paymentInfoRepo;
+	
+	@Autowired 
+	private MemberRepository memberRepo;
 	
 	@Autowired 
 	private CategoryRepository categoryRepo;
@@ -58,7 +63,7 @@ public class FrontStoreController {
 	private CustomerOrderRepository customerOrderRepo;
 	
 	@Autowired 
-	CustomerService customerService;
+	MemberService customerService;
 	
 	@Autowired 
 	private OrderedProductRepository orderedProductRepo;
@@ -183,17 +188,18 @@ public class FrontStoreController {
 		if (cart != null) 
 			cart.calculateTotal(Cart._deliverySurcharge.toString());
 		Object ob = session.getAttribute("customerLoggedIn");
-		Customer newCust = new Customer();
-		if (ob instanceof Customer)
-			newCust = (Customer)ob;
-		CustomerDto customerDto = new CustomerDto(newCust);
+		Member newCust = new Member();
+		PaymentInfo newPaymentInfo = new PaymentInfo();
+		if (ob instanceof Member)
+			newCust = (Member)ob;
+		CustomerDto customerDto = new CustomerDto(newPaymentInfo, newCust);
 		mm.put("customerDto", customerDto);
 
 		return "front_store/checkout";
 	}
 	
 	@RequestMapping(value= "/purchase", method = RequestMethod.POST) 
-	public String purchase(final Customer customer, final BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
+	public String purchase(final Member customer, final BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
 		Cart cart = (Cart) session.getAttribute("cart");
 		Double surcharge;
 		
@@ -211,7 +217,7 @@ public class FrontStoreController {
             String phone = customer.getPhone();
             String address = customer.getAddress();
             String cityRegion = customer.getCityRegion();
-            String ccNumber = customer.getCcNumber();
+            String ccNumber = paymentInfo.getCcNumber();
             surcharge = Cart._deliverySurcharge;
             
 
@@ -226,7 +232,7 @@ public class FrontStoreController {
 
                 // otherwise, save order to database
             } else {
-                Integer orderId = orderService.placeOrder(customer, cart);
+                Integer orderId = orderService.placeOrder(member, cart);
 
                 // if order processed successfully send user to confirmation page
                 if (orderId != 0) {
@@ -261,10 +267,10 @@ public class FrontStoreController {
 	public String newCust(HttpSession session, ModelMap mm) {
 
 		Object ob = session.getAttribute("customerLoggedIn");
-		Customer newCust = new Customer();
-		if (ob instanceof Customer)
-			newCust = (Customer)ob;
-		CustomerDto customerDto = new CustomerDto(newCust);
+		PaymentInfo newPaymentInfo = new PaymentInfo();
+		if (ob instanceof PaymentInfo)
+			newPaymentInfo = (PaymentInfo)ob;
+		CustomerDto customerDto = new CustomerDto(newPaymentInfo, newMember);
 		mm.put("customerDto", customerDto);
 		
 		return "front_store/customerregistration";
@@ -285,7 +291,7 @@ public class FrontStoreController {
 
         // validate user data
         boolean validationErrorFlag = false;
-        Customer customer = customerDtoService.addNewCustomer(customerDto);
+        Member customer = customerDtoService.addNewCustomer(customerDto);
         validationErrorFlag = validator.validateCustomer(customer, request);
         
         // check for existing email
@@ -302,7 +308,7 @@ public class FrontStoreController {
         if (validationErrorFlag == true) {
         	mm.put("validationErrorFlag", validationErrorFlag);
         } else {
-        	Customer newcust = customerService.saveNewCustomer(customer);
+        	Member newcust = customerService.saveNewCustomer(customer);
         	newcust.setPassword(""); //do not send password back to the browser!
         	mm.put("customer", newcust);
         	mm.put("success", true);
@@ -319,24 +325,38 @@ public class FrontStoreController {
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public String custLogin() {
 		
-		return "front_store/customerlogin";
+//		return "front_store/customerlogin";
+		return "admin/login";
 	}
 
+//	@RequestMapping(value = "/login", method = { RequestMethod.GET,
+//			RequestMethod.POST })
+//	public String loginConsole(
+//			@RequestParam(value = "error", required = false) String error,
+//			ModelMap mm) {
+//
+//		if (error != null) {
+//			mm.put("message", "Login Failed!");
+//		} else {
+//			mm.put("message", false);
+//		}
+//		return "admin/login";
+//	}
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public String custLogin(@RequestParam("email") String email,
 			@RequestParam("password") String password, 
 			HttpSession session,
 			ModelMap mm) {
-		Customer customer = new Customer();
-		customer = customerRepo.findByEmail(email);
-		if (customer == null || customer.getId() == null) {
+		Member member = new Member();
+		member = memberRepo.findByEmail(email);
+		if (member == null || member.getId() == null) {
 			mm.put("loginerror", true);
-			System.out.println("customer by email not found");
+			System.out.println("member by email not found");
 			return "front_store/customerlogin";
 		}
 		
-		boolean isPasswordValid = customerService.validatePassword(password, customer.getPassword());
+		boolean isPasswordValid = customerService.validatePassword(password, member.getPassword());
 		
 		if (!isPasswordValid) {
 			mm.put("loginerror", true);
@@ -344,11 +364,11 @@ public class FrontStoreController {
 			return "front_store/customerlogin";
 		}
 
-    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
+    	System.out.println("customer " + member.getName() + " verified.  id: " + member.getId());
 
 		session.setAttribute("isSignedIn", true);
 		customer.setPassword("");
-		session.setAttribute("customerLoggedIn", customer);
+		session.setAttribute("customerLoggedIn", member);
 		return "redirect:/home";
 		
 	}

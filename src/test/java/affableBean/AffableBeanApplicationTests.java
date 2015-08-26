@@ -13,10 +13,10 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import affableBean.domain.Category;
-import affableBean.domain.Customer;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.Product;
 import affableBean.service.CategoryService;
-import affableBean.service.CustomerService;
+import affableBean.service.MemberService;
 import affableBean.service.ProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,7 +25,7 @@ import affableBean.service.ProductService;
 public class AffableBeanApplicationTests {
 
 	@Autowired
-	CustomerService customerService;
+	MemberService customerService;
 
 	@Autowired
 	CategoryService categoryService;
@@ -39,13 +39,13 @@ public class AffableBeanApplicationTests {
 	@Test
 	@Transactional
 	public void testSaveCustomer() {
-		Customer cust = new Customer(null, "Thien", "thienman@gmail.com",
+		PaymentInfo cust = new PaymentInfo(null, "Thien", "thienman@gmail.com",
 				"7349724084", "test address", "MI",
 				"1234 5678 9012 3456");
 
-		Customer custReturned = customerService.saveAndFlush(cust);
+		PaymentInfo custReturned = customerService.saveAndFlush(cust);
 		System.out.println("******" + custReturned.getPhone());
-		Customer custSaved = customerService.findOneByName("Thien");
+		PaymentInfo custSaved = customerService.findOneByName("Thien");
 		Assert.assertEquals(custReturned, custSaved);
 
 		Integer id = custReturned.getId();

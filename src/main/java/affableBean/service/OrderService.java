@@ -15,13 +15,15 @@ import org.springframework.stereotype.Service;
 
 import affableBean.cart.Cart;
 import affableBean.cart.CartItem;
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.CustomerOrder;
 import affableBean.domain.OrderedProduct;
 import affableBean.domain.OrderedProductPK;
 import affableBean.domain.Product;
 import affableBean.repository.CustomerOrderRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.MemberRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
 
@@ -30,7 +32,7 @@ import affableBean.repository.ProductRepository;
 public class OrderService {
 	
 	@Autowired 
-	private CustomerRepository customerRepo;
+	private MemberRepository customerRepo;
 
 	@Autowired
 	private CustomerOrderRepository customerOrderRepo;
@@ -41,10 +43,10 @@ public class OrderService {
 	@Autowired
 	private ProductRepository productRepo;
 	
-    public int placeOrder(Customer newCust, Cart cart) {
+    public int placeOrder(Member newCust, Cart cart) {
     	
         try {
-            Customer customer = addCustomer(newCust);
+            Member customer = addCustomer(newCust);
             System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
 
             CustomerOrder order = addOrder(customer, cart);
@@ -57,7 +59,7 @@ public class OrderService {
         }
     }
 
-    private Customer addCustomer(Customer newCust) {
+    private Member addCustomer(Member newCust) {
 
 //        Customer customer = new Customer();
 //        customer.setName(name);
@@ -70,7 +72,7 @@ public class OrderService {
         return customerRepo.saveAndFlush(newCust);
     }
 
-    private CustomerOrder addOrder(Customer customer, Cart cart) {
+    private CustomerOrder addOrder(Member customer, Cart cart) {
 
         // set up customer order
         CustomerOrder order = new CustomerOrder();
@@ -128,7 +130,7 @@ public class OrderService {
         CustomerOrder order = customerOrderRepo.findById(orderId);
 
         // get customer
-        Customer customer = order.getCustomer();
+        Member customer = order.getCustomer();
 
         // get all ordered products
         List<OrderedProduct> orderedProducts = orderedProductRepo.findByCustomerOrderId(orderId);

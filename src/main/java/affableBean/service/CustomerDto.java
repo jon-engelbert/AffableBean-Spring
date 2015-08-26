@@ -1,6 +1,7 @@
 package affableBean.service;
 
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 
 
 public class CustomerDto {
@@ -18,17 +19,17 @@ public class CustomerDto {
 		this.confPassword = password;
 	}
     
-    public CustomerDto(Customer cust) {
+    public CustomerDto(PaymentInfo paymentInfo, Member member) {
 		super();
-		this.id = cust.getId();
-		this.name = cust.getName();
-		this.email = cust.getEmail();
-		this.phone = cust.getPhone();
-		this.address = cust.getAddress();
-		this.cityRegion = cust.getCityRegion();
-		this.ccNumber = cust.getCcNumber();
-		this.password = cust.getPassword();
-		this.confPassword = cust.getPassword();
+		this.id = member.getId();
+		this.name = member.getName();
+		this.email = member.getEmail();
+		this.phone = member.getPhone();
+		this.address = member.getAddress();
+		this.cityRegion = member.getCityRegion();
+		this.ccNumber = paymentInfo.getCcNumber();
+		this.password = member.getPassword();
+		this.confPassword = member.getPassword();
 	}
 
 	public CustomerDto() {

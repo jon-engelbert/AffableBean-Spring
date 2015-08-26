@@ -44,7 +44,7 @@ public class CustomerOrder implements Serializable {
 	private Collection<OrderedProduct> orderedProductCollection;
 	@JoinColumn(name = "customer_id", referencedColumnName = "id")
 	@ManyToOne(optional = false)
-	private Customer customer;
+	private Member customer;
 
 	public CustomerOrder() {
 	}
@@ -102,11 +102,11 @@ public class CustomerOrder implements Serializable {
 		this.orderedProductCollection = orderedProductCollection;
 	}
 
-	public Customer getCustomer() {
+	public Member getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(Customer customer) {
+	public void setCustomer(Member customer) {
 		this.customer = customer;
 	}
 

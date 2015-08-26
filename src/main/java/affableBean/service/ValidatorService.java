@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
-import affableBean.domain.Customer;
+import affableBean.domain.PaymentInfo;
 
 @Service
 public class ValidatorService {
@@ -101,7 +101,7 @@ public class ValidatorService {
     }
     
     // performs simple validation on checkout form
-    public boolean validateCustomer(Customer customer,
+    public boolean validateCustomer(PaymentInfo customer,
                                 HttpServletRequest request) {
 
         boolean errorFlag = false;
