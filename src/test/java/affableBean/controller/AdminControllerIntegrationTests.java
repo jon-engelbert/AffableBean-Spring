@@ -10,6 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,6 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -27,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import affableBean.AffableBeanApplication;
+import affableBean.domain.Customer;
 import affableBean.domain.Member;
 import affableBean.domain.Role;
 import affableBean.repository.CategoryRepository;
@@ -44,7 +49,7 @@ public class AdminControllerIntegrationTests {
 	private WebApplicationContext wac;
 
 	@Autowired
-	private CustomerRepository customerRepo;
+	CustomerRepository customerRepo;
 	@Autowired
 	private CategoryRepository categoryRepo;
 	@Autowired
@@ -53,6 +58,10 @@ public class AdminControllerIntegrationTests {
 	private MemberRepository memberRepo;
 	@Autowired
 	private RoleRepository roleRepo;
+	
+	@Mock
+	private CustomerRepository mockCustomerRepo;
+	
 	@InjectMocks
 	AdminController controller;
 	MockMvc mockMvc;
@@ -93,6 +102,17 @@ public class AdminControllerIntegrationTests {
 				.andExpect(model().attribute("customerList", hasSize(5)));
 	}
 
+	@Test
+	public void testCustomerPage() throws Exception {
+		ArrayList<Customer> expectedCustomers = new ArrayList<Customer>();
+		Customer newCustomer = new Customer(0, "ted", "t@t.com", "123", "street", "aa", "4567");
+		customerRepo.deleteAll();
+		customerRepo.save(newCustomer);
+//		when(mockCustomerRepo.findAll()).thenReturn(expectedCustomers);
+		mockMvc.perform(get("/admin"))
+		.andExpect(view().name("admin/index"))
+		.andExpect(status().isOk());
+	}
 	@Test
 	public void testMemberConsole() throws Exception {
 		Role adminRole = roleRepo.findByName("ADMIN");
