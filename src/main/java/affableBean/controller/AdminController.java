@@ -226,13 +226,13 @@ public class AdminController {
 	@RequestMapping(value = "/customerEdit", method = RequestMethod.GET)
 	public String editCustomer(@RequestParam("id") Integer id, ModelMap mm) {
 
-		Member customer = new Member();
+		Member member = new Member();
 		if (id != null) {
-			customer = memberRepo.findById(id);
+			member = memberRepo.findById(id);
 		}
 
 		// place customer details in request scope
-		mm.put("customer", customer);
+		mm.put("member", member);
 
 		return "admin/customer";
 	}
@@ -256,7 +256,7 @@ public class AdminController {
 
 		// validate customer data
 		boolean validationErrorFlag = false;
-		validationErrorFlag = validator.validateCustomer(customer, request);
+		validationErrorFlag = validator.validateMember(customer, request);
 
 		if (validationErrorFlag == true) {
 			mm.put("validationErrorFlag", validationErrorFlag);

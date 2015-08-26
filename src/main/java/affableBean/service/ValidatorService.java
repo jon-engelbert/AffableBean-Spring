@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
+import affableBean.domain.Member;
 import affableBean.domain.PaymentInfo;
 
 @Service
@@ -101,7 +102,8 @@ public class ValidatorService {
     }
     
     // performs simple validation on checkout form
-    public boolean validateCustomer(PaymentInfo customer,
+    public boolean validateMember(Member customer, 
+//    		PaymentInfo paymentInfo,
                                 HttpServletRequest request) {
 
         boolean errorFlag = false;
@@ -110,14 +112,14 @@ public class ValidatorService {
         boolean phoneError;
         boolean addressError;
         boolean cityRegionError;
-        boolean ccNumberError;
+//        boolean ccNumberError;
         
         String name = customer.getName();
         String email = customer.getEmail();
         String phone = customer.getPhone();
         String address = customer.getAddress();
         String cityRegion = customer.getCityRegion();
-        String ccNumber = customer.getCcNumber();
+//        String ccNumber = paymentInfo.getCcNumber();
 
         if (name == null
                 || name.equals("")
@@ -154,13 +156,13 @@ public class ValidatorService {
             cityRegionError = true;
             request.setAttribute("cityRegionError", cityRegionError);
         }
-        if (ccNumber == null
-                || ccNumber.equals("")
-                || ccNumber.length() > 19) {
-            errorFlag = true;
-            ccNumberError = true;
-            request.setAttribute("ccNumberError", ccNumberError);
-        }
+//        if (ccNumber == null
+//                || ccNumber.equals("")
+//                || ccNumber.length() > 19) {
+//            errorFlag = true;
+//            ccNumberError = true;
+//            request.setAttribute("ccNumberError", ccNumberError);
+//        }
 
         return errorFlag;
     }
