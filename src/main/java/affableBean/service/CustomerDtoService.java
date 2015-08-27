@@ -3,6 +3,8 @@ package affableBean.service;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import affableBean.domain.Customer;
@@ -13,6 +15,8 @@ import affableBean.repository.CustomerRepository;
 public class CustomerDtoService {
     @Autowired
     private CustomerRepository repository;
+    
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public Customer addNewCustomer(CustomerDto customerDto)  {
         final Customer customer = new Customer();
@@ -23,7 +27,7 @@ public class CustomerDtoService {
         customer.setAddress(customerDto.getAddress());
         customer.setCityRegion(customerDto.getCityRegion());
         customer.setCcNumber(customerDto.getCcNumber());
-        customer.setPassword(customerDto.getPassword());
+        customer.setPassword(encoder.encode(customerDto.getPassword()));
 
         return repository.save(customer);
     }
@@ -36,7 +40,8 @@ public class CustomerDtoService {
         customer.setAddress(customerDto.getAddress());
         customer.setCityRegion(customerDto.getCityRegion());
         customer.setCcNumber(customerDto.getCcNumber());
-        customer.setPassword(customerDto.getPassword());
+        if (customerDto.getPassword() != null)
+        	customer.setPassword(encoder.encode(customerDto.getPassword()));
 
         return repository.save(customer);
     }
