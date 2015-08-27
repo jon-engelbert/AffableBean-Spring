@@ -63,7 +63,7 @@
 		
 		    <p class="error" th:text="#{orderFailureError}" th:if="${#vars['orderFailureFlag'] != null}">order failure error</p>
 		
-		    <form id="checkoutForm" th:action="@{/purchase}" th:object="${customerDto}" method="post">
+		    <form id="checkoutForm" th:action="@{/purchase}" th:object="${paymentInfo}" method="post">
 		    	<span th:if="${session.isSignedIn} == true"><input type="hidden" name="id" id="id" th:value="${session.customerLoggedIn.id}"/></span>
 		        <table id="checkoutTable">
 		            <tr th:if="${#vars['validationErrorFlag'] != null}">
@@ -73,13 +73,15 @@
 		                      <span th:if="${nameError} != null">
 		                        <br/><span class="indent" th:text="#{nameError}"></span>
 		                      </span>
-		                      <span th:if="${emailError} != null">
+		                      
+<!-- 		                      <span th:if="${emailError} != null">
 		                        <br/><span class="indent" th:text="#{emailError}"></span>
 		                      </span>
 		                      <span th:if="${phoneError} != null">\
 		                        <br/><span class="indent" th:text="#{phoneError}"></span>
 		                      </span>
-		                      <span th:if="${addressError} != null">\
+ -->
+ 		                      <span th:if="${addressError} != null">\
 		                        <br/><span class="indent" th:text="#{addressError}"></span>
 		                      </span>
 		                      <span th:if="${cityRegionError} != null">\
@@ -99,7 +101,7 @@
 		                    <input type="text" th:field="*{name}" />
 		                </td>
 		            </tr>
-		            <tr>
+<!-- 		            <tr>
 		                <td><label for="email" th:text="|#{email}:|">email</label></td>
 		                <td class="inputField">
 		                    <input type="text" th:field="*{email}" />
@@ -111,7 +113,8 @@
 		                    <input type="text" th:field="*{phone}" />
 		                </td>
 		            </tr>
-		            <tr>
+ -->
+ 		            <tr>
 		                <td><label for="address" th:text="|#{address}:|">address</label></td>
 		                <td class="inputField">
 		                    <input type="text" th:field="*{address}"  />

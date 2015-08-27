@@ -21,10 +21,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
-import affableBean.domain.Customer;
+import affableBean.domain.PaymentInfo;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerOrderRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
 import affableBean.service.ValidatorService;
@@ -34,7 +34,7 @@ public class AdminControllerTests {
 
 	@Mock
 	// @Autowired
-	private CustomerRepository customerRepo;
+	private PaymentInfoRepository customerRepo;
 	@Mock
 	// @Autowired
 	private CategoryRepository categoryRepo;

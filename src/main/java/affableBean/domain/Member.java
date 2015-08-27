@@ -1,36 +1,60 @@
 package affableBean.domain;
 
+import java.util.Collection;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "member", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Member implements java.io.Serializable {
 
-	public Member(String name, String username, String password,
+	private static final long serialVersionUID = 3394395703589149580L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	private Integer id;
+    @Basic(optional = true)
+    @Column(name = "name")
+	private String name;
+	@Column(name = "username", unique = true, nullable = false, length = 45)
+	private String username;
+    @Basic(optional = false)
+    @Column(name = "password")
+	private String password;
+	private boolean enabled;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role_id", nullable = false)
+	private Role role;
+    @Basic(optional = true)
+    @Column(name = "phone")
+    private String phone;
+    @Basic(optional = true)
+    @Column(name = "address")
+    private String address;
+    @Basic(optional = true)
+    @Column(name = "city_region")
+    private String cityRegion;
+    @Basic(optional = false)
+    @Column(name = "email")
+    private String email;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+    private Collection<PaymentInfo> paymentInfoCollection;
+
+	public Member() {
+	}
+
+	public Member(String name, String username, String email, String password,
 			boolean enabled, Role role) {
 		super();
 		this.name = name;
 		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.enabled = enabled;
 		this.role = role;
 	}
 
-	private static final long serialVersionUID = 3394395703589149580L;
-
-	private Integer id;
-	private String name;
-	private String username;
-	private String password;
-	private boolean enabled;
-	private Role role;
-
-	public Member() {
-	}
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return id;
 	}
@@ -47,7 +71,6 @@ public class Member implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "username", unique = true, nullable = false, length = 45)
 	public String getUsername() {
 		return username;
 	}
@@ -72,8 +95,6 @@ public class Member implements java.io.Serializable {
 		this.enabled = enabled;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id", nullable = false)
 	public Role getRole() {
 		return role;
 	}
@@ -84,6 +105,47 @@ public class Member implements java.io.Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCityRegion() {
+		return cityRegion;
+	}
+
+	public void setCityRegion(String cityRegion) {
+		this.cityRegion = cityRegion;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Collection<PaymentInfo> getPaymentInfoCollection() {
+		return paymentInfoCollection;
+	}
+
+	public void setPaymentInfoCollection(
+			Collection<PaymentInfo> paymentInfoCollection) {
+		this.paymentInfoCollection = paymentInfoCollection;
 	}
 	
 }

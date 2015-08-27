@@ -42,9 +42,9 @@ public class CustomerOrder implements Serializable {
 	private int confirmationNumber;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customerOrder")
 	private Collection<OrderedProduct> orderedProductCollection;
-	@JoinColumn(name = "customer_id", referencedColumnName = "id")
+	@JoinColumn(name = "payment_info_id", referencedColumnName = "id")
 	@ManyToOne(optional = false)
-	private Customer customer;
+	private PaymentInfo paymentInfo;
 
 	public CustomerOrder() {
 	}
@@ -102,13 +102,10 @@ public class CustomerOrder implements Serializable {
 		this.orderedProductCollection = orderedProductCollection;
 	}
 
-	public Customer getCustomer() {
-		return customer;
+	public Member getCustomer() {
+		return paymentInfo.getMember();
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
 
 	@Override
 	public int hashCode() {
@@ -135,6 +132,14 @@ public class CustomerOrder implements Serializable {
 	@Override
 	public String toString() {
 		return "entity.CustomerOrder[id=" + id + "]";
+	}
+
+	public PaymentInfo getPaymentInfo() {
+		return paymentInfo;
+	}
+
+	public void setPaymentInfo(PaymentInfo paymentInfo) {
+		this.paymentInfo = paymentInfo;
 	}
 
 }

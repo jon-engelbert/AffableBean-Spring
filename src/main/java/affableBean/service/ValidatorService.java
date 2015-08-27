@@ -4,7 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 
 @Service
 public class ValidatorService {
@@ -39,8 +40,7 @@ public class ValidatorService {
 
     // performs simple validation on checkout form
     public boolean validateForm(String name,
-                                String email,
-                                String phone,
+//                                String phone,
                                 String address,
                                 String cityRegion,
                                 String ccNumber,
@@ -48,8 +48,8 @@ public class ValidatorService {
 
         boolean errorFlag = false;
         boolean nameError;
-        boolean emailError;
-        boolean phoneError;
+//        boolean emailError;
+//        boolean phoneError;
         boolean addressError;
         boolean cityRegionError;
         boolean ccNumberError;
@@ -61,20 +61,20 @@ public class ValidatorService {
             nameError = true;
             request.setAttribute("nameError", nameError);
         }
-        if (email == null
-                || email.equals("")
-                || !email.contains("@")) {
-            errorFlag = true;
-            emailError = true;
-            request.setAttribute("emailError", emailError);
-        }
-        if (phone == null
-                || phone.equals("")
-                || phone.length() < 9) {
-            errorFlag = true;
-            phoneError = true;
-            request.setAttribute("phoneError", phoneError);
-        }
+//        if (email == null
+//                || email.equals("")
+//                || !email.contains("@")) {
+//            errorFlag = true;
+//            emailError = true;
+//            request.setAttribute("emailError", emailError);
+//        }
+//        if (phone == null
+//                || phone.equals("")
+//                || phone.length() < 9) {
+//            errorFlag = true;
+//            phoneError = true;
+//            request.setAttribute("phoneError", phoneError);
+//        }
         if (address == null
                 || address.equals("")
                 || address.length() > 45) {
@@ -84,7 +84,7 @@ public class ValidatorService {
         }
         if (cityRegion == null
                 || cityRegion.equals("")
-                || cityRegion.length() > 2) {
+                || cityRegion.length() > 45) {
             errorFlag = true;
             cityRegionError = true;
             request.setAttribute("cityRegionError", cityRegionError);
@@ -101,7 +101,8 @@ public class ValidatorService {
     }
     
     // performs simple validation on checkout form
-    public boolean validateCustomer(CustomerDto customerDto,
+    public boolean validateMember(Member customer, 
+//    		PaymentInfo paymentInfo,
                                 HttpServletRequest request) {
 
         boolean errorFlag = false;
@@ -110,14 +111,14 @@ public class ValidatorService {
         boolean phoneError;
         boolean addressError;
         boolean cityRegionError;
-        boolean ccNumberError;
+//        boolean ccNumberError;
         
-        String name = customerDto.getName();
-        String email = customerDto.getEmail();
-        String phone = customerDto.getPhone();
-        String address = customerDto.getAddress();
-        String cityRegion = customerDto.getCityRegion();
-        String ccNumber = customerDto.getCcNumber();
+        String name = customer.getName();
+        String email = customer.getEmail();
+        String phone = customer.getPhone();
+        String address = customer.getAddress();
+        String cityRegion = customer.getCityRegion();
+//        String ccNumber = paymentInfo.getCcNumber();
 
         if (name == null
                 || name.equals("")
@@ -149,18 +150,18 @@ public class ValidatorService {
         }
         if (cityRegion == null
                 || cityRegion.equals("")
-                || cityRegion.length() > 2) {
+                || cityRegion.length() > 45) {
             errorFlag = true;
             cityRegionError = true;
             request.setAttribute("cityRegionError", cityRegionError);
         }
-        if (ccNumber == null
-                || ccNumber.equals("")
-                || ccNumber.length() > 19) {
-            errorFlag = true;
-            ccNumberError = true;
-            request.setAttribute("ccNumberError", ccNumberError);
-        }
+//        if (ccNumber == null
+//                || ccNumber.equals("")
+//                || ccNumber.length() > 19) {
+//            errorFlag = true;
+//            ccNumberError = true;
+//            request.setAttribute("ccNumberError", ccNumberError);
+//        }
 
         return errorFlag;
     }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,55 +14,58 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import affableBean.domain.Customer;
-import affableBean.repository.CustomerRepository;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
+import affableBean.repository.MemberRepository;
+import affableBean.repository.PaymentInfoRepository;
 
 @Service
 @Transactional
-public class CustomerService {
+public class MemberService {
 
-	@Resource
-	private CustomerRepository customerRepo;
+	@Autowired
+	private MemberRepository memberRepo;
 	
 	private PasswordEncoder encoder = new BCryptPasswordEncoder();
 	
 	
 	private static final int PAGE_SIZE = 5;
 
-    public Page<Customer> findAllCustomers(Integer pageNumber) {
+    public Page<Member> findAllCustomers(Integer pageNumber) {
         PageRequest request =
             new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "name");
-        return customerRepo.findAll(request);
+        return memberRepo.findAll(request);
     }
 
-	public List<Customer> getAll() {
-		return customerRepo.findAll();
+	public List<Member> getAll() {
+		return memberRepo.findAll();
 	}
 	
-	public Customer saveAndFlush(Customer customer) {
-		return customerRepo.saveAndFlush(customer);
+	public Member saveAndFlush(Member customer) {
+		return memberRepo.saveAndFlush(customer);
 	}
 	
-	public Customer findOneByName(String name) {
-		return customerRepo.findOneByName(name);
+	public Member findOneByName(String name) {
+		return memberRepo.findOneByName(name);
 	
 	}
 	
-	public Customer findById(Integer id) {
-		return customerRepo.findById(id);
+	public Member findById(Integer id) {
+		return memberRepo.findById(id);
 	}
 	
-	public Customer saveNewCustomer(Customer customer) {
+	public Member saveNewCustomer(Member member) {
 		
-		String password = customer.getPassword();
+		String password = member.getPassword();
 		
 		
 		String encodedPw = encoder.encode(password);
 		
-		customer.setPassword(encodedPw);
+		member.setPassword(encodedPw);
 		
 		
-		return customerRepo.saveAndFlush(customer);
+		member = memberRepo.saveAndFlush(member);
+		return member;
 	}
 
 	public boolean validatePassword(String rawPassword, String encodeddPassword) {
@@ -70,9 +74,9 @@ public class CustomerService {
 	}
 
 	public boolean checkEmailExists(String email) {
-		List<Customer> custs = new ArrayList<Customer>();
-		custs = customerRepo.findByEmail(email);
-		if (custs.size() > 0)
+		Member cust = new Member();
+		cust = memberRepo.findByEmail(email);
+		if (cust != null && cust.getId() != null)
 			return true;
 		else return false;
 	}

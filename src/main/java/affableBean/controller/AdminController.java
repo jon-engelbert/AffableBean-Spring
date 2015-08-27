@@ -26,17 +26,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import affableBean.cart.Cart;
 import affableBean.domain.Category;
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.CustomerOrder;
 import affableBean.domain.Product;
 import affableBean.repository.CategoryRepository;
 import affableBean.repository.CustomerOrderRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
-import affableBean.service.CustomerDto;
-import affableBean.service.CustomerDtoService;
-import affableBean.service.CustomerService;
+import affableBean.service.MemberService;
 import affableBean.service.OrderService;
 import affableBean.service.ProductDto;
 import affableBean.service.ProductDtoService;
@@ -47,10 +46,7 @@ import affableBean.service.ValidatorService;
 public class AdminController {
 
 	@Autowired
-	private CustomerRepository customerRepo;
-	
-	@Autowired
-	private CustomerDtoService customerDtoService;
+	private PaymentInfoRepository paymentInfoRepo;
 
 	@Autowired
 	private ProductRepository productRepo;
@@ -62,7 +58,10 @@ public class AdminController {
 	private CategoryRepository categoryRepo;
 
 	 @Autowired
-	 private CustomerService customerService;
+	 private MemberService memberService;
+
+//	 @Autowired
+//	 private PaymentInfoService paymentInfoService;
 
 	@Autowired
 	private CustomerOrderRepository orderRepo;
@@ -85,37 +84,46 @@ public class AdminController {
 	@Autowired
 	DataSource datasource;
 
-	/**
-	 * Auth process
-	 */
-	@RequestMapping(value = "/login", method = { RequestMethod.GET,
-			RequestMethod.POST })
-	public String loginConsole(
-			@RequestParam(value = "error", required = false) String error,
+
+	
+	@RequestMapping(value="/login", method = RequestMethod.POST)
+	public String custLogin(@RequestParam("email") String email,
+			@RequestParam("password") String password, 
+			HttpSession session,
 			ModelMap mm) {
-
-		if (error != null) {
-			mm.put("message", "Login Failed!");
-		} else {
-			mm.put("message", false);
+		Member customer = new Member();
+		customer = memberRepo.findByEmail(email);
+		if (customer == null || customer.getId() == null) {
+			mm.put("loginerror", true);
+			System.out.println("customer by email not found");
+			return "front_store/memberlogin";
 		}
-		return "admin/login";
-	}
+		
+		boolean isPasswordValid = memberService.validatePassword(password, customer.getPassword());
+		
+		if (!isPasswordValid) {
+			mm.put("loginerror", true);
+			System.out.println("password not valid");
+			return "front_store/memberlogin";
+		}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logoutConsole(HttpSession session) {
+    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
 
-		if (session != null)
-			session.invalidate();
+		session.setAttribute("isSignedIn", true);
+		customer.setPassword("");
+		session.setAttribute("customerLoggedIn", customer);
 		return "redirect:/home";
+		
 	}
+	
+
 
 	/**
 	 * Login succeeded, inside AdminConsole
 	 */
 	@RequestMapping(value = {"", "/viewCustomers"}, method = RequestMethod.GET)
 	public String customerConsole(@RequestParam(value="page", required=false, defaultValue="1") Integer pageNumber, ModelMap mm) {
-		Page<Customer> page = customerService.findAllCustomers(pageNumber);
+		Page<Member> page = memberService.findAllCustomers(pageNumber);
 		
 		int current = page.getNumber() + 1;
 	    int begin = Math.max(1, current - 5);
@@ -140,11 +148,14 @@ public class AdminController {
 	public String getCustomerRecord(@RequestParam("id") Integer id, ModelMap mm) {
 
 		// get customer details
-		Customer customer = customerRepo.findById(id);
+		Member customer = memberRepo.findById(id);
 		mm.put("customerRecord", customer);
+		PaymentInfo paymentInfo = null;
+		if (!customer.getPaymentInfoCollection().isEmpty())
+			paymentInfo = customer.getPaymentInfoCollection().iterator().next();
 
 		// get customer order details
-		List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
+		List<CustomerOrder> orders = orderRepo.findByPaymentInfo(paymentInfo);
 		System.out
 				.println("Number of orders: " + String.valueOf(orders.size()));
 		if (orders.size() == 1)
@@ -174,8 +185,11 @@ public class AdminController {
 	@RequestMapping(value = "/viewCustomerOrders", method = RequestMethod.GET)
 	public String getCustomerOrders(@RequestParam("id") Integer id, ModelMap mm) {
 
-		Customer customer = customerRepo.findById(id);
-		List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
+		Member customer = memberRepo.findById(id);
+		PaymentInfo paymentInfo = null;
+		if (!customer.getPaymentInfoCollection().isEmpty())
+			paymentInfo = customer.getPaymentInfoCollection().iterator().next();
+		List<CustomerOrder> orders = orderRepo.findByPaymentInfo(paymentInfo);
 		mm.put("orderRecords", orders);
 		mm.put("customer", customer);
 		mm.put("deliverySurcharge", Cart._deliverySurcharge);
@@ -195,27 +209,23 @@ public class AdminController {
 	@RequestMapping(value = "/customerEdit", method = RequestMethod.GET)
 	public String editCustomer(@RequestParam("id") Integer id, ModelMap mm) {
 
-		Customer customer = new Customer();
+		Member member = new Member();
 		if (id != null) {
-			customer = customerRepo.findById(id);
+			member = memberRepo.findById(id);
 		}
 
 		// place customer details in request scope
-		mm.put("customer", customer);
+		mm.put("member", member);
 
 		return "admin/customer";
 	}
 
 	@RequestMapping(value = "/customerEdit", method = RequestMethod.POST)
-	public String editCustomerPost(final CustomerDto customerDto,
+	public String editCustomerPost(final Member customer,
 			final BindingResult bindingResult, ModelMap mm,
 			HttpServletRequest request) {
 
 		System.out.println("in customerEdit post");
-		Integer id = 0;
-		if (customerDto != null) {
-			id = customerDto.getId();
-		}
 
 		if (bindingResult.hasErrors()) {
 			System.out.println("bindingResult error");
@@ -225,7 +235,7 @@ public class AdminController {
 
 		// validate customer data
 		boolean validationErrorFlag = false;
-		validationErrorFlag = validator.validateCustomer(customerDto, request);
+		validationErrorFlag = validator.validateMember(customer, request);
 
 		if (validationErrorFlag == true) {
 			mm.put("validationErrorFlag", validationErrorFlag);
@@ -233,7 +243,7 @@ public class AdminController {
 
 			// otherwise, update customer to database
 		} else {
-			Customer updatedCustomer = customerDtoService.addNewCustomer(customerDto);
+			Member updatedCustomer = memberRepo.save(customer);
 			mm.put("success", true);
 			mm.put("customer", updatedCustomer);
 		}

@@ -31,11 +31,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import affableBean.AffableBeanApplication;
-import affableBean.domain.Customer;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.Member;
 import affableBean.domain.Role;
 import affableBean.repository.CategoryRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
 import affableBean.repository.RoleRepository;
@@ -49,7 +49,7 @@ public class AdminControllerIntegrationTests {
 	private WebApplicationContext wac;
 
 	@Autowired
-	CustomerRepository customerRepo;
+	MemberRepository customerRepo;
 	@Autowired
 	private CategoryRepository categoryRepo;
 	@Autowired
@@ -60,7 +60,7 @@ public class AdminControllerIntegrationTests {
 	private RoleRepository roleRepo;
 	
 	@Mock
-	private CustomerRepository mockCustomerRepo;
+	private PaymentInfoRepository mockCustomerRepo;
 	
 	@InjectMocks
 	AdminController controller;
@@ -104,8 +104,9 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testCustomerPage() throws Exception {
-		ArrayList<Customer> expectedCustomers = new ArrayList<Customer>();
-		Customer newCustomer = new Customer(0, "ted", "t@t.com", "123", "street", "aa", "4567");
+		ArrayList<PaymentInfo> expectedCustomers = new ArrayList<PaymentInfo>();
+		Role userRole = roleRepo.findByName("USER");
+		Member newCustomer = new Member("Ted theo", "ted", "t@t.com", "123", true, userRole);
 		customerRepo.deleteAll();
 		customerRepo.save(newCustomer);
 //		when(mockCustomerRepo.findAll()).thenReturn(expectedCustomers);
@@ -117,7 +118,7 @@ public class AdminControllerIntegrationTests {
 	public void testMemberConsole() throws Exception {
 		Role adminRole = roleRepo.findByName("ADMIN");
 //		roleRepo.save(newRole);
-		Member newMember = new Member("jon", "jonny", "123", true, adminRole);
+		Member newMember = new Member("jon", "jonny", "jon@jon.com", "123", true, adminRole);
 		memberRepo.save(newMember);
 		mockMvc.perform(get("/admin/member")).andExpect(view().name("admin/member"))
 				.andExpect(status().isOk())

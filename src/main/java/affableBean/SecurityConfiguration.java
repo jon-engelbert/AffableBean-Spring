@@ -71,11 +71,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         Member userMember = memberRepo.findByUsername("user");
  
         if(userMember == null) {
-            memberRepo.saveAndFlush(new Member("user", "user", encoder.encode("user"), true, userRole));
+            memberRepo.saveAndFlush(new Member("user", "user", "user@user.com", encoder.encode("user"), true, userRole));
         }
         
         if(adminMember == null) {
-            memberRepo.saveAndFlush(new Member("admin", "admin", encoder.encode("admin"), true, adminRole));
+            memberRepo.saveAndFlush(new Member("admin", "admin", "admin@admin.com", encoder.encode("admin"), true, adminRole));
 
         }
         

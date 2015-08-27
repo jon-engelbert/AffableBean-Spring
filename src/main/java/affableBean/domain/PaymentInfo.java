@@ -10,13 +10,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "customer")
-public class Customer implements Serializable {
+@Table(name = "payment_info")
+public class PaymentInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +28,9 @@ public class Customer implements Serializable {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
-    @Basic(optional = false)
-    @Column(name = "email")
-    private String email;
-    @Basic(optional = false)
-    @Column(name = "phone")
-    private String phone;
+//    @Basic(optional = false)
+//    @Column(name = "phone")
+//    private String phone;
     @Basic(optional = false)
     @Column(name = "address")
     private String address;
@@ -41,24 +40,32 @@ public class Customer implements Serializable {
     @Basic(optional = false)
     @Column(name = "cc_number")
     private String ccNumber;
-    @Basic(optional = false)
-    @Column(name = "password")
-    private String password;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
     private Collection<CustomerOrder> customerOrderCollection;
+	@JoinColumn(name = "member_id", referencedColumnName = "id")
+	@ManyToOne(optional = false)
+	private Member member;
 
-    public Customer() {
+    public PaymentInfo() {
     }
 
-    public Customer(Integer id) {
+    public PaymentInfo(Integer id) {
         this.id = id;
     }
 
-    public Customer(Integer id, String name, String email, String phone, String address, String cityRegion, String ccNumber) {
+    public PaymentInfo(Integer id, String name, String email, String phone, String address, String cityRegion, String ccNumber) {
         this.id = id;
         this.name = name;
-        this.email = email;
-        this.phone = phone;
+//        this.phone = phone;
+        this.address = address;
+        this.cityRegion = cityRegion;
+        this.ccNumber = ccNumber;
+    }
+
+    public PaymentInfo(String name, String address, String cityRegion, String ccNumber) {
+        this.id = id;
+        this.name = name;
+//        this.phone = phone;
         this.address = address;
         this.cityRegion = cityRegion;
         this.ccNumber = ccNumber;
@@ -80,22 +87,14 @@ public class Customer implements Serializable {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//
     public String getAddress() {
         return address;
     }
@@ -120,14 +119,6 @@ public class Customer implements Serializable {
         this.ccNumber = ccNumber;
     }
 
-    public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
     public Collection<CustomerOrder> getCustomerOrderCollection() {
         return customerOrderCollection;
     }
@@ -146,10 +137,10 @@ public class Customer implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Customer)) {
+        if (!(object instanceof PaymentInfo)) {
             return false;
         }
-        Customer other = (Customer) object;
+        PaymentInfo other = (PaymentInfo) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -160,6 +151,14 @@ public class Customer implements Serializable {
     public String toString() {
         return "entity.Customer[id=" + id + "]";
     }
+
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
 
 }

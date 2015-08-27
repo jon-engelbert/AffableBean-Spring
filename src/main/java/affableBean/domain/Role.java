@@ -28,13 +28,17 @@ public class Role implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6464512438578201997L;
 
-	private Byte id;
-	private String name;
-	private Set<Member> members = new HashSet<Member>(0);
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
+	private Byte id;
+
+	@Column(name = "name", nullable = false, length = 45)
+	private String name;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+	private Set<Member> members = new HashSet<Member>(0);
+
 	public Byte getId() {
 		return id;
 	}
@@ -43,7 +47,6 @@ public class Role implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "name", nullable = false, length = 45)
 	public String getName() {
 		return name;
 	}
@@ -52,7 +55,6 @@ public class Role implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
 	public Set<Member> getMembers() {
 		return members;
 	}

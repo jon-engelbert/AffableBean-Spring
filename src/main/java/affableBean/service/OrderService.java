@@ -15,13 +15,15 @@ import org.springframework.stereotype.Service;
 
 import affableBean.cart.Cart;
 import affableBean.cart.CartItem;
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.CustomerOrder;
 import affableBean.domain.OrderedProduct;
 import affableBean.domain.OrderedProductPK;
 import affableBean.domain.Product;
 import affableBean.repository.CustomerOrderRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.MemberRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
 
@@ -30,7 +32,10 @@ import affableBean.repository.ProductRepository;
 public class OrderService {
 	
 	@Autowired 
-	private CustomerRepository customerRepo;
+	private MemberRepository customerRepo;
+
+	@Autowired 
+	private PaymentInfoRepository paymentInfoRepo;
 
 	@Autowired
 	private CustomerOrderRepository customerOrderRepo;
@@ -41,19 +46,13 @@ public class OrderService {
 	@Autowired
 	private ProductRepository productRepo;
 	
-	@Autowired
-	private CustomerDtoService customerDtoService;
-	
-    public int placeOrder(CustomerDto newCustDto, Cart cart) {
+    public int placeOrder(PaymentInfo newPaymentInfo, Cart cart) {
     	
         try {
-        	// the original netbeans tutorial didn't have a register/login
-        	// function so each purchase was essentially adding a new customer.
-        	// With the register/login function, the purchase now UPDATES a customer's
-        	// information, not add.
-        	Customer customer = updateCustomer(newCustDto);
+            PaymentInfo paymentInfo = addPaymentInfo(newPaymentInfo);
+            System.out.println("after new paymentInfo " + paymentInfo.getMember().getName() + " id " + paymentInfo.getId());
 
-            CustomerOrder order = addOrder(customer, cart);
+            CustomerOrder order = addOrder(paymentInfo, cart);
             addOrderedItems(order, cart);
             return order.getId();
         } catch (Exception e) {
@@ -63,21 +62,19 @@ public class OrderService {
         }
     }
 
-    private Customer addCustomer(CustomerDto newCustDto) {
+    private PaymentInfo addPaymentInfo(PaymentInfo newPaymentInfo) {
+		// TODO Auto-generated method stub
+        return paymentInfoRepo.saveAndFlush(newPaymentInfo);
+	}
 
-        return customerDtoService.addNewCustomer(newCustDto);
-    }
+//	private Member addCustomer(Member newCust) {
 
-    private Customer updateCustomer(CustomerDto newCustDto) {
 
-        return customerDtoService.editCustomer(newCustDto);
-    }
-
-    private CustomerOrder addOrder(Customer customer, Cart cart) {
+    private CustomerOrder addOrder(PaymentInfo paymentInfo, Cart cart) {
 
         // set up customer order
         CustomerOrder order = new CustomerOrder();
-        order.setCustomer(customer);
+        order.setPaymentInfo(paymentInfo);
         order.setAmount(BigDecimal.valueOf(cart.getTotal()));
 
         // create confirmation number
@@ -131,7 +128,7 @@ public class OrderService {
         CustomerOrder order = customerOrderRepo.findById(orderId);
 
         // get customer
-        Customer customer = order.getCustomer();
+        Member customer = order.getCustomer();
 
         // get all ordered products
         List<OrderedProduct> orderedProducts = orderedProductRepo.findByCustomerOrderId(orderId);

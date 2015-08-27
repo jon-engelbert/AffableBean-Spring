@@ -19,14 +19,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import affableBean.domain.Category;
 import affableBean.repository.CategoryRepository;
-import affableBean.repository.CustomerRepository;
+import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
 
 public class FrontStoreControllerTests {
 
 	@Mock
-	private CustomerRepository customerRepo;
+	private PaymentInfoRepository customerRepo;
 	@Mock
 	private CategoryRepository categoryRepo;
 	@Mock

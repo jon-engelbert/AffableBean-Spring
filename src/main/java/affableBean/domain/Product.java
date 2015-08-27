@@ -111,7 +111,7 @@ public class Product implements Serializable {
         this.category = category;
     }
 
-    public Collection<OrderedProduct> getOrderedProductCollection() {
+	public Collection<OrderedProduct> getOrderedProductCollection() {
         return orderedProductCollection;
     }
 

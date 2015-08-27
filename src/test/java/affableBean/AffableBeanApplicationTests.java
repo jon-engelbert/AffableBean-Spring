@@ -12,11 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
 import affableBean.domain.Category;
-import affableBean.domain.Customer;
+import affableBean.domain.Member;
+import affableBean.domain.PaymentInfo;
 import affableBean.domain.Product;
+import affableBean.domain.Role;
+import affableBean.repository.RoleRepository;
 import affableBean.service.CategoryService;
-import affableBean.service.CustomerService;
+import affableBean.service.MemberService;
 import affableBean.service.ProductService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,12 +29,14 @@ import affableBean.service.ProductService;
 public class AffableBeanApplicationTests {
 
 	@Autowired
-	CustomerService customerService;
+	MemberService customerService;
 
 	@Autowired
 	CategoryService categoryService;
 	@Autowired
 	ProductService productService;
+	@Autowired
+	private RoleRepository roleRepo;
 
 	@Test
 	public void contextLoads() {
@@ -39,13 +45,12 @@ public class AffableBeanApplicationTests {
 	@Test
 	@Transactional
 	public void testSaveCustomer() {
-		Customer cust = new Customer(null, "Thien", "thienman@gmail.com",
-				"7349724084", "test address", "MI",
-				"1234 5678 9012 3456");
+		Role adminRole = roleRepo.findByName("ADMIN");
+		Member cust = new Member("Thien", "Thien  Nguyen", "thienman@gmail.com", "123", true, adminRole);
 
-		Customer custReturned = customerService.saveAndFlush(cust);
+		Member custReturned = customerService.saveAndFlush(cust);
 		System.out.println("******" + custReturned.getPhone());
-		Customer custSaved = customerService.findOneByName("Thien");
+		Member custSaved = customerService.findOneByName("Thien");
 		Assert.assertEquals(custReturned, custSaved);
 
 		Integer id = custReturned.getId();

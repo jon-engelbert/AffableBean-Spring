@@ -12,7 +12,7 @@
 		<span th:if="${error}">There was a problem updating this customer</span>
 		<span th:if="${success}">Customer successfully updated</span>
 
-			<form id="customerForm" th:action="@{/admin/customerEdit}" th:object="${customer}" method="post">
+			<form id="customerForm" th:action="@{/admin/customerEdit}" th:object="${member}" method="post">
 				<input type="hidden" name="id" th:value="${customer.id}" />
 		        <table id="customerTable">
 		            <tr th:if="${#vars['validationErrorFlag'] != null}">
@@ -34,10 +34,10 @@
 		                      <span th:if="${cityRegionError} != null">\
 		                        <br/><span class="indent" th:text="#{cityRegionError}"></span>
 		                      </span>
-		                      <span th:if="${ccNumberError} != null">\
+<!-- 		                      <span th:if="${ccNumberError} != null">\
 		                        <br/><span class="indent" th:text="#{ccNumberError}"></span>
 		                      </span>
-		
+ -->		
 		                    </span>
 		                </td>
 		            </tr>
@@ -67,32 +67,28 @@
 		            <tr>
 		                <td><label for="phone" th:text="|#{phone}:|"></label></td>
 		                <td class="inputField">
-		                    <input type="text"
-		                           size="31"
-		                           maxlength="16"
-		                           id="phone"
-		                           name="phone"
-		                           th:value="${customer.phone}" />
+		                    <input type="text" th:field "*{phone}" />
 		                </td>
 		            </tr>
 		            <tr>
 		                <td><label for="address" th:text="|#{address}:|">address</label></td>
 		                <td class="inputField">
-		                    <input type="text"
-		                           size="31"
-		                           maxlength="45"
-		                           id="address"
-		                           name="address"
-		                           th:value="${customer.address}" />
+		                    <input type="text" th:field "*{address}" />
 		
-		                    <br/>
-		                    <span th:text="#{prague}"></span>
-		                    <select name="cityRegion">
-								<option th:each="regionNumber : ${#numbers.sequence(1,10)}" th:value="${regionNumber}" th:text="${regionNumber}" th:selected="${customer.cityRegion eq (regionNumber)}"></option>
-		                    </select>
 		                </td>
 		            </tr>
 		            <tr>
+		                <td><label for="cityRegion" th:text="|#{cityRegion}:|">cityRegion</label></td>
+		                <td class="inputField">
+		                    <input type="text" th:field "*{cityRegion}" />
+		                </td>
+<!-- 		                    <span th:text="#{prague}"></span>
+		                    <select name="cityRegion">
+								<option th:each="regionNumber : ${#numbers.sequence(1,10)}" th:value="${regionNumber}" th:text="${regionNumber}" th:selected="${customer.cityRegion eq (regionNumber)}"></option>
+		                    </select>
+ -->
+		            </tr>
+<!-- 		            <tr>
 		                <td><label for="ccNumber" th:text="|#{creditCard}:|">credit card</label></td>
 		                <td class="inputField">
 		                    <input type="text"
@@ -104,7 +100,8 @@
 		                           th:value="${customer.ccNumber}" />
 		                </td>
 		            </tr>
-		            <tr>
+ -->
+ 		            <tr>
 		                <td colspan="2">
 		                    <input type="submit" value="submit" />
 		                </td>
