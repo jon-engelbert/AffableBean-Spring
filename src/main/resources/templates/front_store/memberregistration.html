@@ -37,30 +37,28 @@
 			account was created!</span> <span class="error" th:if="${emailExists}">This
 			email address has already been registered</span>
 
-		<form id="customerForm" th:action="@{/newCustSubmit}"
-			th:object="${customerDto}" method="post"
+		<form id="customerForm" th:action="@{/newMemberSubmit}"
+			th:object="${member}" method="post"
 			onsubmit="return validatePassword();">
 			<input type="hidden" name="id" th:value="*{id}" />
 			<table class="formTable">
 				<tr th:if="${#vars['validationErrorFlag'] != null}">
-					<td colspan="2" style="text-align: left"><span
-						class="error smallText"><span
-							th:text="#{validationErrorMessage" /> <span
-							th:if="${nameError} != null"> <br />
+					<td colspan="2" style="text-align: left" 
+						class="error smallText">
+						 <span
+							th:if="${nameError} != null" th:text="#{validationErrorMessage}"> <br />
 							<span class="indent" th:text="#{nameError}"></span>
-						</span> <span th:if="${emailError} != null"> <br />
+						</span> <span th:if="${emailError} != null" th:text="#{validationErrorMessage}"> <br />
 							<span class="indent" th:text="#{emailError}"></span>
-						</span> <span th:if="${phoneError} != null">\ <br />
+						</span> <span th:if="${phoneError} != null" th:text="#{validationErrorMessage}">\ <br />
 							<span class="indent" th:text="#{phoneError}"></span>
-						</span> <span th:if="${addressError} != null">\ <br />
+						</span> <span th:if="${addressError} != null" th:text="#{validationErrorMessage}">\ <br />
 							<span class="indent" th:text="#{addressError}"></span>
-						</span> <span th:if="${cityRegionError} != null">\ <br />
+						</span> <span th:if="${cityRegionError} != null" th:text="#{validationErrorMessage}">\ <br />
 							<span class="indent" th:text="#{cityRegionError}"></span>
-						</span> <span th:if="${ccNumberError} != null">\ <br />
-							<span class="indent" th:text="#{ccNumberError}"></span>
-						</span> <span th:if="${passwordError} != null">\ <br />
+						</span> <span th:if="${passwordError} != null" th:text="#{validationErrorMessage}">\ <br />
 							<span class="indent">password</span>
-						</span> </span></td>
+						</span></td>
 				</tr>
 
 				<tr>
@@ -96,20 +94,18 @@
  					</td>
 				</tr>
 				<tr>
-					<td><label for="ccNumber" th:text="|#{creditCard}:|">credit
-							card</label></td>
-					<td class="inputField"><input type="text"
-						th:field="*{ccNumber}" /></td>
-				</tr>
-				<tr>
 					<td><label for="password">password:</label></td>
 					<td class="inputField"><input type="password"
 						th:field="*{password}" /></td>
 				</tr>
 				<tr>
 					<td><label for="confpassword">confirm password:</label></td>
-					<td class="inputField"><input type="password"
-						th:field="*{confPassword}" /></td>
+					<td class="inputField">		                    <input type="password"
+		                           size="31"
+		                           id="confpassword"
+		                           name="confpassword"
+		                           class="password" />
+</td>
 				</tr>
 				<tr>
 					<td colspan="2"><input type="submit" value="submit" /></td>

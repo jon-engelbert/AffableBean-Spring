@@ -96,7 +96,7 @@ public class AdminController {
 		if (customer == null || customer.getId() == null) {
 			mm.put("loginerror", true);
 			System.out.println("customer by email not found");
-			return "front_store/customerlogin";
+			return "front_store/memberlogin";
 		}
 		
 		boolean isPasswordValid = memberService.validatePassword(password, customer.getPassword());
@@ -104,7 +104,7 @@ public class AdminController {
 		if (!isPasswordValid) {
 			mm.put("loginerror", true);
 			System.out.println("password not valid");
-			return "front_store/customerlogin";
+			return "front_store/memberlogin";
 		}
 
     	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
@@ -116,30 +116,7 @@ public class AdminController {
 		
 	}
 	
-	/**
-	 * Auth process
-	 */
-	@RequestMapping(value = "/login", method = { RequestMethod.GET,
-			RequestMethod.POST })
-	public String loginConsole(
-			@RequestParam(value = "error", required = false) String error,
-			ModelMap mm) {
 
-		if (error != null) {
-			mm.put("message", "Login Failed!");
-		} else {
-			mm.put("message", false);
-		}
-		return "admin/login";
-	}
-
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logoutConsole(HttpSession session) {
-
-		if (session != null)
-			session.invalidate();
-		return "redirect:/home";
-	}
 
 	/**
 	 * Login succeeded, inside AdminConsole
@@ -173,9 +150,12 @@ public class AdminController {
 		// get customer details
 		Member customer = memberRepo.findById(id);
 		mm.put("customerRecord", customer);
+		PaymentInfo paymentInfo = null;
+		if (!customer.getPaymentInfoCollection().isEmpty())
+			paymentInfo = customer.getPaymentInfoCollection().iterator().next();
 
 		// get customer order details
-		List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
+		List<CustomerOrder> orders = orderRepo.findByPaymentInfo(paymentInfo);
 		System.out
 				.println("Number of orders: " + String.valueOf(orders.size()));
 		if (orders.size() == 1)
@@ -206,7 +186,10 @@ public class AdminController {
 	public String getCustomerOrders(@RequestParam("id") Integer id, ModelMap mm) {
 
 		Member customer = memberRepo.findById(id);
-		List<CustomerOrder> orders = orderRepo.findByCustomer(customer);
+		PaymentInfo paymentInfo = null;
+		if (!customer.getPaymentInfoCollection().isEmpty())
+			paymentInfo = customer.getPaymentInfoCollection().iterator().next();
+		List<CustomerOrder> orders = orderRepo.findByPaymentInfo(paymentInfo);
 		mm.put("orderRecords", orders);
 		mm.put("customer", customer);
 		mm.put("deliverySurcharge", Cart._deliverySurcharge);

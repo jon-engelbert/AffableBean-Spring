@@ -15,6 +15,7 @@ public interface PaymentInfoRepository extends JpaRepository<PaymentInfo, Intege
 	PaymentInfo findById(Integer id);
 
 	PaymentInfo findOneByName(String name);
+	PaymentInfo findOneByCcNumber(String ccNumber);
 	
 
 	// more methods to follow

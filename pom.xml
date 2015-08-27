@@ -15,7 +15,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.2.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -52,7 +52,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -63,8 +63,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>r05</version>
+		</dependency>
 	</dependencies>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -76,20 +81,17 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-<!-- for debugging				<configuration>
-	          		<jvmArguments>
-	            		-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-	         		</jvmArguments>
-        		</configuration> -->
+				<!-- for debugging <configuration> <jvmArguments> -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 
+					</jvmArguments> </configuration> -->
 			</plugin>
 		</plugins>
 	</build>
-	
+
 
 </project>

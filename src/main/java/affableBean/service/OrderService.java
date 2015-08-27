@@ -34,6 +34,9 @@ public class OrderService {
 	@Autowired 
 	private MemberRepository customerRepo;
 
+	@Autowired 
+	private PaymentInfoRepository paymentInfoRepo;
+
 	@Autowired
 	private CustomerOrderRepository customerOrderRepo;
 
@@ -43,13 +46,13 @@ public class OrderService {
 	@Autowired
 	private ProductRepository productRepo;
 	
-    public int placeOrder(Member newCust, Cart cart) {
+    public int placeOrder(PaymentInfo newPaymentInfo, Cart cart) {
     	
         try {
-            Member customer = addCustomer(newCust);
-            System.out.println("after new customer " + customer.getName() + " id " + customer.getId());
+            PaymentInfo paymentInfo = addPaymentInfo(newPaymentInfo);
+            System.out.println("after new paymentInfo " + paymentInfo.getMember().getName() + " id " + paymentInfo.getId());
 
-            CustomerOrder order = addOrder(customer, cart);
+            CustomerOrder order = addOrder(paymentInfo, cart);
             addOrderedItems(order, cart);
             return order.getId();
         } catch (Exception e) {
@@ -59,7 +62,12 @@ public class OrderService {
         }
     }
 
-    private Member addCustomer(Member newCust) {
+    private PaymentInfo addPaymentInfo(PaymentInfo newPaymentInfo) {
+		// TODO Auto-generated method stub
+        return paymentInfoRepo.saveAndFlush(newPaymentInfo);
+	}
+
+	private Member addCustomer(Member newCust) {
 
 //        Customer customer = new Customer();
 //        customer.setName(name);
@@ -72,11 +80,11 @@ public class OrderService {
         return customerRepo.saveAndFlush(newCust);
     }
 
-    private CustomerOrder addOrder(Member customer, Cart cart) {
+    private CustomerOrder addOrder(PaymentInfo paymentInfo, Cart cart) {
 
         // set up customer order
         CustomerOrder order = new CustomerOrder();
-        order.setCustomer(customer);
+        order.setPaymentInfo(paymentInfo);
         order.setAmount(BigDecimal.valueOf(cart.getTotal()));
 
         // create confirmation number

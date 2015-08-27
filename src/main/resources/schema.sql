@@ -10,7 +10,9 @@ create table payment_info (
   name varchar(45) not null ,
   address varchar(100) not null ,
   city_region varchar(45) not null ,
-  cc_number varchar(19) not null
+  cc_number varchar(19) not null,
+  `member_id` INT UNSIGNED NOT NULL ,
+  foreign key (`member_id`) references member(`id`)
   );
 --COMMENT = 'maintains customer payment info details';
 
@@ -25,8 +27,8 @@ CREATE  TABLE customer_order (
   `amount` DECIMAL(6,2) NOT NULL ,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `confirmation_number` INT UNSIGNED NOT NULL ,
-  `member_id` INT UNSIGNED NOT NULL ,
-  foreign key (member_id) references member(id)
+  `payment_info_id` INT UNSIGNED NOT NULL ,
+  foreign key (payment_info_id) references payment_info(id)
 );
 --COMMENT = 'maintains customer order details';
 
@@ -94,19 +96,18 @@ DROP TABLE IF EXISTS member ;
 
 CREATE  TABLE member (
   `id` identity,
-  `name` VARCHAR(45) NOT NULL ,
-  `username` VARCHAR(45) NOT NULL ,
-  `password` VARCHAR(100) NOT NULL ,
-  `enabled` boolean NOT NULL ,
+  `name` VARCHAR(45),
+  `username` VARCHAR(45),
+  `password` VARCHAR(100),
+  `enabled` boolean,
   email varchar(45) not null ,
-  phone varchar(45) not null ,
-  address varchar(100) not null ,
-  city_region varchar(45) not null ,
-  `payment_info_id` INT UNSIGNED NOT NULL ,
-  foreign key (`payment_info_id`) references payment_info(`id`),
+  phone varchar(45),
+  address varchar(100),
+  city_region varchar(45),
   `role_id` INT UNSIGNED NOT NULL ,
   foreign key (`role_id`) references role(`id`),
-  UNIQUE (`username`) 
+  UNIQUE (`username`),
+  UNIQUE(`email`)
   );
 -- COMMENT = 'maintains admin console member details';
 

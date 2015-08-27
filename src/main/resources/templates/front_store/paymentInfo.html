@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">...
+</head>
+<body>
+	<script>
+		function loginRedirect() {
+			alert("Account successfully created.\n You will now be directed to the home page");
+			window.location = "/home";
+		}
+
+		function validatePassword() {
+			//Store the password field objects into variables ...
+			var pass1 = document.getElementById('password');
+			var pass2 = document.getElementById('confpassword');
+			if (pass1.length == 0) {
+				alert("please enter a password");
+				return false;
+			}
+			if (pass1.value == pass2.value) {
+				return true;
+			} else {
+				alert("Passwords Do Not Match");
+				return false;
+			}
+		}
+	</script>
+	<div id="main">
+		<div id="header" th:include="fragments/bodyHeader :: bodyHeader">
+			...</div>
+		<h2>Create Account</h2>
+
+		<!-- content begin -->
+		<span class="error" th:if="${error}">There was a problem
+			updating this customer</span> <span class="error" th:if="${success}">Your
+			account was created!</span> <span class="error" th:if="${emailExists}">This
+			email address has already been registered</span>
+
+		<form id="customerForm" th:action="@{/paymentInfoSubmit}"
+			th:object="${paymentInfo}" method="post">
+			<input type="hidden" name="id" th:value="*{id}" />
+			<table class="formTable">
+				<tr th:if="${#vars['validationErrorFlag'] != null}">
+					<td colspan="2" style="text-align: left"><span
+						class="error smallText"><span
+							th:text="#{validationErrorMessage" /> <span
+							th:if="${nameError} != null"> <br />
+							<span class="indent" th:text="#{nameError}"></span>
+						</span> <span th:if="${phoneError} != null">\ <br />
+							<span class="indent" th:text="#{phoneError}"></span>
+						</span> <span th:if="${addressError} != null">\ <br />
+							<span class="indent" th:text="#{addressError}"></span>
+						</span> <span th:if="${cityRegionError} != null">\ <br />
+							<span class="indent" th:text="#{cityRegionError}"></span>
+						</span> <span th:if="${ccNumberError} != null">\ <br />
+							<span class="indent" th:text="#{ccNumberError}"></span>
+						</span> <span th:if="${passwordError} != null">\ <br />
+							<span class="indent">password</span>
+						</span> </span></td>
+				</tr>
+
+				<tr>
+					<td><label for="name" th:text="|#{customerName}:|">name</label></td>
+					<td class="inputField"><input type="text" th:field="*{name}" />
+					</td>
+				</tr>
+				<tr>
+					<td><label for="address" th:text="|#{address}:|">address</label></td>
+					<td class="inputField"><input type="text"
+						th:field="*{address}" /></td>
+				</tr>
+				<tr>
+					<td><label for="cityRegion" th:text="|#{cityRegion}:|">cityRegion</label></td>
+					<td class="inputField"><input type="text"
+						th:field="*{cityRegion}" /> 
+ 					</td>
+				</tr>
+				<tr>
+					<td><label for="ccNumber" th:text="|#{creditCard}:|">credit
+							card</label></td>
+					<td class="inputField"><input type="text"
+						th:field="*{ccNumber}" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><input type="submit" value="submit" /></td>
+				</tr>
+			</table>
+		</form>
+
+		<!-- content end -->
+
+		<div id="footer" th:include="fragments/bodyFooter :: bodyFooter"></div>
+	</div>
+	<span class="error" th:if="${success}"> <script
+			type="text/javascript">
+		loginRedirect();
+	</script>
+	</span>
+</body>
+</html>

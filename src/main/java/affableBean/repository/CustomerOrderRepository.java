@@ -17,7 +17,7 @@ public interface CustomerOrderRepository extends
 
 	CustomerOrder findById(Integer id);
 	
-	List<CustomerOrder> findByCustomer(Member customer);
+	List<CustomerOrder> findByPaymentInfo(PaymentInfo pi);
 
 	// more methods
 }

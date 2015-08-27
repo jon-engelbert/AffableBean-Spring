@@ -42,25 +42,30 @@ INSERT INTO `product` (`name`, price, description, category_id) VALUES ('red cur
 INSERT INTO `product` (`name`, price, description, category_id) VALUES ('broccoli', 1.29, '500g', 4);
 INSERT INTO `product` (`name`, price, description, category_id) VALUES ('seedless watermelon', 1.49, '250g', 4);
 
+--
+-- Sample data for table `role`
+--
+INSERT INTO `role` (`name`) VALUES ('USER');
+INSERT INTO `role` (`name`) VALUES ('ADMIN');
 
 --
 -- Sample data for table `member`
 --
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('MC Hammer', 'hammer@hammertime.com', '226884562', 'Ruská 11', '2');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Karel Gott', 'gott@karelgott.com', '224517995', 'Kostelní 83', '7');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Helena Vondráčková', 'h.vondrackova@seznam.cz', '224517995', 'Letohradská 18', '7');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Sawyer Ford', 'sawyer.ford@gmail.com', '204888845', 'Dušní 87', '1');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Dalibor Janda', 'dalibor@dalibor.cz', '728331184', 'Krkonošská 9', '3');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Richard Genzer', 'r.genzer@nova.cz', '737610775', 'Plzeňská 131', '5');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Iveta Bartošová', 'i.bartosova@volny.cz', '734556133', 'Prokopská 60', '1');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Jin-Soo Kwon', 'jin.kwon@hotmail.kr', '606338909', 'Ve Střešovičkách 49', '6');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Benjamin Linus', 'b.linus@lost.com', '222756448', 'Družstevní 77', '4');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Leoš Mareš', 'mares@ferrari.it', '608995383', 'Pařížská 89', '1');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('John Locke', 'maninblack@lostpedia.com', '413443727', 'Valečovská 20', '9');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10');
-INSERT INTO `member` (`name`, email, phone, address, city_region) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3');
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('MC Hammer', 'hammer@hammertime.com', '226884562', 'Ruská 11', '2', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Karel Gott', 'gott@karelgott.com', '224517995', 'Kostelní 83', '7', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Helena Vondráčková', 'h.vondrackova@seznam.cz', '224517995', 'Letohradská 18', '7', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Sawyer Ford', 'sawyer.ford@gmail.com', '204888845', 'Dušní 87', '1', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Dalibor Janda', 'dalibor@dalibor.cz', '728331184', 'Krkonošská 9', '3', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Richard Genzer', 'r.genzer@nova.cz', '737610775', 'Plzeňská 131', '5', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Iveta Bartošová', 'i.bartosova@volny.cz', '734556133', 'Prokopská 60', '1', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Jin-Soo Kwon', 'jin.kwon@hotmail.kr', '606338909', 'Ve Střešovičkách 49', '6', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Benjamin Linus', 'b.linus@lost.com', '222756448', 'Družstevní 77', '4', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Leoš Mareš', 'mares@ferrari.it', '608995383', 'Pařížská 89', '1', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('John Locke', 'maninblack@lostpedia.com', '413443727', 'Valečovská 20', '9', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10', 1);
+INSERT INTO `member` (`name`, email, phone, address, city_region, role_id) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3', 1);
 
 --
 -- Sample data for table `payment_info`
@@ -84,22 +89,22 @@ INSERT INTO `payment_info` (`name`, member_id, address, city_region, cc_number) 
 --
 -- Sample data for table `customer_order`
 --
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (16.50, '2010-05-14 18:00:11.0', 15, 285434339);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (16.11, '2010-05-14 17:56:23.0', 14, 428278565);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (26.00, '2010-05-14 17:51:37.0', 13, 503113888);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (17.63, '2010-05-14 17:47:46.0', 12, 916407556);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (17.24, '2010-05-14 17:45:21.0', 11, 189191209);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (15.57, '2010-05-14 17:43:12.0', 10, 274027361);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (4.49, '2010-05-14 18:04:09.0', 9, 250764732);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (19.70, '2010-05-14 18:10:09.0', 8, 766244032);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (37.49, '2010-05-14 18:23:08.0', 7, 53395157);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (18.90, '2010-05-14 18:25:56.0', 6, 818358116);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (18.92, '2010-05-14 18:32:03.0', 5, 244956320);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (17.66, '2010-05-14 18:35:07.0', 4, 868642371);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (10.22, '2010-05-14 18:40:38.0', 3, 344549009);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (12.16, '2010-05-14 18:51:58.0', 2, 475644436);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (10.75, '2010-05-14 18:56:13.0', 1, 247455344);
-INSERT INTO `customer_order` (amount, date_created, customer_id, confirmation_number) VALUES (100.75, '2011-05-14 19:56:13.0', 1, 347455344);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (16.50, '2010-05-14 18:00:11.0', 15, 285434339);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (16.11, '2010-05-14 17:56:23.0', 14, 428278565);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (26.00, '2010-05-14 17:51:37.0', 13, 503113888);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (17.63, '2010-05-14 17:47:46.0', 12, 916407556);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (17.24, '2010-05-14 17:45:21.0', 11, 189191209);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (15.57, '2010-05-14 17:43:12.0', 10, 274027361);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (4.49, '2010-05-14 18:04:09.0', 9, 250764732);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (19.70, '2010-05-14 18:10:09.0', 8, 766244032);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (37.49, '2010-05-14 18:23:08.0', 7, 53395157);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (18.90, '2010-05-14 18:25:56.0', 6, 818358116);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (18.92, '2010-05-14 18:32:03.0', 5, 244956320);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (17.66, '2010-05-14 18:35:07.0', 4, 868642371);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (10.22, '2010-05-14 18:40:38.0', 3, 344549009);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (12.16, '2010-05-14 18:51:58.0', 2, 475644436);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (10.75, '2010-05-14 18:56:13.0', 1, 247455344);
+INSERT INTO `customer_order` (amount, date_created, payment_info_id, confirmation_number) VALUES (100.75, '2011-05-14 19:56:13.0', 1, 347455344);
 
 
 --
@@ -163,5 +168,3 @@ INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (1, 10, 1);
 INSERT INTO `ordered_product` (customer_order_id, product_id, quantity) VALUES (1, 8, 1);
 
-INSERT INTO `role` (`name`) VALUES ('USER');
-INSERT INTO `role` (`name`) VALUES ('ADMIN');

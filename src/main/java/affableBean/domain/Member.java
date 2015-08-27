@@ -1,5 +1,7 @@
 package affableBean.domain;
 
+import java.util.Collection;
+
 import javax.persistence.*;
 
 @Entity
@@ -36,15 +38,18 @@ public class Member implements java.io.Serializable {
     @Basic(optional = false)
     @Column(name = "email")
     private String email;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+    private Collection<PaymentInfo> paymentInfoCollection;
 
 	public Member() {
 	}
 
-	public Member(String name, String username, String password,
+	public Member(String name, String username, String email, String password,
 			boolean enabled, Role role) {
 		super();
 		this.name = name;
 		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.enabled = enabled;
 		this.role = role;
@@ -132,6 +137,15 @@ public class Member implements java.io.Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Collection<PaymentInfo> getPaymentInfoCollection() {
+		return paymentInfoCollection;
+	}
+
+	public void setPaymentInfoCollection(
+			Collection<PaymentInfo> paymentInfoCollection) {
+		this.paymentInfoCollection = paymentInfoCollection;
 	}
 	
 }

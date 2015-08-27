@@ -28,9 +28,9 @@ public class PaymentInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "name")
     private String name;
-    @Basic(optional = false)
-    @Column(name = "phone")
-    private String phone;
+//    @Basic(optional = false)
+//    @Column(name = "phone")
+//    private String phone;
     @Basic(optional = false)
     @Column(name = "address")
     private String address;
@@ -40,7 +40,7 @@ public class PaymentInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "cc_number")
     private String ccNumber;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "payment_info")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
     private Collection<CustomerOrder> customerOrderCollection;
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	@ManyToOne(optional = false)
@@ -56,7 +56,16 @@ public class PaymentInfo implements Serializable {
     public PaymentInfo(Integer id, String name, String email, String phone, String address, String cityRegion, String ccNumber) {
         this.id = id;
         this.name = name;
-        this.phone = phone;
+//        this.phone = phone;
+        this.address = address;
+        this.cityRegion = cityRegion;
+        this.ccNumber = ccNumber;
+    }
+
+    public PaymentInfo(String name, String address, String cityRegion, String ccNumber) {
+        this.id = id;
+        this.name = name;
+//        this.phone = phone;
         this.address = address;
         this.cityRegion = cityRegion;
         this.ccNumber = ccNumber;
@@ -78,14 +87,14 @@ public class PaymentInfo implements Serializable {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
+//    public String getPhone() {
+//        return phone;
+//    }
+//
+//    public void setPhone(String phone) {
+//        this.phone = phone;
+//    }
+//
     public String getAddress() {
         return address;
     }
