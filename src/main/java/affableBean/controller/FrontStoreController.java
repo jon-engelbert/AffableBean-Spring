@@ -131,6 +131,7 @@ public class FrontStoreController {
 		return "redirect:" + returnStr;
 	}
 	
+	
 	/**
 	 * CRUD on shopping cart
 	 */
@@ -146,12 +147,14 @@ public class FrontStoreController {
 		if (product != null) {
 			cart.addItem(product);
 		}
-		
+
 		return "redirect:" + request.getHeader("Referer");
 	}
 	
+	
 	@RequestMapping(value = "/viewCart", method = RequestMethod.GET)
 	public String cart(@RequestParam(value="clear", required=false, defaultValue = "false") boolean clear, HttpServletRequest request, HttpSession session) {
+
 		Cart cart = (Cart) session.getAttribute("cart");
 		if (clear) {
 			cart.clear();
@@ -178,24 +181,43 @@ public class FrontStoreController {
         return "front_store/cart";
 	}
 	
+	/* 
+	 * This is the "proceed to checkout" link.  The process is thus:
+	 * If isSignedIn, retrieve customer data (saved as a session object of customer ID) and proceed to checkout
+	 * If not signed in, redirect to a page that asks them to either sign in or create account
+	 *   once they sign in or create account, get customer data and proceed to checkout
+	 */
 	@RequestMapping(value="/checkout", method=RequestMethod.GET)
-	public String checkout(HttpSession session,
-			ModelMap mm) {
+	public String checkout(HttpSession session, ModelMap mm) {
+
+		Boolean isSignedIn = (Boolean) session.getAttribute("isSignedIn");
+		if (isSignedIn == null || !isSignedIn) {					// not signed in
+			session.setAttribute("redirect", "/checkout");			// setting a session flag to redirect to checkout after create/login
+			return "front_store/customerlogin";						// initially sends them to login page where they can opt to register too.
+		}
+		
+		// Otherwise, customer is signed in, proceed with checkout flow
 		Cart cart = (Cart) session.getAttribute("cart");
+		Customer cust = new Customer();
+		CustomerDto customerDto = new CustomerDto(cust);
+		Integer custId = (Integer) session.getAttribute("custId");	// custId is set when a new customer registers or existing one logs in
+
 		if (cart != null) 
 			cart.calculateTotal(Cart._deliverySurcharge.toString());
-		Object ob = session.getAttribute("customerLoggedIn");
-		Customer newCust = new Customer();
-		if (ob instanceof Customer)
-			newCust = (Customer)ob;
-		CustomerDto customerDto = new CustomerDto(newCust);
+
+		if (custId != null) {
+			cust = customerRepo.findById(custId);
+		}
+
 		mm.put("customerDto", customerDto);
 
 		return "front_store/checkout";
 	}
 	
+	
 	@RequestMapping(value= "/purchase", method = RequestMethod.POST) 
 	public String purchase(final CustomerDto customerDto, final BindingResult bindingResult, HttpSession session, HttpServletRequest request) {
+
 		Cart cart = (Cart) session.getAttribute("cart");
 		Double surcharge;
 		
@@ -259,13 +281,19 @@ public class FrontStoreController {
 		
 	}
 	
+	/*
+	 * Customer crud
+	 */
+	
 	@RequestMapping(value= "/newcust", method = RequestMethod.GET) 
 	public String newCust(HttpSession session, ModelMap mm) {
 
 		Object ob = session.getAttribute("customerLoggedIn");
 		Customer newCust = new Customer();
+		
 		if (ob instanceof Customer)
 			newCust = (Customer)ob;
+		
 		CustomerDto customerDto = new CustomerDto(newCust);
 		mm.put("customerDto", customerDto);
 		
@@ -279,7 +307,7 @@ public class FrontStoreController {
 			HttpServletRequest request, 
 			HttpSession session,
 			ModelMap mm) {
-		
+
 		if (bindingResult.hasErrors()) {
 			System.out.println("bindingResult error");
 			mm.put("validationErrorFlag", true);
@@ -305,18 +333,30 @@ public class FrontStoreController {
         	mm.put("validationErrorFlag", validationErrorFlag);
         } else {
         	Customer newcust = customerDtoService.addNewCustomer(customerDto);
-        	newcust.setPassword(""); //do not send password back to the browser!
-        	mm.put("customer", newcust);
+        	customerDto.setId(newcust.getId());						// assign the customer Id to the customerDto Id.
+        	customerDto.setPassword(""); 							// do not send password back to the browser!
+        	
+        	mm.put("customerDto", customerDto);
         	mm.put("success", true);
         	
     		session.setAttribute("isSignedIn", true);
-    		newcust.setPassword("");
-    		session.setAttribute("customerLoggedIn", newcust);
+    		session.setAttribute("custId", customerDto.getId());
+    		
+    		String redirectPath = (String) session.getAttribute("redirect");
+    		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
+    			Cart cart = (Cart)session.getAttribute("cart");
+    			session.removeAttribute("redirect");
+    			return "redirect:" + redirectPath;
+    		}
 
         }
 	
 		return "front_store/customerregistration";
 	}
+	
+	/*
+	 * login / logout
+	 */
 	
 	@RequestMapping(value="/login", method = RequestMethod.GET)
 	public String custLogin() {
@@ -330,28 +370,39 @@ public class FrontStoreController {
 			@RequestParam("password") String password, 
 			HttpSession session,
 			ModelMap mm) {
-		Customer customer = new Customer();
+		
 		List<Customer> custList = new ArrayList<Customer>();
 		custList = customerRepo.findByEmail(email);
+		
 		if (custList.isEmpty()) {
 			mm.put("loginerror", true);
-			System.out.println("customer by email not found");
 			return "front_store/customerlogin";
 		}
+		
+		Customer customer = customerRepo.findOneByEmail(email);
 		
 		boolean isPasswordValid = customerService.validatePassword(password, customer.getPassword());
-		
+
 		if (!isPasswordValid) {
 			mm.put("loginerror", true);
-			System.out.println("password not valid");
 			return "front_store/customerlogin";
 		}
+    	
+    	customer = customerRepo.findOneByEmail(email);
+    	CustomerDto customerDto = new CustomerDto(customer);
+    	customerDto.setPassword("");
 
-    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
-
+    	session.setAttribute("custId", customerDto.getId());
 		session.setAttribute("isSignedIn", true);
-		customer.setPassword("");
-		session.setAttribute("customerLoggedIn", customer);
+		
+		String redirectPath = (String) session.getAttribute("redirect");
+		
+		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
+			mm.put("customerDto", customerDto);
+			session.removeAttribute("redirect");
+			return "redirect:" + redirectPath;
+		}
+
 		return "redirect:/home";
 		
 	}

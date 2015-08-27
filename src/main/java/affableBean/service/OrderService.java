@@ -47,7 +47,11 @@ public class OrderService {
     public int placeOrder(CustomerDto newCustDto, Cart cart) {
     	
         try {
-            Customer customer = addCustomer(newCustDto);
+        	// the original netbeans tutorial didn't have a register/login
+        	// function so each purchase was essentially adding a new customer.
+        	// With the register/login function, the purchase now UPDATES a customer's
+        	// information, not add.
+            Customer customer = updateCustomer(newCustDto);	
 
             CustomerOrder order = addOrder(customer, cart);
             addOrderedItems(order, cart);
@@ -61,17 +65,14 @@ public class OrderService {
 
     private Customer addCustomer(CustomerDto newCustDto) {
 
-//        Customer customer = new Customer();
-//        customer.setName(name);
-//        customer.setEmail(email);
-//        customer.setPhone(phone);
-//        customer.setAddress(address);
-//        customer.setCityRegion(cityRegion);
-//        customer.setCcNumber(ccNumber);
-
         return customerDtoService.addNewCustomer(newCustDto);
     }
-
+    
+    private Customer updateCustomer(CustomerDto newCustDto) {
+    	
+      return customerDtoService.editCustomer(newCustDto);
+  }
+    
     private CustomerOrder addOrder(Customer customer, Cart cart) {
 
         // set up customer order

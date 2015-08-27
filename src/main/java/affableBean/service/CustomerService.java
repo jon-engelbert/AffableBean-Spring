@@ -65,7 +65,7 @@ public class CustomerService {
 	}
 
 	public boolean validatePassword(String rawPassword, String encodeddPassword) {
-
+System.out.println("raw password, encoded: " + encoder.encode(rawPassword) + ", stored password: " + encodeddPassword);
 		return (encoder.matches(rawPassword, encodeddPassword));
 	}
 

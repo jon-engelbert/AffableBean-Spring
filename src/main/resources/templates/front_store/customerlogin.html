@@ -24,6 +24,7 @@ function validateFields() {
 	<div id="main">
 		<div id="header" th:include="fragments/bodyHeader :: bodyHeader"> ... </div>
 		<h2>Sign into your account</h2>
+		<h3>Don't have an account?  <a th:href="@{/newcust}">Create one.</a></h3>
 		
 		<!-- content begin -->
 		<span th:if="${loginerror}" class="error">email or password incorrect.  <a th:href="@{/newcust}"><b>Create an account?</b></a></span>
