@@ -86,35 +86,49 @@ public class AdminController {
 
 
 	
-	@RequestMapping(value="/login", method = RequestMethod.POST)
-	public String custLogin(@RequestParam("email") String email,
-			@RequestParam("password") String password, 
-			HttpSession session,
-			ModelMap mm) {
-		Member customer = new Member();
-		customer = memberRepo.findByEmail(email);
-		if (customer == null || customer.getId() == null) {
-			mm.put("loginerror", true);
-			System.out.println("customer by email not found");
-			return "front_store/memberlogin";
-		}
-		
-		boolean isPasswordValid = memberService.validatePassword(password, customer.getPassword());
-		
-		if (!isPasswordValid) {
-			mm.put("loginerror", true);
-			System.out.println("password not valid");
-			return "front_store/memberlogin";
-		}
+	/**
+	 * Auth process
+	 */
+	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
 
-    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
-
-		session.setAttribute("isSignedIn", true);
-		customer.setPassword("");
-		session.setAttribute("customerLoggedIn", customer);
-		return "redirect:/home";
-		
+		if(error != null) {
+			mm.put("message", "Login Failed!");
+		} else {
+			mm.put("message", false);
+		}
+		return "admin/login";
 	}
+
+	//	@RequestMapping(value="/login", method = RequestMethod.POST)
+//	public String custLogin(@RequestParam("email") String email,
+//			@RequestParam("password") String password, 
+//			HttpSession session,
+//			ModelMap mm) {
+//		Member customer = new Member();
+//		customer = memberRepo.findOneByEmail(email);
+//		if (customer == null || customer.getId() == null) {
+//			mm.put("loginerror", true);
+//			System.out.println("customer by email not found");
+//			return "front_store/memberlogin";
+//		}
+//		
+//		boolean isPasswordValid = memberService.validatePassword(password, customer.getPassword());
+//		
+//		if (!isPasswordValid) {
+//			mm.put("loginerror", true);
+//			System.out.println("password not valid");
+//			return "front_store/memberlogin";
+//		}
+//
+//    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
+//
+//		session.setAttribute("isSignedIn", true);
+//		customer.setPassword("");
+//		session.setAttribute("customerLoggedIn", customer);
+//		return "redirect:/home";
+//		
+//	}
 	
 
 
@@ -280,7 +294,7 @@ public class AdminController {
 	@RequestMapping(value = "/product/add", method = RequestMethod.POST)
 	public String addProduct(@ModelAttribute ProductDto productDto,
 			ModelMap mm, @RequestPart("file") MultipartFile file) {
-		Product product = productDtoService.addNewProduct(productDto);
+//		Product product = productDtoService.addNewProduct(productDto);
 	    MultipartFile productPicture = file;
 //        String rootPath = System.getProperty("AffableBean");
 //        rootPath = rootPath.replace("/null","");
@@ -303,7 +317,7 @@ public class AdminController {
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
 	public String updateProduct(@ModelAttribute ProductDto productDto,
 			ModelMap mm, @RequestParam("file") MultipartFile file) {
-		Product product = productDtoService.editProduct(productDto);
+//		Product product = productDtoService.editProduct(productDto);
 		String filename = "";
         File dir = new File("src/main/resources/static/img/products");
         if (!dir.exists())

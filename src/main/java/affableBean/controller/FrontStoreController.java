@@ -187,16 +187,23 @@ public class FrontStoreController {
 	@RequestMapping(value="/checkout", method=RequestMethod.GET)
 	public String checkout(HttpSession session,
 			ModelMap mm) {
+		Boolean isSignedIn = (Boolean) session.getAttribute("isSignedIn");
+		if (isSignedIn == null || !isSignedIn) {					// not signed in
+			session.setAttribute("redirect", "/checkout");			// setting a session flag to redirect to checkout after create/login
+			return "front_store/login";						// initially sends them to login page where they can opt to register too.
+		}
 		Cart cart = (Cart) session.getAttribute("cart");
+		Member member = new Member();
+		Integer custId = (Integer) session.getAttribute("custId");	// custId is set when a new customer registers or existing one logs in
+		PaymentInfo newPaymentInfo = new PaymentInfo();
 		if (cart != null) 
 			cart.calculateTotal(Cart._deliverySurcharge.toString());
-		Object ob = session.getAttribute("customerLoggedIn");
-		Member member = new Member();
-		PaymentInfo newPaymentInfo = new PaymentInfo();
-		if (ob instanceof Member) {
-			member = (Member)ob;
+
+		if (custId != null) 
+			member = memberRepo.findById(custId);
+		if (member != null)
 			newPaymentInfo = new PaymentInfo(member.getName(), member.getAddress(), member.getCityRegion(), "");
-		}
+		
 //		CustomerDto customerDto = new CustomerDto(newPaymentInfo, newCust);
 		mm.put("paymentInfo", newPaymentInfo);
 
@@ -309,7 +316,6 @@ public class FrontStoreController {
 
         // validate user data
         boolean validationErrorFlag = false;
-        
         validationErrorFlag = validator.validateMember(member, request);
         
         // check for existing email
@@ -317,9 +323,9 @@ public class FrontStoreController {
         if (!validationErrorFlag) {
         	emailExists = customerService.checkEmailExists(member.getEmail());
         	if (emailExists) {
-        		mm.put("customer", member);
+        		mm.put("customerLoggedIn", member);
         		mm.put("emailExists", emailExists);
-        		return "front_store/customerregistration";
+        		return "front_store/memberregistration";
         	}
         }
 
@@ -331,13 +337,17 @@ public class FrontStoreController {
 			member.setRole(userRole);
         	Member newcust = customerService.saveNewCustomer(member);
         	newcust.setPassword(""); //do not send password back to the browser!
-        	mm.put("customer", newcust);
+        	mm.put("customerLoggedIn", newcust);
         	mm.put("success", true);
         	
     		session.setAttribute("isSignedIn", true);
-    		newcust.setPassword("");
-    		session.setAttribute("customerLoggedIn", newcust);
-
+    		session.setAttribute("custId", newcust.getId());
+    		String redirectPath = (String) session.getAttribute("redirect");
+    		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
+    			Cart cart = (Cart)session.getAttribute("cart");
+    			session.removeAttribute("redirect");
+    			return "redirect:" + redirectPath;
+    		}
         }
 	
 		return "front_store/memberregistration";
@@ -347,22 +357,8 @@ public class FrontStoreController {
 	public String custLogin() {
 		
 		return "front_store/memberlogin";
-//		return "admin/login";
 	}
 
-//	@RequestMapping(value = "/login", method = { RequestMethod.GET,
-//			RequestMethod.POST })
-//	public String loginConsole(
-//			@RequestParam(value = "error", required = false) String error,
-//			ModelMap mm) {
-//
-//		if (error != null) {
-//			mm.put("message", "Login Failed!");
-//		} else {
-//			mm.put("message", false);
-//		}
-//		return "admin/login";
-//	}
 	
 	@RequestMapping(value="/login", method = RequestMethod.POST)
 	public String custLogin(@RequestParam("email") String email,
@@ -370,10 +366,9 @@ public class FrontStoreController {
 			HttpSession session,
 			ModelMap mm) {
 		Member member = new Member();
-		member = memberRepo.findByEmail(email);
+		member = memberRepo.findOneByEmail(email);
 		if (member == null || member.getId() == null) {
 			mm.put("loginerror", true);
-			System.out.println("member by email not found");
 			return "front_store/memberlogin";
 		}
 		
@@ -381,15 +376,23 @@ public class FrontStoreController {
 		
 		if (!isPasswordValid) {
 			mm.put("loginerror", true);
-			System.out.println("password not valid");
 			return "front_store/memberlogin";
 		}
 
     	System.out.println("customer " + member.getName() + " verified.  id: " + member.getId());
+    	System.out.println("customer role: " + member.getRole() + " name: " + member.getRole().getName());
 
+    	session.setAttribute("custId", member.getId());
 		session.setAttribute("isSignedIn", true);
+		String redirectPath = (String) session.getAttribute("redirect");
 		member.setPassword("");
 		session.setAttribute("customerLoggedIn", member);
+		
+		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
+			mm.put("customerLoggedIn", member);
+			session.removeAttribute("redirect");
+			return "redirect:" + redirectPath;
+		}
 		return "redirect:/home";
 		
 	}

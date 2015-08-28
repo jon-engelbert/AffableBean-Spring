@@ -35,7 +35,7 @@ public class OrderService {
 	private MemberRepository customerRepo;
 
 	@Autowired 
-	private PaymentInfoRepository paymentInfoRepo;
+	private PaymentInfoService paymentInfoService;
 
 	@Autowired
 	private CustomerOrderRepository customerOrderRepo;
@@ -49,7 +49,7 @@ public class OrderService {
     public int placeOrder(PaymentInfo newPaymentInfo, Cart cart) {
     	
         try {
-            PaymentInfo paymentInfo = addPaymentInfo(newPaymentInfo);
+            PaymentInfo paymentInfo = paymentInfoService.editPaymentInfo(newPaymentInfo);
             System.out.println("after new paymentInfo " + paymentInfo.getMember().getName() + " id " + paymentInfo.getId());
 
             CustomerOrder order = addOrder(paymentInfo, cart);
@@ -61,14 +61,6 @@ public class OrderService {
             return 0;
         }
     }
-
-    private PaymentInfo addPaymentInfo(PaymentInfo newPaymentInfo) {
-		// TODO Auto-generated method stub
-        return paymentInfoRepo.saveAndFlush(newPaymentInfo);
-	}
-
-//	private Member addCustomer(Member newCust) {
-
 
     private CustomerOrder addOrder(PaymentInfo paymentInfo, Cart cart) {
 

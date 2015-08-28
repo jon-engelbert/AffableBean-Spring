@@ -39,6 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         	.formLogin().loginPage("/admin/login")
         	.failureUrl("/admin/login?error").permitAll().defaultSuccessUrl("/admin")
+//        	.formLogin().loginPage("/front_store/memberlogin")
+//        	.failureUrl("/front_store/memberlogin?error").permitAll().defaultSuccessUrl("/admin")
         .and()
         	.logout()
                .deleteCookies("remove")
@@ -67,16 +69,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         Role userRole = roleRepo.findByName("USER");
         Role adminRole = roleRepo.findByName("ADMIN");
         
-        Member adminMember = memberRepo.findByUsername("admin");
-        Member userMember = memberRepo.findByUsername("user");
+        Member adminMember = memberRepo.findOneByUsername("admin");
+        Member userMember = memberRepo.findOneByUsername("user");
  
         if(userMember == null) {
-            memberRepo.saveAndFlush(new Member("user", "user", "user@user.com", encoder.encode("user"), true, userRole));
+            memberRepo.saveAndFlush(new Member("user", "user@user.com", "user@user.com", encoder.encode("user"), true, userRole));
         }
         
         if(adminMember == null) {
-            memberRepo.saveAndFlush(new Member("admin", "admin", "admin@admin.com", encoder.encode("admin"), true, adminRole));
-
+            memberRepo.saveAndFlush(new Member("admin", "admin@admin.com", "admin@admin.com", encoder.encode("admin"), true, adminRole));
         }
         
     }

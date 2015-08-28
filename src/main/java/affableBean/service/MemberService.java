@@ -75,7 +75,7 @@ public class MemberService {
 
 	public boolean checkEmailExists(String email) {
 		Member cust = new Member();
-		cust = memberRepo.findByEmail(email);
+		cust = memberRepo.findOneByEmail(email);
 		if (cust != null && cust.getId() != null)
 			return true;
 		else return false;

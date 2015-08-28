@@ -12,7 +12,7 @@ public interface PaymentInfoRepository extends JpaRepository<PaymentInfo, Intege
 
 	List<PaymentInfo> findAll();
 
-	PaymentInfo findById(Integer id);
+	PaymentInfo findOneById(Integer id);
 
 	PaymentInfo findOneByName(String name);
 	PaymentInfo findOneByCcNumber(String ccNumber);

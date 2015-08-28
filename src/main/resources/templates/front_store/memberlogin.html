@@ -6,8 +6,8 @@
 <script>
 function validateFields() {
     //Store the password field objects into variables ...
-    var email = document.getElementById('email');
-    var password = document.getElementById('confpassword');
+    var email = document.getElementById('username');
+    var password = document.getElementById('password');
     if (email.length == 0) {
         alert("please enter your email");
         return false;
@@ -24,9 +24,9 @@ function validateFields() {
 	<div id="main">
 		<div id="header" th:include="fragments/bodyHeader :: bodyHeader"> ... </div>
 		<h2>Sign into your account</h2>
-		
+		<h3>Don't have an account?  <a th:href="@{/newMember}">Create one.</a></h3>		
 		<!-- content begin -->
-		<span th:if="${loginerror}" class="error">email or password incorrect.  <a th:href="@{/newcust}"><b>Create an account?</b></a></span>
+		<span th:if="${loginerror}" class="error">email or password incorrect.  <a th:href="@{/newMember}"><b>Create an account?</b></a></span>
 			<form id="customerLoginForm" th:action="@{/login}" method="post" onsubmit="return validateFields();">
 		        <table class="formTable">
 		            <tr>
@@ -35,8 +35,8 @@ function validateFields() {
 		                    <input type="text"
 		                           size="31"
 		                           maxlength="45"
-		                           id="email"
-		                           name="email" />
+		                           id="username"
+		                           name="username" />
 		                </td>
 		            </tr>
 					<tr>

@@ -64,7 +64,7 @@
 		    <p class="error" th:text="#{orderFailureError}" th:if="${#vars['orderFailureFlag'] != null}">order failure error</p>
 		
 		    <form id="checkoutForm" th:action="@{/purchase}" th:object="${paymentInfo}" method="post">
-		    	<span th:if="${session.isSignedIn} == true"><input type="hidden" name="id" id="id" th:value="${session.customerLoggedIn.id}"/></span>
+		    	<input type="hidden" name="id" id="id" th:value="*{id}"/>
 		        <table id="checkoutTable">
 		            <tr th:if="${#vars['validationErrorFlag'] != null}">
 		                <td colspan="2" style="text-align:left">
