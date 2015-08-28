@@ -76,6 +76,30 @@ public class FrontStoreController {
 	
 	@Autowired
 	private ValidatorService validator;
+	
+	public boolean isSignedIn(HttpServletRequest request) {	// , Session session
+		Member member = new Member();
+		if (request.getRemoteUser() != null)  { // || (session.getAttribute("remoteuser") != null) {
+			member = memberRepo.findOneByEmail(request.getRemoteUser());
+//			session.setAttribute("customerLoggedIn", member);
+//	    	session.setAttribute("custId", member.getId());
+//			session.setAttribute("isSignedIn", true);
+		}
+		System.out.println("customer: " + member);
+		return request.getRemoteUser() != null;
+	}
+
+	public Member getCustomer(HttpServletRequest request) {
+		Member member = null;
+		if (request.getRemoteUser() != null) {	//  || (session.getAttribute("isSignedIn") != null && (Boolean) session.getAttribute("isSignedIn") == true)) {
+			member = memberRepo.findOneByEmail(request.getRemoteUser());
+//			session.setAttribute("customerLoggedIn", member);
+//	    	session.setAttribute("custId", member.getId());
+//			session.setAttribute("isSignedIn", true);
+		}
+		System.out.println("customer: " + member);
+		return member;
+	}
 
 	/**
 	 * Category
@@ -185,16 +209,18 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value="/checkout", method=RequestMethod.GET)
-	public String checkout(HttpSession session,
+	public String checkout(HttpSession session, HttpServletRequest request, 
 			ModelMap mm) {
-		Boolean isSignedIn = (Boolean) session.getAttribute("isSignedIn");
-		if (isSignedIn == null || !isSignedIn) {					// not signed in
+		Boolean isSignedIn = isSignedIn(request);
+		if (!isSignedIn) {					// not signed in
 			session.setAttribute("redirect", "/checkout");			// setting a session flag to redirect to checkout after create/login
-			return "front_store/login";						// initially sends them to login page where they can opt to register too.
+			return "admin/login";						// initially sends them to login page where they can opt to register too.
 		}
 		Cart cart = (Cart) session.getAttribute("cart");
-		Member member = new Member();
-		Integer custId = (Integer) session.getAttribute("custId");	// custId is set when a new customer registers or existing one logs in
+		Member member = getCustomer(request);
+		Integer custId = member.getId();
+//		Member member = new Member();
+//		Integer custId = (Integer) session.getAttribute("custId");	// custId is set when a new customer registers or existing one logs in
 		PaymentInfo newPaymentInfo = new PaymentInfo();
 		if (cart != null) 
 			cart.calculateTotal(Cart._deliverySurcharge.toString());
@@ -250,10 +276,10 @@ public class FrontStoreController {
 //            	Member member = memberRepo.findByEmail(customer.getEmail());
 //            	PaymentInfo paymentInfo = paymentInfoRepo.findOneByCcNumber(customer.getCcNumber());
 
-        		Object ob = session.getAttribute("customerLoggedIn");
-        		Member member = new Member();
-        		if (ob instanceof Member)
-        			member = (Member)ob;
+//        		Object ob = session.getAttribute("customerLoggedIn");
+        		Member member = getCustomer(request);
+//        		if (ob instanceof Member)
+//        			member = (Member)ob;
         		paymentInfo.setMember(member);
             	PaymentInfo newPaymentInfo = paymentInfoRepo.saveAndFlush(paymentInfo);
                 Integer orderId = orderService.placeOrder(newPaymentInfo, cart);
@@ -263,8 +289,11 @@ public class FrontStoreController {
                 // if order processed successfully send user to confirmation page
                 if (orderId != 0) {
 
-                	// session and request invalidate and reset
-                	DoInvalidateSession(request, session);
+                	// reset the cart only, not the entire session... the user may want to remain logged in.
+//                	DoInvalidateSession(request, session);
+        			cart = new Cart();
+        			session.setAttribute("cart", cart);
+
                     // get order details
                     Map<String, Object> orderMap = orderService.getOrderDetails(orderId);
 
@@ -290,12 +319,11 @@ public class FrontStoreController {
 	}
 	
 	@RequestMapping(value= "/newMember", method = RequestMethod.GET) 
-	public String newMember(HttpSession session, ModelMap mm) {
+	public String newMember(HttpSession session, HttpServletRequest request, ModelMap mm) {
 
-		Object ob = session.getAttribute("customerLoggedIn");
-		Member newMember = new Member();
-		if (ob instanceof Member)
-			newMember = (Member)ob;
+		Member newMember = getCustomer(request);
+		if (newMember == null)
+			newMember = new Member();
 		mm.put("member", newMember);
 		
 		return "front_store/memberregistration";
@@ -335,12 +363,15 @@ public class FrontStoreController {
         } else {
             Role userRole = roleRepo.findByName("USER");
 			member.setRole(userRole);
+			member.setEnabled(true);
         	Member newcust = customerService.saveNewCustomer(member);
+			System.out.println("new customer: " + newcust.toString());
         	newcust.setPassword(""); //do not send password back to the browser!
         	mm.put("customerLoggedIn", newcust);
         	mm.put("success", true);
         	
-    		session.setAttribute("isSignedIn", true);
+//        	session.setAttribute("remoteuser", newcust.getEmail());
+        	session.setAttribute("isSignedIn", true);
     		session.setAttribute("custId", newcust.getId());
     		String redirectPath = (String) session.getAttribute("redirect");
     		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
@@ -353,49 +384,60 @@ public class FrontStoreController {
 		return "front_store/memberregistration";
 	}
 	
-	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public String custLogin() {
-		
+//	@RequestMapping(value="/login", method = RequestMethod.GET)
+//	public String custLogin() {
+//		
+//		return "front_store/memberlogin";
+//	}
+//
+	
+	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
+System.out.println("in loginConsole");
+		if(error != null) {
+			mm.put("message", "Login Failed!");
+		} else {
+			mm.put("message", false);
+		}
 		return "front_store/memberlogin";
 	}
 
-	
-	@RequestMapping(value="/login", method = RequestMethod.POST)
-	public String custLogin(@RequestParam("email") String email,
-			@RequestParam("password") String password, 
-			HttpSession session,
-			ModelMap mm) {
-		Member member = new Member();
-		member = memberRepo.findOneByEmail(email);
-		if (member == null || member.getId() == null) {
-			mm.put("loginerror", true);
-			return "front_store/memberlogin";
-		}
-		
-		boolean isPasswordValid = customerService.validatePassword(password, member.getPassword());
-		
-		if (!isPasswordValid) {
-			mm.put("loginerror", true);
-			return "front_store/memberlogin";
-		}
-
-    	System.out.println("customer " + member.getName() + " verified.  id: " + member.getId());
-    	System.out.println("customer role: " + member.getRole() + " name: " + member.getRole().getName());
-
-    	session.setAttribute("custId", member.getId());
-		session.setAttribute("isSignedIn", true);
-		String redirectPath = (String) session.getAttribute("redirect");
-		member.setPassword("");
-		session.setAttribute("customerLoggedIn", member);
-		
-		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
-			mm.put("customerLoggedIn", member);
-			session.removeAttribute("redirect");
-			return "redirect:" + redirectPath;
-		}
-		return "redirect:/home";
-		
-	}
+//	@RequestMapping(value="/login", method = RequestMethod.POST)
+//	public String custLogin(@RequestParam("username") String email,
+//			@RequestParam("password") String password, 
+//			HttpSession session,
+//			ModelMap mm) {
+//		Member member = new Member();
+//		member = memberRepo.findOneByEmail(email);
+//		if (member == null || member.getId() == null) {
+//			mm.put("loginerror", true);
+//			return "front_store/memberlogin";
+//		}
+//		
+//		boolean isPasswordValid = customerService.validatePassword(password, member.getPassword());
+//		
+//		if (!isPasswordValid) {
+//			mm.put("loginerror", true);
+//			return "front_store/memberlogin";
+//		}
+//
+//    	System.out.println("customer " + member.getName() + " verified.  id: " + member.getId());
+//    	System.out.println("customer role: " + member.getRole() + " name: " + member.getRole().getName());
+//
+//    	session.setAttribute("custId", member.getId());
+//		session.setAttribute("isSignedIn", true);
+//		String redirectPath = (String) session.getAttribute("redirect");
+//		member.setPassword("");
+//		session.setAttribute("customerLoggedIn", member);
+//		
+//		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
+//			mm.put("customerLoggedIn", member);
+//			session.removeAttribute("redirect");
+//			return "redirect:" + redirectPath;
+//		}
+//		return "redirect:/home";
+//		
+//	}
 	
 	@RequestMapping("/logout")
 	public String customerLogout (HttpServletRequest request, HttpSession session) {

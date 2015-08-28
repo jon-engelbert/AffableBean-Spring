@@ -27,7 +27,7 @@ function validateFields() {
 		<h3>Don't have an account?  <a th:href="@{/newMember}">Create one.</a></h3>		
 		<!-- content begin -->
 		<span th:if="${loginerror}" class="error">email or password incorrect.  <a th:href="@{/newMember}"><b>Create an account?</b></a></span>
-			<form id="customerLoginForm" th:action="@{/login}" method="post" onsubmit="return validateFields();">
+			<form th:action="@{/login}" method="POST">
 		        <table class="formTable">
 		            <tr>
 		                <td><label for="email" th:text="|#{email}:|">email</label></td>

@@ -57,13 +57,10 @@ public class MemberService {
 	public Member saveNewCustomer(Member member) {
 		
 		String password = member.getPassword();
-		
-		
-		String encodedPw = encoder.encode(password);
-		
+		String encodedPw = encoder.encode(password);		
 		member.setPassword(encodedPw);
 		
-		
+		member.setUsername(member.getEmail());
 		member = memberRepo.saveAndFlush(member);
 		return member;
 	}

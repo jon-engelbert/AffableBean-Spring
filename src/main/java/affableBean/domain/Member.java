@@ -147,5 +147,14 @@ public class Member implements java.io.Serializable {
 			Collection<PaymentInfo> paymentInfoCollection) {
 		this.paymentInfoCollection = paymentInfoCollection;
 	}
+
+	@Override
+	public String toString() {
+		return "Member [id=" + id + ", name=" + name + ", username=" + username
+				+ ", password=" + password + ", enabled=" + enabled + ", role="
+				+ role + ", phone=" + phone + ", address=" + address
+				+ ", cityRegion=" + cityRegion + ", email=" + email
+				+ ", paymentInfoCollection=" + paymentInfoCollection + "]";
+	}
 	
 }

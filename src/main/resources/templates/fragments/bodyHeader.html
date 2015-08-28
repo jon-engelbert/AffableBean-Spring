@@ -73,8 +73,8 @@
 
                     </div>
                     <div class="headerWidget" id="login">
-                    	<span class="horizontalMargin" th:if="${session.isSignedIn} != null and ${session.isSignedIn} == true">Signed In (<a th:href="@{/logout}">logout</a>)</span>
-                    	<span class="horizontalMargin" th:if="${session.isSignedIn} == null"><a href="login" th:href="@{/login}">Login</a> | <a th:href="@{/newMember}">Register</a></span>
+                    	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() != null}">Signed In (<a th:href="@{/logout}">logout</a>)</span>
+                    	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() == null}"><a href="/admin/login" th:href="@{/admin/login}">Login</a> | <a th:href="@{/newMember}">Register</a></span>
                     </div>
 
                 </div>
