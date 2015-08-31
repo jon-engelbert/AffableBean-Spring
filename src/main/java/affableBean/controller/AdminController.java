@@ -277,7 +277,7 @@ public class AdminController {
 		return "admin/order";
 	}
 
-	@RequestMapping(value = "/product", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewProducts", method = RequestMethod.GET)
 	public String productConsole(
 			@RequestParam(value = "id", required = false) Integer id,
 			ModelMap mm) {

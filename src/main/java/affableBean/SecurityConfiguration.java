@@ -34,13 +34,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-        	.authorizeRequests().antMatchers("/admin/**").hasAuthority("ADMIN")
+    	.authorizeRequests()
+        	.antMatchers("/checkout", "/purchase").hasAnyAuthority("USER", "ADMIN")
+    		.antMatchers("/admin/**").hasAuthority("ADMIN")
         	.anyRequest().permitAll()
         .and()
         	.formLogin().loginPage("/admin/login")
-//        	.formLogin().loginPage("/front_store/login")
         	.failureUrl("/admin/login?error").permitAll()
-//        	.failureUrl("/front_store/login?error").permitAll()
         	.defaultSuccessUrl("/")
         .and()
         	.logout()

@@ -211,11 +211,6 @@ public class FrontStoreController {
 	@RequestMapping(value="/checkout", method=RequestMethod.GET)
 	public String checkout(HttpSession session, HttpServletRequest request, 
 			ModelMap mm) {
-		Boolean isSignedIn = isSignedIn(request);
-		if (!isSignedIn) {					// not signed in
-			session.setAttribute("redirect", "/checkout");			// setting a session flag to redirect to checkout after create/login
-			return "admin/login";						// initially sends them to login page where they can opt to register too.
-		}
 		Cart cart = (Cart) session.getAttribute("cart");
 		Member member = getCustomer(request);
 		Integer custId = member.getId();
