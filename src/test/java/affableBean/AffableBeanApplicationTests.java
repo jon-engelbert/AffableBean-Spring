@@ -46,11 +46,11 @@ public class AffableBeanApplicationTests {
 	@Transactional
 	public void testSaveCustomer() {
 		Role adminRole = roleRepo.findByName("ADMIN");
-		Member cust = new Member("Thien", "Thien  Nguyen", "thienman@gmail.com", "123", true, adminRole);
+		Member cust = new Member("Thien", "thienman@gmail.com", "thienman@gmail.com", "123", true, adminRole);
 
 		Member custReturned = customerService.saveAndFlush(cust);
 		System.out.println("******" + custReturned.getPhone());
-		Member custSaved = customerService.findOneByName("Thien");
+		Member custSaved = customerService.getMemberByEmail("thienman@gmail.com");
 		Assert.assertEquals(custReturned, custSaved);
 
 		Integer id = custReturned.getId();

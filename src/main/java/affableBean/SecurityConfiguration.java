@@ -2,6 +2,7 @@ package affableBean;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -63,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         	.jdbcAuthentication().dataSource(datasource)
         	.usersByUsernameQuery("select username, password, enabled from member where username=?")
         	.authoritiesByUsernameQuery("select member.username, role.name from member join role on member.role_id = role.id where username=?")
-        	.passwordEncoder(encoder);
+        	.passwordEncoder(encoder());
         
         
         // adding two members for testing purposes
@@ -83,4 +84,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         
     }
 
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder(11);
+    }
 }

@@ -9,16 +9,21 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 import affableBean.cart.Cart;
 import affableBean.domain.Member;
@@ -32,10 +37,13 @@ import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.OrderedProductRepository;
 import affableBean.repository.ProductRepository;
 import affableBean.repository.RoleRepository;
+import affableBean.service.IMemberService;
+import affableBean.service.MemberDto;
 import affableBean.service.MemberService;
 import affableBean.service.OrderService;
 import affableBean.service.ProductDto;
 import affableBean.service.ValidatorService;
+import affableBean.validation.EmailExistsException;
 
 @Controller
 public class FrontStoreController {
@@ -43,7 +51,11 @@ public class FrontStoreController {
 //	@Autowired
 //	private Cart cart;
 
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
+    @Autowired
+    private IMemberService customerService;
+
 	@Autowired 
 	private PaymentInfoRepository paymentInfoRepo;
 	
@@ -65,8 +77,6 @@ public class FrontStoreController {
 	@Autowired 
 	private CustomerOrderRepository customerOrderRepo;
 	
-	@Autowired 
-	MemberService customerService;
 	
 	@Autowired 
 	private OrderedProductRepository orderedProductRepo;
@@ -85,7 +95,7 @@ public class FrontStoreController {
 //	    	session.setAttribute("custId", member.getId());
 //			session.setAttribute("isSignedIn", true);
 		}
-		System.out.println("customer: " + member);
+		System.out.println("isSignedIn, customer: " + member);
 		return request.getRemoteUser() != null;
 	}
 
@@ -97,7 +107,7 @@ public class FrontStoreController {
 //	    	session.setAttribute("custId", member.getId());
 //			session.setAttribute("isSignedIn", true);
 		}
-		System.out.println("customer: " + member);
+		System.out.println("getCustomer, customer: " + member);
 		return member;
 	}
 
@@ -105,7 +115,7 @@ public class FrontStoreController {
 	 * Category
 	 */
 
-	@RequestMapping(value = {"home", "/"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/home", "/"}, method = RequestMethod.GET)
 	public String home(ModelMap mm, HttpSession session) {
 		Cart cart = (Cart) session.getAttribute("cart");
 		if (cart == null) {
@@ -316,67 +326,105 @@ public class FrontStoreController {
 	@RequestMapping(value= "/newMember", method = RequestMethod.GET) 
 	public String newMember(HttpSession session, HttpServletRequest request, ModelMap mm) {
 
+        LOGGER.info("in newMember: " + getCustomer(request));
 		Member newMember = getCustomer(request);
-		if (newMember == null)
-			newMember = new Member();
-		mm.put("member", newMember);
+		MemberDto memberDto = new MemberDto();
+		if (newMember != null)
+			memberDto = new MemberDto(newMember);
+        LOGGER.info("in newMember, memberDto: " + memberDto);
+
+		mm.put("memberDto", memberDto);
 		
 		return "front_store/memberregistration";
 		
 	}
 	
+    private Member createMemberAccount(final MemberDto accountDto) {
+        Member registered = null;
+        LOGGER.info("in createMemberAccount");
+        try {
+        	accountDto.setUsername(accountDto.getEmail());
+            registered = customerService.registerNewMemberAccount(accountDto);
+        } catch (final EmailExistsException e) {
+            return null;
+        }
+        return registered;
+    }
+    
 	@RequestMapping(value="/newMemberSubmit", method = RequestMethod.POST)
-	public String newMemberSubmit(@ModelAttribute final Member member, 
+	public String newMemberSubmit(@Valid final MemberDto memberDto, 
 			final BindingResult bindingResult, 
 			HttpServletRequest request, 
 			HttpSession session,
-			ModelMap mm) {
+			ModelMap mm, final Errors errors) {
 		
-		if (bindingResult.hasErrors()) {
-			System.out.println("bindingResult error");
-			mm.put("validationErrorFlag", true);
-		}
+        LOGGER.info("Registering user account with information: {}", memberDto);
 
-        // validate user data
-        boolean validationErrorFlag = false;
-        validationErrorFlag = validator.validateMember(member, request);
+        final Member registered = createMemberAccount(memberDto);
+        if (registered == null) {
+            // result.rejectValue("email", "message.regError");
+        	mm.put("memberDto", memberDto);
+            return "front_store/memberregistration";
+        }
+        try {
+            final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+        } catch (final Exception ex) {
+            LOGGER.warn("Unable to register user", ex);
+//            return new ModelAndView("emailError", "memberDto", memberDto);
+        	mm.put("memberDto", memberDto);
+            return "front_store/memberregistration";
+        }
+//        return new ModelAndView("successRegister", "memberDto", memberDto);
+        return "front_store/memberlogin";
+
         
-        // check for existing email
-        boolean emailExists = false;
-        if (!validationErrorFlag) {
-        	emailExists = customerService.checkEmailExists(member.getEmail());
-        	if (emailExists) {
-        		mm.put("customerLoggedIn", member);
-        		mm.put("emailExists", emailExists);
-        		return "front_store/memberregistration";
-        	}
-        }
-
-        // if validation error found, return user to checkout
-        if (validationErrorFlag == true) {
-        	mm.put("validationErrorFlag", validationErrorFlag);
-        } else {
-            Role userRole = roleRepo.findByName("USER");
-			member.setRole(userRole);
-			member.setEnabled(true);
-        	Member newcust = customerService.saveNewCustomer(member);
-			System.out.println("new customer: " + newcust.toString());
-        	newcust.setPassword(""); //do not send password back to the browser!
-        	mm.put("customerLoggedIn", newcust);
-        	mm.put("success", true);
-        	
-//        	session.setAttribute("remoteuser", newcust.getEmail());
-        	session.setAttribute("isSignedIn", true);
-    		session.setAttribute("custId", newcust.getId());
-    		String redirectPath = (String) session.getAttribute("redirect");
-    		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
-    			Cart cart = (Cart)session.getAttribute("cart");
-    			session.removeAttribute("redirect");
-    			return "redirect:" + redirectPath;
-    		}
-        }
-	
-		return "front_store/memberregistration";
+//        if (bindingResult.hasErrors()) {
+//			System.out.println("bindingResult error");
+//			mm.put("validationErrorFlag", true);
+//		}
+//
+//        // validate user data
+//        boolean validationErrorFlag = false;
+//        Member member = registerNewMemberAccount(memberDto);
+////        validationErrorFlag = validator.validateMember(member, request);
+//        
+//        // check for existing email
+//        boolean emailExists = false;
+//        if (!validationErrorFlag) {
+//        	emailExists = customerService.checkEmailExists(member.getEmail());
+//        	if (emailExists) {
+//        		mm.put("customerLoggedIn", member);
+//        		mm.put("emailExists", emailExists);
+//        		return "front_store/memberregistration";
+//        	}
+//        }
+//
+//        // if validation error found, return user to checkout
+//        if (validationErrorFlag == true) {
+//        	mm.put("validationErrorFlag", validationErrorFlag);
+//        } else {
+//            Role userRole = roleRepo.findByName("USER");
+//			member.setRole(userRole);
+//			member.setEnabled(true);
+//        	Member newcust = customerService.saveNewCustomer(member);
+//			System.out.println("new customer: " + newcust.toString());
+//        	newcust.setPassword(""); //do not send password back to the browser!
+//        	mm.put("customerLoggedIn", newcust);
+//        	mm.put("success", true);
+//        	
+////        	session.setAttribute("remoteuser", newcust.getEmail());
+//        	session.setAttribute("isSignedIn", true);
+//    		session.setAttribute("custId", newcust.getId());
+//    		String redirectPath = (String) session.getAttribute("redirect");
+//    		if (redirectPath != null) {					// if there is a redirect session attr, then redirect
+//    			Cart cart = (Cart)session.getAttribute("cart");
+//    			session.removeAttribute("redirect");
+//    			return "redirect:" + redirectPath;
+//    		}
+//        }
+//	
+//		return "front_store/memberregistration";
 	}
 	
 //	@RequestMapping(value="/login", method = RequestMethod.GET)
@@ -388,13 +436,16 @@ public class FrontStoreController {
 	
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
 	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
-System.out.println("in loginConsole");
+//System.out.println("in loginConsole");
 		if(error != null) {
+			System.out.println("in loginConsole, failed: " + error);
 			mm.put("message", "Login Failed!");
+			return "front_store/memberlogin";
 		} else {
+			System.out.println("in loginConsole, success: ");
 			mm.put("message", false);
+			return "front_store/home/";
 		}
-		return "front_store/memberlogin";
 	}
 
 //	@RequestMapping(value="/login", method = RequestMethod.POST)
@@ -446,7 +497,6 @@ System.out.println("in loginConsole");
 
 	private void DoInvalidateSession(HttpServletRequest request,
 			HttpSession session) {
-		Cart cart = (Cart) session.getAttribute("cart");
         // in case language was set using toggle, get language choice before destroying session
         Locale locale = (Locale) session.getAttribute("javax.servlet.jsp.jstl.fmt.locale.session");
         String language = "";
@@ -457,7 +507,7 @@ System.out.println("in loginConsole");
         }
 
         // dissociate shopping cart from session
-        cart = null;
+        session.setAttribute("cart", null);
 
         // end session
         session.invalidate();

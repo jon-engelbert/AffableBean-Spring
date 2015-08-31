@@ -35,6 +35,7 @@ import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.ProductRepository;
+import affableBean.service.IMemberService;
 import affableBean.service.MemberService;
 import affableBean.service.OrderService;
 import affableBean.service.ProductDto;
@@ -58,7 +59,7 @@ public class AdminController {
 	private CategoryRepository categoryRepo;
 
 	 @Autowired
-	 private MemberService memberService;
+	 private IMemberService memberService;
 
 //	 @Autowired
 //	 private PaymentInfoService paymentInfoService;

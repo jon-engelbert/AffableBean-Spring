@@ -13,7 +13,7 @@
 		function validatePassword() {
 			//Store the password field objects into variables ...
 			var pass1 = document.getElementById('password');
-			var pass2 = document.getElementById('confpassword');
+			var pass2 = document.getElementById('matchingPassword');
 			if (pass1.length == 0) {
 				alert("please enter a password");
 				return false;
@@ -38,7 +38,7 @@
 			email address has already been registered</span>
 
 		<form id="customerForm" th:action="@{/newMemberSubmit}"
-			th:object="${member}" method="post"
+			th:object="${memberDto}" method="post"
 			onsubmit="return validatePassword();">
 			<input type="hidden" name="id" th:value="*{id}" />
 			<table class="formTable">
@@ -98,13 +98,13 @@
 				</tr>
 				<tr>
 					<td><label for="password">password:</label></td>
-					<td class="inputField"><input type="password" id="password"
+					<td class="inputField"><input type="password"
 						th:field="*{password}" /></td>
 				</tr>
 				<tr>
-					<td><label for="confpassword">confirm password:</label></td>
+					<td><label for="matchingPassword">confirm password:</label></td>
 					<td class="inputField"><input type="password" size="31"
-						id="confpassword" name="confpassword" class="password" /></td>
+						th:field="*{matchingPassword}" /></td>
 				</tr>
 				<tr>
 					<td colspan="2"><input type="submit" value="submit" /></td>
