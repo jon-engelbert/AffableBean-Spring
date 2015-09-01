@@ -3,8 +3,10 @@ package affableBean.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -18,11 +20,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import affableBean.domain.Member;
+import affableBean.domain.PasswordResetToken;
 import affableBean.domain.PaymentInfo;
 import affableBean.domain.Role;
+import affableBean.domain.VerificationToken;
 import affableBean.repository.MemberRepository;
+import affableBean.repository.PasswordResetTokenRepository;
 import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.RoleRepository;
+import affableBean.repository.VerificationTokenRepository;
 import affableBean.validation.EmailExistsException;
 
 @Service
@@ -39,9 +45,26 @@ public class MemberService implements IMemberService{
 	
     @Autowired
     private PasswordEncoder passwordEncoder;
-	
+
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordTokenRepository;
 	
 	private static final int PAGE_SIZE = 5;
+
+	public Member getCustomerFromRequest(HttpServletRequest request) {
+		Member member = null;
+		if (request.getRemoteUser() != null) {	//  || (session.getAttribute("isSignedIn") != null && (Boolean) session.getAttribute("isSignedIn") == true)) {
+			member = memberRepo.findOneByEmail(request.getRemoteUser());
+//			session.setAttribute("customerLoggedIn", member);
+//	    	session.setAttribute("custId", member.getId());
+//			session.setAttribute("isSignedIn", true);
+		}
+		System.out.println("getCustomer, customer: " + member);
+		return member;
+	}
 
 	@Override
     public Page<Member> findAllCustomers(Integer pageNumber) {
@@ -70,9 +93,19 @@ public class MemberService implements IMemberService{
 	public Member getMemberByEmail(String email) {
 		return memberRepo.findOneByEmail(email);
 	}
-
 	
-	@Override
+    @Override
+    public Member getMember(final String verificationToken) {
+        final Member user = tokenRepository.findByToken(verificationToken).getMember();
+        return user;
+    }
+	
+    @Override
+    public Member getMemberByPasswordResetToken(final String token) {
+        return passwordTokenRepository.findByToken(token).getMember();
+    }
+
+    @Override
 	public Member saveNewCustomer(Member member) {
 		
 		String password = member.getPassword();
@@ -145,6 +178,36 @@ public class MemberService implements IMemberService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public VerificationToken getVerificationToken(final String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
+    }
+
+    @Override
+    public void createVerificationTokenForMember(final Member member, final String token) {
+        final VerificationToken myToken = new VerificationToken(token, member);
+        tokenRepository.save(myToken);
+    }
+
+    @Override
+    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
+        VerificationToken vToken = tokenRepository.findByToken(existingVerificationToken);
+        vToken.updateToken(UUID.randomUUID().toString());
+        vToken = tokenRepository.save(vToken);
+        return vToken;
+    }
+
+    @Override
+    public void createPasswordResetTokenForMember(final Member member, final String token) {
+        final PasswordResetToken myToken = new PasswordResetToken(token, member);
+        passwordTokenRepository.save(myToken);
+    }
+
+    @Override
+    public PasswordResetToken getPasswordResetToken(final String token) {
+        return passwordTokenRepository.findByToken(token);
     }
 
 }

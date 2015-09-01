@@ -99,18 +99,6 @@ public class FrontStoreController {
 		return request.getRemoteUser() != null;
 	}
 
-	public Member getCustomer(HttpServletRequest request) {
-		Member member = null;
-		if (request.getRemoteUser() != null) {	//  || (session.getAttribute("isSignedIn") != null && (Boolean) session.getAttribute("isSignedIn") == true)) {
-			member = memberRepo.findOneByEmail(request.getRemoteUser());
-//			session.setAttribute("customerLoggedIn", member);
-//	    	session.setAttribute("custId", member.getId());
-//			session.setAttribute("isSignedIn", true);
-		}
-		System.out.println("getCustomer, customer: " + member);
-		return member;
-	}
-
 	/**
 	 * Category
 	 */
@@ -222,7 +210,7 @@ public class FrontStoreController {
 	public String checkout(HttpSession session, HttpServletRequest request, 
 			ModelMap mm) {
 		Cart cart = (Cart) session.getAttribute("cart");
-		Member member = getCustomer(request);
+		Member member = customerService.getCustomerFromRequest(request);
 		Integer custId = member.getId();
 //		Member member = new Member();
 //		Integer custId = (Integer) session.getAttribute("custId");	// custId is set when a new customer registers or existing one logs in
@@ -282,7 +270,7 @@ public class FrontStoreController {
 //            	PaymentInfo paymentInfo = paymentInfoRepo.findOneByCcNumber(customer.getCcNumber());
 
 //        		Object ob = session.getAttribute("customerLoggedIn");
-        		Member member = getCustomer(request);
+        		Member member = customerService.getCustomerFromRequest(request);
 //        		if (ob instanceof Member)
 //        			member = (Member)ob;
         		paymentInfo.setMember(member);
@@ -323,63 +311,6 @@ public class FrontStoreController {
 		
 	}
 	
-	@RequestMapping(value= "/newMember", method = RequestMethod.GET) 
-	public String newMember(HttpSession session, HttpServletRequest request, ModelMap mm) {
-
-        LOGGER.info("in newMember: " + getCustomer(request));
-		Member newMember = getCustomer(request);
-		MemberDto memberDto = new MemberDto();
-		if (newMember != null)
-			memberDto = new MemberDto(newMember);
-        LOGGER.info("in newMember, memberDto: " + memberDto);
-
-		mm.put("memberDto", memberDto);
-		
-		return "front_store/memberregistration";
-		
-	}
-	
-    private Member createMemberAccount(final MemberDto accountDto) {
-        Member registered = null;
-        LOGGER.info("in createMemberAccount");
-        try {
-        	accountDto.setUsername(accountDto.getEmail());
-            registered = customerService.registerNewMemberAccount(accountDto);
-        } catch (final EmailExistsException e) {
-            return null;
-        }
-        return registered;
-    }
-    
-	@RequestMapping(value = "/newMemberSubmit", method = RequestMethod.POST)
-	public String newMemberSubmit(@Valid final MemberDto memberDto,
-			final BindingResult bindingResult, HttpServletRequest request,
-			HttpSession session, ModelMap mm, final Errors errors) {
-
-		LOGGER.info("Registering user account with information: {}", memberDto);
-
-		final Member registered = createMemberAccount(memberDto);
-		if (registered == null) {
-			// result.rejectValue("email", "message.regError");
-			mm.put("memberDto", memberDto);
-			return "front_store/memberregistration";
-		}
-		try {
-			final String appUrl = "http://" + request.getServerName() + ":"
-					+ request.getServerPort() + request.getContextPath();
-			// eventPublisher.publishEvent(new
-			// OnRegistrationCompleteEvent(registered, request.getLocale(),
-			// appUrl));
-		} catch (final Exception ex) {
-			LOGGER.warn("Unable to register user", ex);
-			// return new ModelAndView("emailError", "memberDto", memberDto);
-			mm.put("memberDto", memberDto);
-			return "front_store/memberregistration";
-		}
-		// return new ModelAndView("successRegister", "memberDto", memberDto);
-		return "admin/login";
-	}
-
 
 	
 //	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
