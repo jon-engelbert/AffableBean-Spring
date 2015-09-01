@@ -13,7 +13,7 @@
 		<span th:if="${success}">Customer successfully updated</span>
 
 			<form id="customerForm" th:action="@{/admin/customerEdit}" th:object="${member}" method="post">
-				<input type="hidden" name="id" th:value="${customer.id}" />
+				<input type="hidden" name="id" th:value="*{id}" />
 		        <table id="customerTable">
 		            <tr th:if="${#vars['validationErrorFlag'] != null}">
 		                <td colspan="2" style="text-align:left">
@@ -46,41 +46,32 @@
 		                <td><label for="name" th:text="|#{customerName}:|">name</label></td>
 		                <td class="inputField">
 		                    <input type="text"
-		                           size="31"
-		                           maxlength="45"
-		                           id="name"
-		                           name="name"
-		                           th:value="${customer.name}" />
+		                           th:field="*{name}" />
 		                </td>
 		            </tr>
 		            <tr>
 		                <td><label for="email" th:text="|#{email}:|">email</label></td>
 		                <td class="inputField">
-		                    <input type="text"
-		                           size="31"
-		                           maxlength="45"
-		                           id="email"
-		                           name="email"
-		                           th:value="${customer.email}" />
+		                    <input type="text" th:field="*{email}" />
 		                </td>
 		            </tr>
 		            <tr>
 		                <td><label for="phone" th:text="|#{phone}:|"></label></td>
 		                <td class="inputField">
-		                    <input type="text" th:field "*{phone}" />
+		                    <input type="text" th:field="*{phone}" />
 		                </td>
 		            </tr>
 		            <tr>
 		                <td><label for="address" th:text="|#{address}:|">address</label></td>
 		                <td class="inputField">
-		                    <input type="text" th:field "*{address}" />
+		                    <input type="text" th:field="*{address}" />
 		
 		                </td>
 		            </tr>
 		            <tr>
 		                <td><label for="cityRegion" th:text="|#{cityRegion}:|">cityRegion</label></td>
 		                <td class="inputField">
-		                    <input type="text" th:field "*{cityRegion}" />
+		                    <input type="text" th:field="*{cityRegion}" />
 		                </td>
 <!-- 		                    <span th:text="#{prague}"></span>
 		                    <select name="cityRegion">

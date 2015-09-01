@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/adminFragments :: adminHeader0"> ... </head>
+<body>
+	<div id="main">
+		<div id="header" th:include="fragments/adminFragments :: adminHeader1"> ... </div>
+		<h2>Admin Console</h2>
+		<div th:replace="fragments/adminFragments :: adminMenu"></div>
+		
+		<!-- content begin -->
+		
+		
+		<!-- customerRecord is requested -->
+		<div th:if="${customerRecord} != null">
+
+			<table id="adminTable" class="detailsTable">
+
+				<tr class="header">
+					<th colspan="2">customer details</th>
+				</tr>
+				<tr>
+					<td style="width: 290px"><strong>customer id:</strong></td>
+					<td th:text="${customerRecord.id}">customerRecord.id</td>
+				</tr>
+				<tr>
+					<td><strong>name:</strong></td>
+					<td th:text="${customerRecord.name}">customerRecord.name</td>
+				</tr>
+				<tr>
+					<td><strong>username:</strong></td>
+					<td th:text="${customerRecord.username}">customerRecord.username</td>
+				</tr>
+				<tr>
+					<td><strong>email:</strong></td>
+					<td th:text="${customerRecord.email}">customerRecord.email</td>
+				</tr>
+				<tr>
+					<td><strong>phone:</strong></td>
+					<td th:text="${customerRecord.phone}">customerRecord.phone</td>
+				</tr>
+				<tr>
+					<td><strong>address:</strong></td>
+					<td th:text="${customerRecord.address}">customerRecord.address</td>
+				</tr>
+				<tr>
+					<td><strong>city region:</strong></td>
+					<td th:text="${customerRecord.cityRegion}">customerRecord.cityRegion</td>
+				</tr>
+				<tr>
+					<td><strong>enabled:</strong></td>
+					<td th:text="${customerRecord.enabled}">customerRecord.enabled</td>
+				</tr>
+				<tr>
+					<td><strong>role:</strong></td>
+					<td th:text="${customerRecord.role.getName()}">customerRecord.role.getName()</td>
+				</tr>
+				<tr><td colspan="2" style="padding: 0 20px"><hr/></td></tr>
+
+				<tr class="tableRow"
+					th:onclick="|document.location.href='admin/orderRecord?${order.id}'|" th:if="${order} != null">
+					<td colspan="2">
+						<!-- Anchor tag is provided in case JavaScript is disabled -->
+						<a href="orderRecord" th:href="@{/admin/orderRecord(id=${order.id})}"  class="noDecoration">
+						<strong>view order summary &#x279f;</strong></a></td>
+				</tr>
+				<tr class="tableRow"
+					th:onclick="|document.location.href='admin/viewCustomerOrders?${customerRecord.id}'|" th:if="${orders} != null">
+					<td colspan="2">
+						<!-- Anchor tag is provided in case JavaScript is disabled -->
+						<a href="orderRecord" th:href="@{/admin/viewCustomerOrders(id=${customerRecord.id})}"  class="noDecoration">
+						<strong>view order summary &#x279f;</strong></a></td>
+				</tr>
+			</table>
+		</div>
+		
+		
+
+		<!-- content end -->
+		
+		<div id="footer" th:include="fragments/adminFragments :: adminFooter"></div>
+	</div>
+</body>
+</html>

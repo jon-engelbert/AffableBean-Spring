@@ -70,6 +70,21 @@ public class RegistrationController {
         super();
     }
 
+	/**
+	 * Auth process
+	 */
+	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
+	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
+        LOGGER.info("In LoginConsole: " + error);
+
+		if(error != null) {
+			mm.put("message", "Login Failed!");
+		} else {
+			mm.put("message", false);
+		}
+		return "admin/login";
+	}
+
 	@RequestMapping(value= "/newMember", method = RequestMethod.GET) 
 	public String newMember(HttpSession session, HttpServletRequest request, ModelMap mm) {
 
@@ -161,11 +176,11 @@ public class RegistrationController {
         }
         LOGGER.info("confirmRegistration: " + verificationToken);
         user.setEnabled(true);
-        userService.saveNewCustomer(user);
+        userService.saveRegisteredCustomer(user);
         LOGGER.info("saved new customer enabled: " + user);
         model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
         LOGGER.info("added attribute: " + messages.getMessage("message.accountVerified", null, locale));
-        return "redirect:/admin/login?lang=" + locale.getLanguage();
+        return "redirect:/login?lang=" + locale.getLanguage();
     }
 
     // user activation - verification

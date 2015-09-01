@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -45,6 +47,7 @@ import affableBean.service.ValidatorService;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private PaymentInfoRepository paymentInfoRepo;
@@ -90,47 +93,17 @@ public class AdminController {
 	/**
 	 * Auth process
 	 */
-	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
-	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
-
-		if(error != null) {
-			mm.put("message", "Login Failed!");
-		} else {
-			mm.put("message", false);
-		}
-		return "admin/login";
-	}
-
-	//	@RequestMapping(value="/login", method = RequestMethod.POST)
-//	public String custLogin(@RequestParam("email") String email,
-//			@RequestParam("password") String password, 
-//			HttpSession session,
-//			ModelMap mm) {
-//		Member customer = new Member();
-//		customer = memberRepo.findOneByEmail(email);
-//		if (customer == null || customer.getId() == null) {
-//			mm.put("loginerror", true);
-//			System.out.println("customer by email not found");
-//			return "front_store/memberlogin";
-//		}
-//		
-//		boolean isPasswordValid = memberService.validatePassword(password, customer.getPassword());
-//		
-//		if (!isPasswordValid) {
-//			mm.put("loginerror", true);
-//			System.out.println("password not valid");
-//			return "front_store/memberlogin";
-//		}
+//	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
+//	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
+//        LOGGER.info("In LoginConsole: " + error);
 //
-//    	System.out.println("customer " + customer.getName() + " verified.  id: " + customer.getId());
-//
-//		session.setAttribute("isSignedIn", true);
-//		customer.setPassword("");
-//		session.setAttribute("customerLoggedIn", customer);
-//		return "redirect:/home";
-//		
-//	}
-	
+//		if(error != null) {
+//			mm.put("message", "Login Failed!");
+//		} else {
+//			mm.put("message", false);
+//		}
+//		return "admin/login";
+//	}	
 
 
 	/**
@@ -149,7 +122,7 @@ public class AdminController {
 	    mm.put("beginIndex", begin);
 	    mm.put("endIndex", end);
 	    mm.put("currentIndex", current);
-		return "admin/index";
+		return "admin/customerList";
 	}
 
 	@RequestMapping("/viewOrders")
@@ -166,7 +139,7 @@ public class AdminController {
 		Member customer = memberRepo.findById(id);
 		mm.put("customerRecord", customer);
 		PaymentInfo paymentInfo = null;
-		if (!customer.getPaymentInfoCollection().isEmpty())
+		if (customer != null && !customer.getPaymentInfoCollection().isEmpty())
 			paymentInfo = customer.getPaymentInfoCollection().iterator().next();
 
 		// get customer order details
@@ -178,7 +151,7 @@ public class AdminController {
 		else
 			mm.put("orders", orders);
 
-		return "admin/index";
+		return "admin/viewCustomer";
 	}
 
 	@RequestMapping(value = "/orderRecord", method = RequestMethod.GET)
@@ -194,7 +167,7 @@ public class AdminController {
 		mm.put("orderedProducts", orderMap.get("orderedProducts"));
 		mm.put("deliverySurcharge", Cart._deliverySurcharge);
 
-		return "admin/index";
+		return "admin/orders";
 	}
 
 	@RequestMapping(value = "/viewCustomerOrders", method = RequestMethod.GET)

@@ -76,7 +76,7 @@ public class AdminControllerTests {
 
 	@Test
 	public void testLoginPage() throws Exception {
-		mockMvc.perform(get("/admin/login")).andExpect(
+		mockMvc.perform(get("/login")).andExpect(
 				view().name("admin/login"))
 				.andExpect(status().isOk());
 //				.andExpect(content().contentType("text/html;charset=UTF-8"));

@@ -20,6 +20,10 @@ public interface IMemberService {
 
     Member saveNewCustomer(Member Member);
 
+    Member saveRegisteredCustomer(Member member);
+    
+    Member saveAndFlush(Member Member);
+
     void deleteMember(Member Member);
 
     void createVerificationTokenForMember(Member Member, String token);

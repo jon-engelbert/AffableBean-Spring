@@ -36,19 +36,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
     	.authorizeRequests()
-        	.antMatchers("/checkout", "/purchase").hasAnyAuthority("USER", "ADMIN")
-    		.antMatchers("/admin/**").hasAuthority("ADMIN")
+        	.antMatchers("/checkout", "/purchase").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+    		.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
         	.anyRequest().permitAll()
         .and()
-        	.formLogin().loginPage("/admin/login")
-        	.failureUrl("/admin/login?error").permitAll()
+        	.formLogin().loginPage("/login")
+        	.failureUrl("/login?error").permitAll()
         	.defaultSuccessUrl("/")
         .and()
         	.logout()
                .deleteCookies("remove")
                .invalidateHttpSession(true)
                .logoutUrl("/admin/logout")
-               .logoutSuccessUrl("/admin/login?logout");
+               .logoutSuccessUrl("/login?logout");
 
     }
 	
@@ -68,8 +68,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         
         
         // adding two members for testing purposes
-        Role userRole = roleRepo.findByName("USER");
-        Role adminRole = roleRepo.findByName("ADMIN");
+        Role userRole = roleRepo.findByName("ROLE_USER");
+        Role adminRole = roleRepo.findByName("ROLE_ADMIN");
         
         Member adminMember = memberRepo.findOneByUsername("admin");
         Member userMember = memberRepo.findOneByUsername("user");

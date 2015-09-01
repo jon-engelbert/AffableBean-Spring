@@ -45,8 +45,8 @@ INSERT INTO `product` (`name`, price, description, category_id) VALUES ('seedles
 --
 -- Sample data for table `role`
 --
-INSERT INTO `role` (`name`) VALUES ('USER');
-INSERT INTO `role` (`name`) VALUES ('ADMIN');
+INSERT INTO `role` (`name`) VALUES ('ROLE_USER');
+INSERT INTO `role` (`name`) VALUES ('ROLE_ADMIN');
 
 --
 -- Sample data for table `member`

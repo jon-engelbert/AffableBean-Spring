@@ -20,6 +20,7 @@ import affableBean.domain.Product;
 import affableBean.domain.Role;
 import affableBean.repository.RoleRepository;
 import affableBean.service.CategoryService;
+import affableBean.service.IMemberService;
 import affableBean.service.MemberService;
 import affableBean.service.ProductService;
 
@@ -29,7 +30,7 @@ import affableBean.service.ProductService;
 public class AffableBeanApplicationTests {
 
 	@Autowired
-	MemberService customerService;
+	IMemberService customerService;
 
 	@Autowired
 	CategoryService categoryService;
@@ -45,7 +46,7 @@ public class AffableBeanApplicationTests {
 	@Test
 	@Transactional
 	public void testSaveCustomer() {
-		Role adminRole = roleRepo.findByName("ADMIN");
+		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
 		Member cust = new Member("Thien", "thienman@gmail.com", "thienman@gmail.com", "123", true, adminRole);
 
 		Member custReturned = customerService.saveAndFlush(cust);

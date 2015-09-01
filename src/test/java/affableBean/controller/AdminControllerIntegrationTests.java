@@ -85,7 +85,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testLoginConsole() throws Exception {
-		mockMvc.perform(get("/admin/login")).andExpect(
+		mockMvc.perform(get("/login")).andExpect(
 				view().name("admin/login"));
 	}
 
@@ -105,7 +105,7 @@ public class AdminControllerIntegrationTests {
 	@Test
 	public void testCustomerPage() throws Exception {
 		ArrayList<PaymentInfo> expectedCustomers = new ArrayList<PaymentInfo>();
-		Role userRole = roleRepo.findByName("USER");
+		Role userRole = roleRepo.findByName("ROLE_USER");
 		Member newCustomer = new Member("Ted theo", "ted", "t@t.com", "123", true, userRole);
 		customerRepo.deleteAll();
 		customerRepo.save(newCustomer);
@@ -116,7 +116,7 @@ public class AdminControllerIntegrationTests {
 	}
 	@Test
 	public void testMemberConsole() throws Exception {
-		Role adminRole = roleRepo.findByName("ADMIN");
+		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
 //		roleRepo.save(newRole);
 		Member newMember = new Member("jon", "jonny", "jon@jon.com", "123", true, adminRole);
 		memberRepo.save(newMember);
@@ -134,7 +134,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testProductConsole() throws Exception {
-		mockMvc.perform(get("/admin/product")).andExpect(view().name("admin/products"))
+		mockMvc.perform(get("/admin/viewProducts")).andExpect(view().name("admin/products"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))
@@ -152,7 +152,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testProductByCategory() throws Exception {
-		mockMvc.perform(get("/admin/product?id=1")).andExpect(view().name("admin/products"))
+		mockMvc.perform(get("/admin/viewProducts?id=1")).andExpect(view().name("admin/products"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))

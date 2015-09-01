@@ -77,6 +77,7 @@ public class MemberService implements IMemberService{
 		return memberRepo.findAll();
 	}
 	
+	@Override
 	public Member saveAndFlush(Member customer) {
 		return memberRepo.saveAndFlush(customer);
 	}
@@ -116,6 +117,12 @@ public class MemberService implements IMemberService{
 		member = memberRepo.saveAndFlush(member);
 		return member;
 	}
+    
+    @Override
+    public Member saveRegisteredCustomer(Member member){
+    	member = memberRepo.saveAndFlush(member);
+    	return member;
+    }
 
 	public boolean validatePassword(String rawPassword, String encodeddPassword) {
 
@@ -146,7 +153,7 @@ public class MemberService implements IMemberService{
         user.setPhone(accountDto.getPhone());
         user.setCityRegion(accountDto.getCityRegion());
         user.setEmail(accountDto.getEmail());
-        Role userRole = roleRepo.findByName("USER");
+        Role userRole = roleRepo.findByName("ROLE_USER");
         user.setRole(userRole);
         user.setEnabled(false);
 
