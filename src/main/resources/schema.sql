@@ -1,8 +1,8 @@
 --SET MODE MySQL;
-
 -- -----------------------------------------------------
 -- Table `customer`
 -- -----------------------------------------------------
+
 drop table if exists payment_info ;
 
 create table payment_info (
@@ -110,5 +110,37 @@ CREATE  TABLE member (
   UNIQUE(`email`)
   );
 -- COMMENT = 'maintains admin console member details';
+
+-----------------------------------------------------
+-- Table `verification_token`
+-- --------------------------------------------------
+DROP TABLE IF EXISTS verification_token ;
+
+CREATE  TABLE verification_token (
+  id identity,
+  expiry_date timestamp,
+  member_id INT UNSIGNED NOT NULL,
+  foreign key (member_id) references member(id),
+  token varchar(100),
+  UNIQUE (token)
+  );
+  
+  
+-----------------------------------------------------
+-- Table `password_reset_token`
+-- --------------------------------------------------
+DROP TABLE IF EXISTS password_reset_token ;
+
+CREATE  TABLE password_reset_token (
+  id identity,
+  expiry_date timestamp,
+  member_id INT UNSIGNED NOT NULL,
+  foreign key (member_id) references member(id),
+  token varchar(100),
+  UNIQUE (token)
+  );
+  
+  
+
 
 

@@ -159,11 +159,13 @@ public class RegistrationController {
             model.addAttribute("token", token);
             return "redirect:/badMember.html?lang=" + locale.getLanguage();
         }
-
+        LOGGER.info("confirmRegistration: " + verificationToken);
         user.setEnabled(true);
         userService.saveNewCustomer(user);
+        LOGGER.info("saved new customer enabled: " + user);
         model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
-        return "redirect:/login.html?lang=" + locale.getLanguage();
+        LOGGER.info("added attribute: " + messages.getMessage("message.accountVerified", null, locale));
+        return "redirect:/admin/login?lang=" + locale.getLanguage();
     }
 
     // user activation - verification
@@ -246,7 +248,7 @@ public class RegistrationController {
     // NON-API
 
     private final SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final Member user) {
-        final String confirmationUrl = contextPath + "/regitrationConfirm.html?token=" + newToken.getToken();
+        final String confirmationUrl = contextPath + "/registrationConfirm.html?token=" + newToken.getToken();
         final String message = messages.getMessage("message.resendToken", null, locale);
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject("Resend Registration Token");

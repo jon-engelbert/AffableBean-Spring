@@ -3,6 +3,7 @@ package affableBean.domain;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,8 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "password_reset_token")
 public class PasswordResetToken {
 
     private static final int EXPIRATION = 60 * 24;
@@ -23,9 +26,10 @@ public class PasswordResetToken {
     private String token;
 
     @OneToOne(targetEntity = Member.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "member_id")
     private Member member;
 
+    @Column(name = "expiry_date")
     private Date expiryDate;
 
     public PasswordResetToken() {

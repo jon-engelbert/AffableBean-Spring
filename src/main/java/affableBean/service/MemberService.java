@@ -148,7 +148,7 @@ public class MemberService implements IMemberService{
         user.setEmail(accountDto.getEmail());
         Role userRole = roleRepo.findByName("USER");
         user.setRole(userRole);
-        user.setEnabled(true);
+        user.setEnabled(false);
 
 //        user.setRoles(Arrays.asList(roleRepo.findByName("ROLE_USER")));
         Member newMember = memberRepo.save(user);

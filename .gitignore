@@ -4,3 +4,4 @@ application.log*
 .project
 target
 .DS_Store
+email.properties
