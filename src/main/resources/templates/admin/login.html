@@ -9,15 +9,10 @@
 			...</div>
 		<h2>Login</h2>
 		<div class="panel-body">
-			<div class="alert alert-warning alert-dismissable" th:if="${message}">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-hidden="true">&times;</button>
-			</div>
-			<div th:if="${param.error}">Invalid username and password.</div>
+			
+			<div th:if="${param.error}">Invalid username and/or password.</div>
 			<div th:if="${param.logout}">You have been logged out.</div>
 			<div class="alert alert-warning alert-dismissable" th:if="${message}">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-hidden="true">&times;</button>
 				<strong th:text="${message}"></strong>
 			</div>
 			<form th:action="@{/login}" method="POST">

@@ -101,13 +101,15 @@ public class RegistrationController {
 		
 	}
 	
-    private Member createMemberAccount(final MemberDto accountDto) {
+    private Member createMemberAccount(final MemberDto accountDto, ModelMap mm) {
         Member registered = null;
         LOGGER.info("in createMemberAccount");
         try {
         	accountDto.setUsername(accountDto.getEmail());
             registered = userService.registerNewMemberAccount(accountDto);
         } catch (final EmailExistsException e) {
+        	LOGGER.info("throwing EmailExistsException");
+        	mm.put("emailExists", true);
             return null;
         }
         return registered;
@@ -115,15 +117,21 @@ public class RegistrationController {
     
 	@RequestMapping(value = "/newMemberSubmit", method = RequestMethod.POST)
 	public String newMemberSubmit(@Valid final MemberDto memberDto,
-			final BindingResult bindingResult, HttpServletRequest request,
-			HttpSession session, ModelMap mm, final Errors errors) {
+			final BindingResult bindingResult, 
+			@RequestParam("matchingPassword") String matchingPassword,
+			HttpServletRequest request,
+			ModelMap mm) {
 
 		LOGGER.info("Registering user account with information: {}", memberDto);
+		mm.put("memberDto", memberDto);
 
-		final Member registered = createMemberAccount(memberDto);
+		if (!memberDto.getPassword().equals(matchingPassword)) {
+			mm.put("passwordNoMatchError", true);
+			return "front_store/memberregistration"; 
+		}
+		final Member registered = createMemberAccount(memberDto, mm);
 		if (registered == null) {
-			// result.rejectValue("email", "message.regError");
-			mm.put("memberDto", memberDto);
+			
 			return "front_store/memberregistration";
 		}
 		try {
@@ -133,21 +141,31 @@ public class RegistrationController {
 		} catch (final Exception ex) {
 			LOGGER.warn("Unable to register user", ex);
 			// return new ModelAndView("emailError", "memberDto", memberDto);
-			mm.put("memberDto", memberDto);
 			return "front_store/memberregistration";
 		}
 		// return new ModelAndView("successRegister", "memberDto", memberDto);
 		return "admin/login";
+	}
+	
+	// this comes from ajax call in memberregistration.html
+	@RequestMapping("/checkEmail")
+	@ResponseBody
+	public String checkEmail(@RequestParam("email") String email) {
+		LOGGER.debug("checking if email already exists");
+		if (userService.checkEmailExists(email)) {
+			return "exists";
+		}
+		return "unregistered";
 	}
 
     // Registration
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     @ResponseBody
-    public GenericResponse registerMemberAccount(@Valid final MemberDto accountDto, final HttpServletRequest request) {
+    public GenericResponse registerMemberAccount(@Valid final MemberDto accountDto, final HttpServletRequest request, ModelMap mm) {
         LOGGER.debug("Registering user account with information: {}", accountDto);
 
-        final Member registered = createMemberAccount(accountDto);
+        final Member registered = createMemberAccount(accountDto, mm);
         if (registered == null) {
             throw new UserAlreadyExistException();
         }

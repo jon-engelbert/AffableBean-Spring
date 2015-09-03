@@ -50,4 +50,6 @@ public interface IMemberService {
 
 	public Member getCustomerFromRequest(HttpServletRequest request);
 
+	public boolean checkEmailExists(String email);
+
 }
