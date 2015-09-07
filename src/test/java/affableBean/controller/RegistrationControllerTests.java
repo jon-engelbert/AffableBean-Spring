@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -27,7 +28,8 @@ public class RegistrationControllerTests {
 	// @Autowired
 	private ValidatorService validator;
 	@InjectMocks
-	AdminController controller;
+	RegistrationController controller;
+	
 	MockMvc mockMvc;
 
 	// @Mock

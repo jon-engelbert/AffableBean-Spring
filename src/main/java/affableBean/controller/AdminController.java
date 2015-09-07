@@ -333,7 +333,8 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/category/add", method = RequestMethod.POST)
-	public String addCategory(@ModelAttribute Category cat, ModelMap mm) {
+	public String addCategory(@ModelAttribute Category cat, BindingResult result) {
+		System.out.println("cat: " + cat);
 		categoryRepo.save(cat);
 		return "redirect:/admin/category";
 	}
