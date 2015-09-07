@@ -74,25 +74,6 @@ public class AdminControllerTests {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void testLoginPage() throws Exception {
-		mockMvc.perform(get("/login")).andExpect(
-				view().name("admin/login"))
-				.andExpect(status().isOk());
-//				.andExpect(content().contentType("text/html;charset=UTF-8"));
-	}
-
-//	tested in integration tests... too difficult with pagination to test here
-//	@Test
-//	public void testCustomerPage() throws Exception {
-//		ArrayList<Customer> expectedCustomers = new ArrayList<Customer>();
-//		expectedCustomers.add(new Customer(0, "ted", "t@t.com", "123", "street", "aa", "4567"));
-//		when(customerRepo.findAll()).thenReturn(expectedCustomers);
-//		mockMvc.perform(get("/admin"))
-//		.andExpect(view().name("admin/index"))
-//		.andExpect(status().isOk());
-//	}
-
 
 	@Test
 	public void testMemberPage() throws Exception {
@@ -118,7 +99,7 @@ public class AdminControllerTests {
 	@Test
 	public void testCustomerRecordPage() throws Exception {
 		mockMvc.perform(get("/admin/customerRecord?id=1")).andExpect(
-				view().name("admin/index"))
+				view().name("admin/viewCustomer"))
 				.andExpect(status().isOk());
 	}
 
