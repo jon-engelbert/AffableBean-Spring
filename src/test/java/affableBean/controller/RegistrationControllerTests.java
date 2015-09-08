@@ -1,6 +1,8 @@
 package affableBean.controller;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -13,9 +15,12 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
 import affableBean.repository.MemberRepository;
+import affableBean.service.IMemberService;
+import affableBean.service.MemberService;
 import affableBean.service.ValidatorService;
 
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -27,6 +32,8 @@ public class RegistrationControllerTests {
 	@Mock
 	// @Autowired
 	private ValidatorService validator;
+	@Mock
+    private IMemberService userService;
 	@InjectMocks
 	RegistrationController controller;
 	
@@ -58,8 +65,23 @@ public class RegistrationControllerTests {
 		mockMvc.perform(get("/login")).andExpect(
 				view().name("admin/login"))
 				.andExpect(status().isOk());
-//				.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
+
+	@Test
+	public void testNewMemberRegistrationPageI() throws Exception {
+		when(userService.getCustomerFromRequest(null)).thenReturn(null);
+		mockMvc.perform(get("/newMember")).andExpect(
+				view().name("front_store/memberregistration"))
+				.andExpect(status().isOk());
+	}
+
+//	@Test
+//	public void testNewMemberRegistrationPageII() throws Exception {
+//		mockMvc.perform(post("/newMemberSubmit")).andExpect(
+//				view().name("front_store/memberregistration"))
+//				.andExpect(status().isOk());
+////				.andExpect(content().contentType("text/html;charset=UTF-8"));
+//	}
 
 
 }

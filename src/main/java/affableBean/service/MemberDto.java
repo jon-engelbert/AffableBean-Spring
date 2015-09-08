@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import affableBean.domain.Member;
+import affableBean.domain.Role;
 import affableBean.validation.PasswordMatches;
 import affableBean.validation.ValidEmail;
 import affableBean.validation.ValidPassword;
@@ -24,14 +25,17 @@ public class MemberDto {
 		this.address = member.getAddress();
 		this.cityRegion = member.getCityRegion();
 		this.name = member.getName();
+		this.username = member.getUsername();
 		this.id = member.getId();
 		this.password = member.getPassword();
+		this.role = member.getRole();
 	}
     
 	private Integer id;
     private String phone;
     private String address;
     private String cityRegion;
+    private Role role;
 
     @NotNull
     @Size(min = 1)
@@ -61,13 +65,12 @@ public class MemberDto {
         this.email = email;
     }
 
-    private Integer role;
 
-    public Integer getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(final Integer role) {
+    public void setRole(final Role role) {
         this.role = role;
     }
 
@@ -143,5 +146,89 @@ public class MemberDto {
 				+ ", password=" + password + ", matchingPassword="
 				+ matchingPassword + ", email=" + email + ", username="
 				+ username + ", role=" + role + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result
+				+ ((cityRegion == null) ? 0 : cityRegion.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime
+				* result
+				+ ((matchingPassword == null) ? 0 : matchingPassword.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result
+				+ ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MemberDto other = (MemberDto) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (cityRegion == null) {
+			if (other.cityRegion != null)
+				return false;
+		} else if (!cityRegion.equals(other.cityRegion))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (matchingPassword == null) {
+			if (other.matchingPassword != null)
+				return false;
+		} else if (!matchingPassword.equals(other.matchingPassword))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (phone == null) {
+			if (other.phone != null)
+				return false;
+		} else if (!phone.equals(other.phone))
+			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
 	}
 }

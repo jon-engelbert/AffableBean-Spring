@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -29,6 +30,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,6 +54,7 @@ import affableBean.repository.RoleRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AffableBeanApplication.class)
 @WebAppConfiguration
+//@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)	
 public class AdminControllerIntegrationTests {
 
 	@Autowired
@@ -114,6 +118,7 @@ public class AdminControllerIntegrationTests {
 				.andExpect(model().attribute("customerList", hasSize(5)));
 	}
 
+	@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 	@Test
 	public void testCustomerPage() throws Exception {
 		ArrayList<PaymentInfo> expectedCustomers = new ArrayList<PaymentInfo>();
@@ -126,6 +131,7 @@ public class AdminControllerIntegrationTests {
 		.andExpect(view().name("admin/customerList"))
 		.andExpect(status().isOk());
 	}
+	
 	@Test
 	public void testMemberConsole() throws Exception {
 		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
@@ -141,6 +147,7 @@ public class AdminControllerIntegrationTests {
 
 	@Test
 	public void testOrderConsole() throws Exception {
+		long origSize = orderRepo.count();
 		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
 //		roleRepo.save(newRole);
 		Member member = new Member("jon", "jonny", "jon@jon.com", "123", true, adminRole);
@@ -163,65 +170,82 @@ public class AdminControllerIntegrationTests {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"))
 				.andExpect(model().attributeExists("orderList"))
-				.andExpect(model().attribute("orderList", is(not(empty()))));
+				.andExpect(model().attribute("orderList", hasSize((int)origSize+1)));
 	}
 
 	@Test
 	public void testProductConsole() throws Exception {
+		long origSize = productRepo.count();
 		mockMvc.perform(get("/admin/viewProducts")).andExpect(view().name("admin/products"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))
-		.andExpect(model().attribute("productList", hasSize(16)));
+		.andExpect(model().attribute("productList", hasSize((int)origSize)));
 	}
 
 	@Test
 	public void testCategoryConsole() throws Exception {
+		long origSize = categoryRepo.count();
 		mockMvc.perform(get("/admin/category")).andExpect(view().name("admin/category"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("categoryList"))
-		.andExpect(model().attribute("categoryList", hasSize(4)));
+		.andExpect(model().attribute("categoryList", hasSize((int) origSize)));
 	}
 
 	@Test
 	public void testProductByCategory() throws Exception {
+		long origSize = productRepo.findByCategoryId(1).size();
 		mockMvc.perform(get("/admin/viewProducts?id=1")).andExpect(view().name("admin/products"))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
 		.andExpect(model().attributeExists("productList"))
-		.andExpect(model().attribute("productList", hasSize(4)));
+		.andExpect(model().attribute("productList", hasSize((int) origSize)));
 	}
 
 	@Test
 	public void testAddCategory() throws Exception {
+		long origSize = categoryRepo.count();
 		Category cat = new Category(10, "newcat");
 		mockMvc.perform(post("/admin/category/add")
 		.contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .param("id", "10")
         .param("name", cat.getName()))
-        .andExpect(view().name("redirect:/admin/category"));
-//		.andExpect(status().isOk())
+//		.andExpect(model().attribute("categoryList", hasSize((int) origSize + 1)))
+        .andExpect(view().name("redirect:/admin/category"))
+		.andExpect(status().is3xxRedirection());
+		assertEquals(categoryRepo.count(), origSize+1);
 	}
 
 	@Test
 	public void testCategoryEdit() throws Exception {
-		Category cat = new Category(10, "newcat");
+		Category cat = new Category(-1, "newcat");
 		cat = categoryRepo.save(cat);
-		mockMvc.perform(get("/admin/category/edit?10")
+		long origSize = categoryRepo.count();
+		mockMvc.perform(get("/admin/category/edit/" + cat.getId())
 		.contentType(MediaType.APPLICATION_FORM_URLENCODED)
         .param("id", cat.getId().toString())
         .param("name", "Bob"))
-        .andExpect(view().name("admin/editcategory"))
 		.andExpect(status().isOk())
+        .andExpect(view().name("admin/editcategory"))
+		.andExpect(model().attribute("category", cat))
 		.andExpect(content().contentType("text/html;charset=UTF-8"));
 //		.andExpect(model().attributeExists("categoryList"))
 //		.andExpect(model().attribute("categoryList", hasSize(5)));
+		assertEquals(categoryRepo.count(), origSize);
 	}
 
 	@Test
-	public void testCategoryDelete() {
-		fail("Not yet implemented");
+	public void testCategoryDelete() throws Exception {
+		Category cat = new Category(-1, "newcat");
+		cat = categoryRepo.save(cat);
+		long origSize = categoryRepo.count();
+		mockMvc.perform(get("/admin/category/delete/" + cat.getId())
+		.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        .param("id", cat.getId().toString()))
+		.andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/admin/category"));
+		assertEquals(categoryRepo.count(), origSize-1);
 	}
 
 }

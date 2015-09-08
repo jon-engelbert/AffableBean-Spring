@@ -131,13 +131,17 @@ public class RegistrationController {
 		}
 		final Member registered = createMemberAccount(memberDto, mm);
 		if (registered == null) {
+			LOGGER.info("Registering user account , registered == null");
 			
 			return "front_store/memberregistration";
 		}
 		try {
 			final String appUrl = "http://" + request.getServerName() + ":"
 					+ request.getServerPort() + request.getContextPath();
-			 eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+			LOGGER.info("about to publish OnRegistrationCompleteEvent , "
+					+ appUrl);
+			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(
+					registered, request.getLocale(), appUrl));
 		} catch (final Exception ex) {
 			LOGGER.warn("Unable to register user", ex);
 			// return new ModelAndView("emailError", "memberDto", memberDto);
@@ -160,20 +164,20 @@ public class RegistrationController {
 
     // Registration
 
-    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-    @ResponseBody
-    public GenericResponse registerMemberAccount(@Valid final MemberDto accountDto, final HttpServletRequest request, ModelMap mm) {
-        LOGGER.debug("Registering user account with information: {}", accountDto);
-
-        final Member registered = createMemberAccount(accountDto, mm);
-        if (registered == null) {
-            throw new UserAlreadyExistException();
-        }
-        final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
-
-        return new GenericResponse("success");
-    }
+//    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+//    @ResponseBody
+//    public GenericResponse registerMemberAccount(@Valid final MemberDto accountDto, final HttpServletRequest request, ModelMap mm) {
+//        LOGGER.debug("Registering user account with information: {}", accountDto);
+//
+//        final Member registered = createMemberAccount(accountDto, mm);
+//        if (registered == null) {
+//            throw new UserAlreadyExistException();
+//        }
+//        final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+//
+//        return new GenericResponse("success");
+//    }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(final Locale locale, final Model model, @RequestParam("token") final String token) {

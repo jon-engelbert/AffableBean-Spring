@@ -343,6 +343,7 @@ public class AdminController {
 	public String categoryEdit(@PathVariable("id") Integer id, ModelMap mm) {
 		Category selectedCategory = categoryRepo.findById(id);
 		mm.put("category", selectedCategory);
+		System.out.println("selectedCategory, id: " + selectedCategory + " " + id);
 		return "admin/editcategory";
 	}
 
