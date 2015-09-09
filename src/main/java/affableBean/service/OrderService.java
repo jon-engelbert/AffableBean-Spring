@@ -50,7 +50,7 @@ public class OrderService {
     	
         try {
             PaymentInfo paymentInfo = paymentInfoService.editPaymentInfo(newPaymentInfo);
-            System.out.println("after new paymentInfo " + paymentInfo.getMember().getName() + " id " + paymentInfo.getId());
+            System.out.println("after new paymentInfo " + paymentInfo.getOwner().getName() + " id " + paymentInfo.getId());
 
             CustomerOrder order = addOrder(paymentInfo, cart);
             addOrderedItems(order, cart);

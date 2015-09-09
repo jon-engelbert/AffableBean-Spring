@@ -42,9 +42,9 @@ public class PaymentInfo implements Serializable {
     private String ccNumber;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentInfo")
     private Collection<CustomerOrder> customerOrderCollection;
-	@JoinColumn(name = "member_id", referencedColumnName = "id")
+	@JoinColumn(name = "owner_id", referencedColumnName = "id")
 	@ManyToOne(optional = false)
-	private Member member;
+	private Member owner;
 
     public PaymentInfo() {
     }
@@ -152,12 +152,12 @@ public class PaymentInfo implements Serializable {
         return "entity.Customer[id=" + id + "]";
     }
 
-	public Member getMember() {
-		return member;
+	public Member getOwner() {
+		return owner;
 	}
 
-	public void setMember(Member member) {
-		this.member = member;
+	public void setOwner(Member owner) {
+		this.owner = owner;
 	}
 
 

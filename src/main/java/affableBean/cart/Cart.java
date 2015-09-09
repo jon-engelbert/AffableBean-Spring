@@ -140,7 +140,6 @@ public class Cart implements java.io.Serializable {
         double amount = 0;
 
         for (CartItem scItem : items) {
-
             Product product = (Product) scItem.getProduct();
             amount += (scItem.getQuantity() * product.getPrice().doubleValue());
         }
@@ -192,4 +191,10 @@ public class Cart implements java.io.Serializable {
         numberOfItems = 0;
         total = 0;
     }
+
+	@Override
+	public String toString() {
+		return "Cart [items=" + items + ", numberOfItems=" + numberOfItems
+				+ ", total=" + total + "]";
+	}
 }

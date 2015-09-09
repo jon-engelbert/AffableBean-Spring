@@ -209,22 +209,28 @@ public class FrontStoreController {
 	@RequestMapping(value="/checkout", method=RequestMethod.GET)
 	public String checkout(HttpSession session, HttpServletRequest request, 
 			ModelMap mm) {
+		LOGGER.info("in checkout");
 		Cart cart = (Cart) session.getAttribute("cart");
 		Member member = customerService.getCustomerFromRequest(request);
+		LOGGER.info("in checkout, Request, Member: " + request + ", " + member);
 		Integer custId = member.getId();
 //		Member member = new Member();
 //		Integer custId = (Integer) session.getAttribute("custId");	// custId is set when a new customer registers or existing one logs in
-		PaymentInfo newPaymentInfo = new PaymentInfo();
-		if (cart != null) 
-			cart.calculateTotal(Cart._deliverySurcharge.toString());
-
-		if (custId != null) 
+		if (custId != null) {
+			LOGGER.info("in checkout, memberRepo.findById: " + custId);
 			member = memberRepo.findById(custId);
+		}
+		PaymentInfo newPaymentInfo = new PaymentInfo();
 		if (member != null)
 			newPaymentInfo = new PaymentInfo(member.getName(), member.getAddress(), member.getCityRegion(), "");
+		LOGGER.info("in checkout, paymentInfoRepo.findByMember: " + member);
+		PaymentInfo paymentInfo = paymentInfoRepo.findByOwner(member);
+		paymentInfo = paymentInfo == null ? newPaymentInfo : paymentInfo;
+		if (cart != null) 
+			cart.calculateTotal(Cart._deliverySurcharge.toString());
 		
 //		CustomerDto customerDto = new CustomerDto(newPaymentInfo, newCust);
-		mm.put("paymentInfo", newPaymentInfo);
+		mm.put("paymentInfo", paymentInfo);
 
 		return "front_store/checkout";
 	}
@@ -273,7 +279,7 @@ public class FrontStoreController {
         		Member member = customerService.getCustomerFromRequest(request);
 //        		if (ob instanceof Member)
 //        			member = (Member)ob;
-        		paymentInfo.setMember(member);
+        		paymentInfo.setOwner(member);
             	PaymentInfo newPaymentInfo = paymentInfoRepo.saveAndFlush(paymentInfo);
                 Integer orderId = orderService.placeOrder(newPaymentInfo, cart);
         		mm.put("paymentInfo", newPaymentInfo);

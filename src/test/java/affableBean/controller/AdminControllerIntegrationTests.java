@@ -118,7 +118,7 @@ public class AdminControllerIntegrationTests {
 				.andExpect(model().attribute("customerList", hasSize(5)));
 	}
 
-	@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
+	@DirtiesContext(classMode=ClassMode.AFTER_CLASS)
 	@Test
 	public void testCustomerPage() throws Exception {
 		ArrayList<PaymentInfo> expectedCustomers = new ArrayList<PaymentInfo>();
@@ -134,26 +134,25 @@ public class AdminControllerIntegrationTests {
 	
 	@Test
 	public void testMemberConsole() throws Exception {
-		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
-//		roleRepo.save(newRole);
-		Member newMember = new Member("jon", "jonny@jonny.com", "jonny@jonny.com", "123", true, adminRole);
-		memberRepo.save(newMember);
+//		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
+//		Member newMember = new Member("jon", "jonny@jonny.com", "jonny@jonny.com", "123", true, adminRole);
+//		memberRepo.save(newMember);
+		long listSize = memberRepo.count();
 		mockMvc.perform(get("/admin/member")).andExpect(view().name("admin/member"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"))
 				.andExpect(model().attributeExists("memberList"))
-				.andExpect(model().attribute("memberList", is(not(empty()))));
+				.andExpect(model().attribute("memberList", hasSize((int)listSize)));
 	}
 
 	@Test
 	public void testOrderConsole() throws Exception {
-		long origSize = orderRepo.count();
 		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
 //		roleRepo.save(newRole);
 		Member member = new Member("jon", "jonny", "jon@jon.com", "123", true, adminRole);
 		memberRepo.save(member);
 		PaymentInfo paymentInfo = new PaymentInfo(member.getName(), "123 street", "aa", "1111222233334444");
-		paymentInfo.setMember(member);
+		paymentInfo.setOwner(member);
 		System.out.println("paymentInfo: " + paymentInfo);
 		paymentInfo = paymentInfoRepo.save(paymentInfo);
         CustomerOrder order = new CustomerOrder();
@@ -166,11 +165,12 @@ public class AdminControllerIntegrationTests {
         order.setConfirmationNumber(i);
         order.setDateCreated(new Date());
 		orderRepo.save(order);
+		long listSize = orderRepo.count();
 		mockMvc.perform(get("/admin/order")).andExpect(view().name("admin/order"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"))
 				.andExpect(model().attributeExists("orderList"))
-				.andExpect(model().attribute("orderList", hasSize((int)origSize+1)));
+				.andExpect(model().attribute("orderList", hasSize((int)listSize)));
 	}
 
 	@Test

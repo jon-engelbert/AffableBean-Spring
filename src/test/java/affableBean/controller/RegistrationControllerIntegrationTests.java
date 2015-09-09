@@ -1,12 +1,10 @@
 package affableBean.controller;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,6 +18,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,18 +28,15 @@ import org.springframework.web.context.WebApplicationContext;
 import affableBean.AffableBeanApplication;
 import affableBean.domain.Member;
 import affableBean.domain.Role;
-import affableBean.repository.CategoryRepository;
-import affableBean.repository.CustomerOrderRepository;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.PaymentInfoRepository;
-import affableBean.repository.ProductRepository;
 import affableBean.repository.RoleRepository;
 import affableBean.service.MemberDto;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AffableBeanApplication.class)
 @WebAppConfiguration
-//@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)	
+@DirtiesContext(classMode=ClassMode.AFTER_CLASS)	
 public class RegistrationControllerIntegrationTests {
 
 	@Autowired

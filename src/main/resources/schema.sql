@@ -11,8 +11,8 @@ create table payment_info (
   address varchar(100) not null ,
   city_region varchar(45) not null ,
   cc_number varchar(19) not null,
-  `member_id` INT UNSIGNED NOT NULL ,
-  foreign key (`member_id`) references member(`id`)
+  `owner_id` INT UNSIGNED NOT NULL ,
+  foreign key (`owner_id`) references member(`id`)
   );
 --COMMENT = 'maintains customer payment info details';
 

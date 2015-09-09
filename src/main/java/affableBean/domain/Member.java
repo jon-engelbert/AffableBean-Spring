@@ -38,7 +38,7 @@ public class Member implements java.io.Serializable {
     @Basic(optional = false)
     @Column(name = "email")
     private String email;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Collection<PaymentInfo> paymentInfoCollection;
 
 	public Member() {

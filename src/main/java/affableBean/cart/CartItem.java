@@ -38,4 +38,9 @@ public class CartItem {
         amount = (this.getQuantity() * product.getPrice().doubleValue());
         return amount;
     }
+
+	@Override
+	public String toString() {
+		return "CartItem [product=" + product + ", quantity=" + quantity + "]";
+	}
 }

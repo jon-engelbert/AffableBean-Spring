@@ -103,7 +103,7 @@ public class CustomerOrder implements Serializable {
 	}
 
 	public Member getCustomer() {
-		return paymentInfo.getMember();
+		return paymentInfo.getOwner();
 	}
 
 
