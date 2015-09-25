@@ -71,14 +71,14 @@ public class RegistrationControllerTests {
 	public void testNewMemberRegistrationPageI() throws Exception {
 		when(userService.getCustomerFromRequest(null)).thenReturn(null);
 		mockMvc.perform(get("/newMember")).andExpect(
-				view().name("front_store/memberregistration"))
+				view().name("registration/memberregistration"))
 				.andExpect(status().isOk());
 	}
 
 //	@Test
 //	public void testNewMemberRegistrationPageII() throws Exception {
 //		mockMvc.perform(post("/newMemberSubmit")).andExpect(
-//				view().name("front_store/memberregistration"))
+//				view().name("registration/memberregistration"))
 //				.andExpect(status().isOk());
 ////				.andExpect(content().contentType("text/html;charset=UTF-8"));
 //	}

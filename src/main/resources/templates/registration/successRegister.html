@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/affableBean.css}"></link>
+<title>The Affable Bean</title>
+
+</head>
+<body>
+	<div id="main">
+		<div id="header" th:replace="fragments/bodyHeader :: bodyHeader">header</div>
+
+		<h3 th:text="#{message.regSucc}">Email sent to your account.
+			Click on the link, then login with your new account.</h3>
+
+		<div id="footer" th:replace="fragments/bodyFooter :: bodyFooter">footer</div>
+	</div>
+</body>
+</html>

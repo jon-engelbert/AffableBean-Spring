@@ -85,7 +85,7 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPageGet() throws Exception {
 		mockMvc.perform(get("/newMember")).andExpect(
-				view().name("front_store/memberregistration"))
+				view().name("registration/memberregistration"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
@@ -107,7 +107,7 @@ public class RegistrationControllerIntegrationTests {
 				.param("matchingPassword", userDto.getPassword())
 				)
 				.andExpect(status().isOk())
-				.andExpect(view().name("admin/login"))
+				.andExpect(view().name("registration/successRegister"))
 				.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
@@ -128,7 +128,7 @@ public class RegistrationControllerIntegrationTests {
 				.param("matchingPassword", userDto.getMatchingPassword())
 				)
 				.andExpect(status().isOk())
-				.andExpect(view().name("front_store/memberregistration"))
+				.andExpect(view().name("registration/memberregistration"))
 				.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
@@ -151,7 +151,7 @@ public class RegistrationControllerIntegrationTests {
 				.param("matchingPassword", userDto.getPassword())
 				)
 				.andExpect(status().isOk())
-				.andExpect(view().name("front_store/memberregistration"))
+				.andExpect(view().name("registration/memberregistration"))
 				.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 

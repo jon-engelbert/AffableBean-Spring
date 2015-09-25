@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/headTag :: headTag">...
+</head>
+<body>
+	<div id="main">
+		<div id="header" th:include="fragments/bodyHeader :: bodyHeader">
+			...</div>
+		<!-- <h1>${label.form.resendRegistrationToken}</h1>
+ -->
+		<button onclick="resendToken()"
+			th:text="#{label.form.resendRegistrationToken}">An email was
+			sent to your account with a new registration token link.</button>
+		<div id="footer" th:replace="fragments/bodyFooter :: bodyFooter">footer</div>
+	</div>
+</body>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+function resendToken(){
+    $.get("/registration/resendRegistrationToken" <param name="token" value="${param.token}"", function(data){
+        window.location.href = "/login.html" + "?message=" + data.message;
+    })
+    .fail(function(data) {
+        if(data.responseJSON.error.indexOf("MailError") > -1)
+        {
+            window.location.href = "/emailError.html";
+        }
+        else{
+            window.location.href = "/login.html" + "?message=" + data.responseJSON.message;
+        }
+    });
+}
+
+$(document).ajaxStart(function() {
+    $("title").html("LOADING ...");
+});
+</script>
+
+</body>
+</html>

@@ -30,8 +30,10 @@
 					</div>
 					<button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
 			</form>
+			<a th:href="@{/registration/forgotPassword}" th:text="#{message.resetPassword}">Reset Password
+			</a>
 		</div>
-		<div id="footer" th:include="fragments/adminFragments :: adminFooter"></div>
+	<div id="footer" th:include="fragments/adminFragments :: adminFooter"></div>
 	</div>
 </body>
 </html>

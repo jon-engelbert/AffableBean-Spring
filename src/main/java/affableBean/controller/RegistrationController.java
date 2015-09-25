@@ -97,7 +97,7 @@ public class RegistrationController {
 
 		mm.put("memberDto", memberDto);
 		
-		return "front_store/memberregistration";
+		return "registration/memberregistration";
 		
 	}
 	
@@ -127,28 +127,28 @@ public class RegistrationController {
 
 		if (!memberDto.getPassword().equals(matchingPassword)) {
 			mm.put("passwordNoMatchError", true);
-			return "front_store/memberregistration"; 
+			return "registration/memberregistration"; 
 		}
 		final Member registered = createMemberAccount(memberDto, mm);
 		if (registered == null) {
 			LOGGER.info("Registering user account , registered == null");
 			
-			return "front_store/memberregistration";
+			return "registration/memberregistration";
 		}
-		try {
+//		try {
 			final String appUrl = "http://" + request.getServerName() + ":"
 					+ request.getServerPort() + request.getContextPath();
 			LOGGER.info("about to publish OnRegistrationCompleteEvent , "
 					+ appUrl);
 			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(
 					registered, request.getLocale(), appUrl));
-		} catch (final Exception ex) {
-			LOGGER.warn("Unable to register user", ex);
-			// return new ModelAndView("emailError", "memberDto", memberDto);
-			return "front_store/memberregistration";
-		}
+//		} catch (final Exception ex) {
+//			LOGGER.warn("Unable to register user", ex);
+//			// return new ModelAndView("emailError", "memberDto", memberDto);
+//			return "front_store/memberregistration";
+//		}
 		// return new ModelAndView("successRegister", "memberDto", memberDto);
-		return "admin/login";
+		return "registration/successRegister";
 	}
 	
 	// this comes from ajax call in memberregistration.html
@@ -185,7 +185,7 @@ public class RegistrationController {
         if (verificationToken == null) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
-            return "redirect:/badMember.html?lang=" + locale.getLanguage();
+            return "redirect:/registration/badUser.html?lang=" + locale.getLanguage();
         }
 
         final Member user = verificationToken.getMember();
@@ -194,7 +194,7 @@ public class RegistrationController {
             model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
             model.addAttribute("expired", true);
             model.addAttribute("token", token);
-            return "redirect:/badMember.html?lang=" + locale.getLanguage();
+            return "redirect:/registration/badUser.html?lang=" + locale.getLanguage();
         }
         LOGGER.info("confirmRegistration: " + verificationToken);
         user.setEnabled(true);
@@ -224,6 +224,7 @@ public class RegistrationController {
     @RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
     @ResponseBody
     public GenericResponse resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
+        LOGGER.info("in resetPassword" + userEmail);
         final Member user = userService.getMemberByEmail(userEmail);
         if (user == null) {
             throw new UserNotFoundException();
@@ -237,32 +238,43 @@ public class RegistrationController {
         return new GenericResponse(messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
     }
 
-//    @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
-//    public String showChangePasswordPage(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
-//        final PasswordResetToken passToken = userService.getPasswordResetToken(token);
-//        final Member user = passToken.getMember();
-//        if (passToken == null || user.getId() != id) {
-//            final String message = messages.getMessage("auth.message.invalidToken", null, locale);
-//            model.addAttribute("message", message);
-//            return "redirect:/login.html?lang=" + locale.getLanguage();
-//        }
-//
-//        final Calendar cal = Calendar.getInstance();
-//        if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-//            model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
-//            return "redirect:/login.html?lang=" + locale.getLanguage();
-//        }
-//
+    @RequestMapping(value = "/user/updatePassword", method = RequestMethod.GET)
+    public String showChangePasswordPage(final Model model) {
+        LOGGER.info("in showChangePasswordPage");
+        model.addAttribute("pass", "");
+        model.addAttribute("passConfirm", "");
+        return "/registration/updatePassword";
+    }
+    
+    @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
+    public String changePassword(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
+        LOGGER.info("in changePassword, token: " + token);
+        final PasswordResetToken passToken = userService.getPasswordResetToken(token);
+        final Member user = passToken.getMember();
+        if (passToken == null || user.getId() != id) {
+            final String message = messages.getMessage("auth.message.invalidToken", null, locale);
+            model.addAttribute("message", message);
+            return "redirect:/login.html?lang=" + locale.getLanguage();
+        }
+
+        final Calendar cal = Calendar.getInstance();
+        if ((passToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
+            return "redirect:/login.html?lang=" + locale.getLanguage();
+        }
+
 //        final Authentication auth = new UsernamePasswordAuthenticationToken(user, null, userDetailsService.loadMemberByMembername(user.getEmail()).getAuthorities());
 //        SecurityContextHolder.getContext().setAuthentication(auth);
-//
-//        return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
-//    }
-//
+        LOGGER.info("about to redirect:/updatePassword.html");
+
+        return "redirect:/registration/updatePassword.html?lang=" + locale.getLanguage();
+    }
+
     @RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('READ_PRIVILEGE')")
+//    @PreAuthorize("hasRole('READ_PRIVILEGE')")
     @ResponseBody
     public GenericResponse savePassword(final Locale locale, @RequestParam("password") final String password) {
+        LOGGER.info("in savePassword");
         final Member user = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.changeMemberPassword(user, password);
         return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
