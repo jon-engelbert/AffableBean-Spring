@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import affableBean.domain.Member;
 import affableBean.domain.Role;
 import affableBean.repository.MemberRepository;
@@ -35,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-    	.authorizeRequests()
+		.authorizeRequests()
         	.antMatchers("/checkout", "/purchase").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
     		.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
         	.anyRequest().permitAll()
@@ -49,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                .invalidateHttpSession(true)
                .logoutUrl("/admin/logout")
                .logoutSuccessUrl("/login?logout");
-
     }
 	
     @Override

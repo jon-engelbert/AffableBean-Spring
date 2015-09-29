@@ -169,9 +169,9 @@ public class MemberService implements IMemberService{
 	}
 
 	@Override
-	public void changeMemberPassword(Member Member, String password) {
-		Member.setPassword(passwordEncoder.encode(password));
-        memberRepo.save(Member);
+	public void changeMemberPassword(Member member, String password) {
+		member.setPassword(passwordEncoder.encode(password));
+        memberRepo.save(member);
 	}
 
     @Override

@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -20,7 +21,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -42,6 +45,7 @@ import affableBean.registration.OnRegistrationCompleteEvent;
 import affableBean.repository.MemberRepository;
 import affableBean.service.IMemberService;
 import affableBean.service.MemberDto;
+import affableBean.service.MemberService;
 import affableBean.validation.EmailExistsException;
 
 @Controller
@@ -224,6 +228,7 @@ public class RegistrationController {
     @RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
     @ResponseBody
     public GenericResponse resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
+//    	String userEmail= "";
         LOGGER.info("in resetPassword" + userEmail);
         final Member user = userService.getMemberByEmail(userEmail);
         if (user == null) {
@@ -246,11 +251,31 @@ public class RegistrationController {
         return "/registration/updatePassword";
     }
     
+    @RequestMapping(value = "/registration/forgotPassword", method = RequestMethod.GET)
+    public String showForgotPasswordPage(HttpSession session, final HttpServletRequest request, HttpServletResponse response, final Model model) {
+        LOGGER.info("in showForgotPasswordPage");
+//        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+//		// Spring Security will allow the Token to be included in this header
+//		// name
+//		response.setHeader("X-CSRF-HEADER", token.getHeaderName());
+//		// Spring Security will allow the token to be included in this parameter
+//		// name
+//		response.setHeader("X-CSRF-PARAM", token.getParameterName());
+//		// this is the value of the token to be included as either a header or
+//		// an HTTP parameter
+//		response.setHeader("X-CSRF-TOKEN", token.getToken());
+//        String token = CsrfTokenManager.getTokenForSession(session);
+//        model.addAttribute("csrfToken", token);
+//        LOGGER.info("csrfToken:" + token);
+        return "/registration/forgotPassword";
+    }
+    
     @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
     public String changePassword(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
         LOGGER.info("in changePassword, token: " + token);
         final PasswordResetToken passToken = userService.getPasswordResetToken(token);
         final Member user = passToken.getMember();
+        LOGGER.info("in changePassword, user: " + user);
         if (passToken == null || user.getId() != id) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
@@ -267,7 +292,7 @@ public class RegistrationController {
 //        SecurityContextHolder.getContext().setAuthentication(auth);
         LOGGER.info("about to redirect:/updatePassword.html");
 
-        return "redirect:/registration/updatePassword.html?lang=" + locale.getLanguage();
+        return "redirect:/user/updatePassword.html?lang=" + locale.getLanguage();
     }
 
     @RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
@@ -275,8 +300,12 @@ public class RegistrationController {
     @ResponseBody
     public GenericResponse savePassword(final Locale locale, @RequestParam("password") final String password) {
         LOGGER.info("in savePassword");
-        final Member user = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.changeMemberPassword(user, password);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        LOGGER.info("in savePassword, username: " + userName);
+        Member member = userService.getMemberByEmail(userName);
+        LOGGER.info("in savePassword, member: " + member);
+        userService.changeMemberPassword(member, password);
         return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
     }
 
@@ -286,6 +315,7 @@ public class RegistrationController {
     @PreAuthorize("hasRole('READ_PRIVILEGE')")
     @ResponseBody
     public GenericResponse changeMemberPassword(final Locale locale, @RequestParam("password") final String password, @RequestParam("oldpassword") final String oldPassword) {
+        LOGGER.info("in changeMemberPassword");
         final Member user = userService.getMemberByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {
             throw new InvalidOldPasswordException();

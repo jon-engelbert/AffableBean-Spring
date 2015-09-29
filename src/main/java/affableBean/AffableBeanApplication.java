@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartResolver;
@@ -22,8 +23,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-//import org.springframework.boot.context.embedded.ServletRegistrationBean;
-//import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 //@EnableAutoConfiguration(exclude = {
@@ -50,10 +49,11 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
         return lci;
     }
  
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(localeChangeInterceptor());
+//        registry.addInterceptor(new CSRFHandlerInterceptor());
+//    }     
     
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
@@ -95,7 +95,8 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/user/updatePassword").setViewName("registration/updatePassword");
-        registry.addViewController("/registration/forgotPassword");
+//        registry.addViewController("/registration/forgotPassword");
+        registry.addViewController("/registration/emailError");
     }
     
     
