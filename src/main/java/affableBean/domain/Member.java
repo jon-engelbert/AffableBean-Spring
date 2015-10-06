@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "member", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class Member implements java.io.Serializable {
@@ -23,6 +24,10 @@ public class Member implements java.io.Serializable {
     @Column(name = "password")
 	private String password;
 	private boolean enabled;
+	
+//  @JoinTable(name = "role_members", joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+//    @ManyToMany(mappedBy = "members")
+//    private Collection<Role> roles;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
@@ -45,7 +50,7 @@ public class Member implements java.io.Serializable {
 	}
 
 	public Member(String name, String username, String email, String password,
-			boolean enabled, Role role) {
+			boolean enabled, Role role) {	// Collection<Role> roles) {
 		super();
 		this.name = name;
 		this.username = username;
@@ -53,6 +58,7 @@ public class Member implements java.io.Serializable {
 		this.password = password;
 		this.enabled = enabled;
 		this.role = role;
+//		this.roles = roles;
 	}
 
 	public Integer getId() {
@@ -93,14 +99,6 @@ public class Member implements java.io.Serializable {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 	public static long getSerialversionuid() {
@@ -151,10 +149,25 @@ public class Member implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "Member [id=" + id + ", name=" + name + ", username=" + username
-				+ ", password=" + password + ", enabled=" + enabled + ", role="
-				+ role + ", phone=" + phone + ", address=" + address
+				+ ", password=" + password + ", enabled=" + enabled + ", phone=" + phone + ", address=" + address
 				+ ", cityRegion=" + cityRegion + ", email=" + email
 				+ ", paymentInfoCollection=" + paymentInfoCollection + "]";
 	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+//	public Collection<Role> getRoles() {
+//		return roles;
+//	}
+//
+//	public void setRoles(Collection<Role> roles) {
+//		this.roles = roles;
+//	}
 	
 }

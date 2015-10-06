@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
+import java.util.Arrays;
+
 import javax.servlet.Filter;
 
 import org.junit.After;
@@ -112,7 +114,7 @@ public class FrontStoreControllerIntegrationTests {
 		System.out.println("in testCheckout, product: " + product);
 		cart.addItem(product);
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);
+		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
 		memberRepo.save(user);
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword());

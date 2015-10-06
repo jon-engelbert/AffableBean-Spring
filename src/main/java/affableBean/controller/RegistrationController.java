@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import affableBean.domain.Member;
 import affableBean.domain.PasswordResetToken;
@@ -64,8 +65,8 @@ public class RegistrationController {
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-//    @Autowired
-//    private MemberDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private Environment env;
@@ -78,11 +79,13 @@ public class RegistrationController {
 	 * Auth process
 	 */
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST } )
-	public String loginConsole(@RequestParam(value = "error", required = false) String error, ModelMap mm) {
+	public String loginConsole(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "message", required = false) String message, ModelMap mm) {
         LOGGER.info("In LoginConsole: " + error);
 
 		if(error != null) {
 			mm.put("message", "Login Failed!");
+		} else if (message != null){
+			mm.put("message", message);
 		} else {
 			mm.put("message", false);
 		}
@@ -139,19 +142,19 @@ public class RegistrationController {
 			
 			return "registration/memberregistration";
 		}
-//		try {
+		try {
 			final String appUrl = "http://" + request.getServerName() + ":"
 					+ request.getServerPort() + request.getContextPath();
 			LOGGER.info("about to publish OnRegistrationCompleteEvent , "
 					+ appUrl);
 			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(
 					registered, request.getLocale(), appUrl));
-//		} catch (final Exception ex) {
-//			LOGGER.warn("Unable to register user", ex);
-//			// return new ModelAndView("emailError", "memberDto", memberDto);
+		} catch (final Exception ex) {
+			LOGGER.warn("Unable to register user", ex);
+			 return "registration/emailError";
+//			 return new ModelAndView("registration/emailError", "memberDto", memberDto);
 //			return "front_store/memberregistration";
-//		}
-		// return new ModelAndView("successRegister", "memberDto", memberDto);
+		}
 		return "registration/successRegister";
 	}
 	
@@ -228,8 +231,7 @@ public class RegistrationController {
     @RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
     @ResponseBody
     public GenericResponse resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
-//    	String userEmail= "";
-        LOGGER.info("in resetPassword" + userEmail);
+        LOGGER.info("in resetPassword: " + userEmail);
         final Member user = userService.getMemberByEmail(userEmail);
         if (user == null) {
             throw new UserNotFoundException();
@@ -241,6 +243,7 @@ public class RegistrationController {
         final SimpleMailMessage email = constructResetTokenEmail(appUrl, request.getLocale(), token, user);
         mailSender.send(email);
         return new GenericResponse(messages.getMessage("message.resetPasswordEmail", null, request.getLocale()));
+		// return "registration/successRegister";
     }
 
     @RequestMapping(value = "/user/updatePassword", method = RequestMethod.GET)
@@ -288,15 +291,16 @@ public class RegistrationController {
             return "redirect:/login.html?lang=" + locale.getLanguage();
         }
 
-//        final Authentication auth = new UsernamePasswordAuthenticationToken(user, null, userDetailsService.loadMemberByMembername(user.getEmail()).getAuthorities());
-//        SecurityContextHolder.getContext().setAuthentication(auth);
+        final Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, userDetailsService.loadUserByUsername(user.getEmail()).getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
         LOGGER.info("about to redirect:/updatePassword.html");
 
         return "redirect:/user/updatePassword.html?lang=" + locale.getLanguage();
     }
 
     @RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
-//    @PreAuthorize("hasRole('READ_PRIVILEGE')")
+//  @PreAuthorize("hasRole('READ_PRIVILEGE')")
+//  @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseBody
     public GenericResponse savePassword(final Locale locale, @RequestParam("password") final String password) {
         LOGGER.info("in savePassword");
@@ -312,11 +316,14 @@ public class RegistrationController {
     // change user password
 
     @RequestMapping(value = "/user/updatePassword", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('READ_PRIVILEGE')")
+//    @PreAuthorize("hasRole('READ_PRIVILEGE')")
     @ResponseBody
     public GenericResponse changeMemberPassword(final Locale locale, @RequestParam("password") final String password, @RequestParam("oldpassword") final String oldPassword) {
         LOGGER.info("in changeMemberPassword");
-        final Member user = userService.getMemberByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String userName = auth.getName();
+        LOGGER.info("in changeMemberPassword, username: " + userName);
+        final Member user = userService.getMemberByEmail(userName);
         if (!userService.checkIfValidOldPassword(user, oldPassword)) {
             throw new InvalidOldPasswordException();
         }

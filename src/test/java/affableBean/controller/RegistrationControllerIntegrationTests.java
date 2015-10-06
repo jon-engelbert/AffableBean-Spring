@@ -5,6 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
+import java.util.Arrays;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,7 +21,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -93,7 +95,7 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPagePostSuccess() throws Exception {
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user = new Member("j", "j@j.com", "j@j.com", "Abcde01!@", false, userRole);
+		Member user = new Member("j", "j@j.com", "j@j.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword());
 		System.out.println("userDto: " + userDto);
@@ -114,7 +116,7 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPagePostPasswordMismatch() throws Exception {
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user = new Member("k", "k@k.com", "k@k.com", "Abcde01!@", false, userRole);
+		Member user = new Member("k", "k@k.com", "k@k.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword()+"!");
 		System.out.println("userDto: " + userDto);
@@ -135,9 +137,9 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPagePostEmailInUse() throws Exception {
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user1 = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);
+		Member user1 = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
 		memberRepo.save(user1);
-		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);
+		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword());
 		System.out.println("userDto: " + userDto);

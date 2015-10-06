@@ -88,6 +88,46 @@ CREATE  TABLE role (
   );
 -- COMMENT = 'maintains admin console member roles';
 
+---- -----------------------------------------------------
+---- Table `privilege`
+---- -----------------------------------------------------
+
+DROP TABLE IF EXISTS privilege ;
+
+CREATE  TABLE privilege (
+  `id` identity,
+  `name` VARCHAR(45) NOT NULL 
+  );
+-- COMMENT = 'maintains admin console role privileges';
+
+
+---- -----------------------------------------------------
+---- Table `role_privileges`
+---- -----------------------------------------------------
+
+DROP TABLE IF EXISTS role_privileges ;
+
+CREATE  TABLE role_privileges (
+  role_id INT UNSIGNED NOT NULL ,
+  privilege_id INT UNSIGNED NOT NULL ,
+  primary key (role_id, privilege_id),
+  foreign key (role_id) references role(id),
+  foreign key (privilege_id) references privilege(id)
+);
+
+---- -----------------------------------------------------
+---- Table `role_members`
+---- -----------------------------------------------------
+
+DROP TABLE IF EXISTS role_members ;
+
+CREATE  TABLE role_members (
+  role_id INT UNSIGNED NOT NULL ,
+  member_id INT UNSIGNED NOT NULL ,
+  primary key (member_id, role_id),
+  foreign key (member_id) references member(id),
+  foreign key (role_id) references role(id)
+);
 
 -- -----------------------------------------------------
 -- Table `member`

@@ -49,6 +49,19 @@ INSERT INTO `role` (`name`) VALUES ('ROLE_USER');
 INSERT INTO `role` (`name`) VALUES ('ROLE_ADMIN');
 
 --
+-- Sample data for table `privilege`
+--
+INSERT INTO `privilege` (`name`) VALUES ('READ_PRIVILEGE');
+INSERT INTO `privilege` (`name`) VALUES ('WRITE_PRIVILEGE');
+
+
+--
+-- Sample data for table `role_privileges`
+--
+INSERT INTO `role_privileges` (privilege_id, role_id) VALUES (1, 1);
+INSERT INTO `role_privileges` (privilege_id, role_id) VALUES (1, 2);
+INSERT INTO `role_privileges` (privilege_id, role_id) VALUES (2, 2);
+--
 -- Sample data for table `member`
 --
 INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1', 1, true);
@@ -66,6 +79,25 @@ INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabl
 INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8', 1, true);
 INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10', 1, true);
 INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3', 1, true);
+
+--
+-- Sample data for table `role_members`
+--
+INSERT INTO `role_members` (member_id, role_id) VALUES (1, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (2, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (3, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (4, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (5, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (6, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (7, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (8, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (9, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (10, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (11, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (12, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (13, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (14, 2);
+INSERT INTO `role_members` (member_id, role_id) VALUES (15, 2);
 
 --
 -- Sample data for table `payment_info`

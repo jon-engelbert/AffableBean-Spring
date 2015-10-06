@@ -477,3 +477,7 @@ label.error {
     margin: 0;
     border: none;
 }
+
+.forgotPassword {
+    padding: 30px 5px 5px 5px;
+}

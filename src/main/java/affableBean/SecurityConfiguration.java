@@ -1,36 +1,59 @@
 package affableBean;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
 import affableBean.domain.Member;
 import affableBean.domain.Role;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.RoleRepository;
 
- 
 @Configuration
 @EnableWebMvcSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
- 
+
 	@Autowired
 	private DataSource datasource;
-	
+
 	@Autowired
 	private RoleRepository roleRepo;
-	
+
 	@Autowired
 	private MemberRepository memberRepo;
-    
+
+	@Autowired
+	private UserDetailsService userDetailsService;
+
+	@Autowired
+	private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
+
+
+	// @Bean
+	// public DaoAuthenticationProvider authProvider() {
+	// final DaoAuthenticationProvider authProvider = new
+	// DaoAuthenticationProvider();
+	// authProvider.setUserDetailsService(userDetailsService);
+	// authProvider.setPasswordEncoder(encoder());
+	// return authProvider;
+	// }
+
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -57,11 +80,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        userDetailsService.setDataSource(datasource);
         PasswordEncoder encoder = new BCryptPasswordEncoder();
  
-//        auth.userDetailsService(userDetailsService).passwordEncoder(encoder);
         auth
-        	.jdbcAuthentication().dataSource(datasource)
+        	.jdbcAuthentication()
+        	.dataSource(datasource)
         	.usersByUsernameQuery("select username, password, enabled from member where username=?")
         	.authoritiesByUsernameQuery("select member.username, role.name from member join role on member.role_id = role.id where username=?")
+//        	.userDetailsService(userDetailsService)	// from baeldung... incompatible with jdbc authentication
         	.passwordEncoder(encoder());
         
         
@@ -82,8 +106,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         
     }
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder(11);
-    }
+	@Bean
+	public PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder(11);
+	}
 }

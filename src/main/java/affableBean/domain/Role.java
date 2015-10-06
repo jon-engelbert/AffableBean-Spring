@@ -1,5 +1,6 @@
 package affableBean.domain;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,7 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+//import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,9 +22,8 @@ public class Role implements java.io.Serializable {
 	public Role() {
 	}
 
-	public Role(Byte id, String name, Set<Member> members) {
+	public Role(String name, Set<Member> members) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.members = members;
 	}
@@ -36,8 +38,16 @@ public class Role implements java.io.Serializable {
 	@Column(name = "name", nullable = false, length = 45)
 	private String name;
 
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
 	private Set<Member> members = new HashSet<Member>(0);
+	
+//	@ManyToMany		// (mappedBy = "roles")
+//    private Collection<Member> members;
+
+//    @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id") )
+    @ManyToMany
+    private Collection<Privilege> privileges;
 
 	public Byte getId() {
 		return id;
@@ -55,7 +65,7 @@ public class Role implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Set<Member> getMembers() {
+	public Collection<Member> getMembers() {
 		return members;
 	}
 
@@ -63,7 +73,15 @@ public class Role implements java.io.Serializable {
 		this.members = members;
 	}
 
-	public static long getSerialversionuid() {
+    public Collection<Privilege> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(final Collection<Privilege> privileges) {
+        this.privileges = privileges;
+    }
+
+    public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
@@ -72,6 +90,7 @@ public class Role implements java.io.Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((members == null) ? 0 : members.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -90,12 +109,19 @@ public class Role implements java.io.Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (members == null) {
+			if (other.members != null)
+				return false;
+		} else if (!members.equals(other.members))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	};
+	}
+
+
 
 }

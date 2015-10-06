@@ -1,5 +1,7 @@
 package affableBean.service;
 
+import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
@@ -29,6 +31,7 @@ public class MemberDto {
 		this.id = member.getId();
 		this.password = member.getPassword();
 		this.role = member.getRole();
+//		this.roles = member.getRoles();
 	}
     
 	private Integer id;
@@ -36,6 +39,7 @@ public class MemberDto {
     private String address;
     private String cityRegion;
     private Role role;
+//    private Collection<Role> roles;
 
     @NotNull
     @Size(min = 1)
@@ -66,10 +70,14 @@ public class MemberDto {
     }
 
 
+//  public Collection<Role> getRoles() {
+//  return roles;
     public Role getRole() {
         return role;
     }
 
+//    public void setRoles(final Collection<Role> roles) {
+//        this.roles = roles;
     public void setRole(final Role role) {
         this.role = role;
     }
@@ -165,6 +173,7 @@ public class MemberDto {
 				+ ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
+//		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result
 				+ ((username == null) ? 0 : username.hashCode());
 		return result;
@@ -224,6 +233,8 @@ public class MemberDto {
 				return false;
 		} else if (!role.equals(other.role))
 			return false;
+//		} else if (!roles.equals(other.roles))
+//			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -231,4 +242,5 @@ public class MemberDto {
 			return false;
 		return true;
 	}
+
 }
