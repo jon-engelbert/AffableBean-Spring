@@ -84,7 +84,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         	.jdbcAuthentication()
         	.dataSource(datasource)
         	.usersByUsernameQuery("select username, password, enabled from member where username=?")
-        	.authoritiesByUsernameQuery("select member.username, role.name from member join role on member.role_id = role.id where username=?")
+        	.authoritiesByUsernameQuery("select m.username, 'ROLE_ADMIN' from member m, role r, role_members rm where m.username=? and rm.member_id = m.id and rm.role_id = r.id")
+//        	.authoritiesByUsernameQuery("select member.username, role.name from member join role on member.role_id = role.id where username=?")
 //        	.userDetailsService(userDetailsService)	// from baeldung... incompatible with jdbc authentication
         	.passwordEncoder(encoder());
         
@@ -97,11 +98,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         Member userMember = memberRepo.findOneByUsername("user");
  
         if(userMember == null) {
-            memberRepo.saveAndFlush(new Member("user", "user@user.com", "user@user.com", encoder.encode("user"), true, userRole));
+            memberRepo.saveAndFlush(new Member("user", "user@user.com", "user@user.com", encoder.encode("user"), true, new ArrayList<>(Arrays.asList(userRole))));
         }
         
         if(adminMember == null) {
-            memberRepo.saveAndFlush(new Member("admin", "admin@admin.com", "admin@admin.com", encoder.encode("admin"), true, adminRole));
+            memberRepo.saveAndFlush(new Member("admin", "admin@admin.com", "admin@admin.com", encoder.encode("admin"), true, new ArrayList<>(Arrays.asList(adminRole))));
         }
         
     }

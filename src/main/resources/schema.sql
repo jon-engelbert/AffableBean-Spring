@@ -144,8 +144,8 @@ CREATE  TABLE member (
   phone varchar(45),
   address varchar(100),
   city_region varchar(45),
-  `role_id` INT UNSIGNED NOT NULL ,
-  foreign key (`role_id`) references role(`id`),
+--  `role_id` INT UNSIGNED NOT NULL ,
+--  foreign key (`role_id`) references role(`id`),
   UNIQUE (`username`),
   UNIQUE(`email`)
   );

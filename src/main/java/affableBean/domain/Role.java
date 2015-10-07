@@ -39,15 +39,15 @@ public class Role implements java.io.Serializable {
 	private String name;
 
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-	private Set<Member> members = new HashSet<Member>(0);
+//	@OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+//	private Set<Member> members = new HashSet<Member>(0);
 	
-//	@ManyToMany		// (mappedBy = "roles")
-//    private Collection<Member> members;
+	@ManyToMany (mappedBy = "roles")
+    private Collection<Member> members;
 
 //    @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id") )
-    @ManyToMany
-    private Collection<Privilege> privileges;
+//    @ManyToMany
+//    private Collection<Privilege> privileges;
 
 	public Byte getId() {
 		return id;
@@ -73,13 +73,13 @@ public class Role implements java.io.Serializable {
 		this.members = members;
 	}
 
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(final Collection<Privilege> privileges) {
-        this.privileges = privileges;
-    }
+//    public Collection<Privilege> getPrivileges() {
+//        return privileges;
+//    }
+//
+//    public void setPrivileges(final Collection<Privilege> privileges) {
+//        this.privileges = privileges;
+//    }
 
     public static long getSerialversionuid() {
 		return serialVersionUID;

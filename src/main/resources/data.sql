@@ -64,21 +64,21 @@ INSERT INTO `role_privileges` (privilege_id, role_id) VALUES (2, 2);
 --
 -- Sample data for table `member`
 --
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('MC Hammer', 'hammer@hammertime.com', '226884562', 'Ruská 11', '2', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Karel Gott', 'gott@karelgott.com', '224517995', 'Kostelní 83', '7', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Helena Vondráčková', 'h.vondrackova@seznam.cz', '224517995', 'Letohradská 18', '7', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Sawyer Ford', 'sawyer.ford@gmail.com', '204888845', 'Dušní 87', '1', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Dalibor Janda', 'dalibor@dalibor.cz', '728331184', 'Krkonošská 9', '3', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Richard Genzer', 'r.genzer@nova.cz', '737610775', 'Plzeňská 131', '5', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Iveta Bartošová', 'i.bartosova@volny.cz', '734556133', 'Prokopská 60', '1', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Jin-Soo Kwon', 'jin.kwon@hotmail.kr', '606338909', 'Ve Střešovičkách 49', '6', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Benjamin Linus', 'b.linus@lost.com', '222756448', 'Družstevní 77', '4', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Leoš Mareš', 'mares@ferrari.it', '608995383', 'Pařížská 89', '1', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('John Locke', 'maninblack@lostpedia.com', '413443727', 'Valečovská 20', '9', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10', 1, true);
-INSERT INTO `member` (`name`, email, phone, address, city_region, role_id, enabled) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3', 1, true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Charlie Pace', 'c.pace@youareeverybody.com', '605434778', 'Široká 45', '1', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('MC Hammer', 'hammer@hammertime.com', '226884562', 'Ruská 11', '2', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Karel Gott', 'gott@karelgott.com', '224517995', 'Kostelní 83', '7', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Helena Vondráčková', 'h.vondrackova@seznam.cz', '224517995', 'Letohradská 18', '7', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Sawyer Ford', 'sawyer.ford@gmail.com', '204888845', 'Dušní 87', '1', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Dalibor Janda', 'dalibor@dalibor.cz', '728331184', 'Krkonošská 9', '3', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Richard Genzer', 'r.genzer@nova.cz', '737610775', 'Plzeňská 131', '5', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Iveta Bartošová', 'i.bartosova@volny.cz', '734556133', 'Prokopská 60', '1', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Jin-Soo Kwon', 'jin.kwon@hotmail.kr', '606338909', 'Ve Střešovičkách 49', '6', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Benjamin Linus', 'b.linus@lost.com', '222756448', 'Družstevní 77', '4', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Leoš Mareš', 'mares@ferrari.it', '608995383', 'Pařížská 89', '1', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('John Locke', 'maninblack@lostpedia.com', '413443727', 'Valečovská 20', '9', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Lucie Bílá', 'lucie@jampadampa.cz', '733556813', 'Na hájku 3', '8', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Sayid Jarrah', 'sayid@gmail.com', '602680793', 'Kodaňská 78', '10', true);
+INSERT INTO `member` (`name`, email, phone, address, city_region, enabled) VALUES ('Hugo Reyes', 'hurley@mrcluck.com', '605449336', 'Žerotínova 64', '3', true);
 
 --
 -- Sample data for table `role_members`

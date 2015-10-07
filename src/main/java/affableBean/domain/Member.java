@@ -25,12 +25,13 @@ public class Member implements java.io.Serializable {
 	private String password;
 	private boolean enabled;
 	
-//  @JoinTable(name = "role_members", joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
-//    @ManyToMany(mappedBy = "members")
-//    private Collection<Role> roles;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id", nullable = false)
-	private Role role;
+//    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+    @JoinTable(name = "role_members", joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id") , inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id") )
+    @ManyToMany	// (mappedBy = "members")
+    private Collection<Role> roles;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "role_id", nullable = false)
+//	private Role role;
     @Basic(optional = true)
     @Column(name = "phone")
     private String phone;
@@ -50,15 +51,15 @@ public class Member implements java.io.Serializable {
 	}
 
 	public Member(String name, String username, String email, String password,
-			boolean enabled, Role role) {	// Collection<Role> roles) {
+			boolean enabled,  Collection<Role> roles) {
 		super();
 		this.name = name;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.enabled = enabled;
-		this.role = role;
-//		this.roles = roles;
+//		this.role = role;
+		this.roles = roles;
 	}
 
 	public Integer getId() {
@@ -154,20 +155,28 @@ public class Member implements java.io.Serializable {
 				+ ", paymentInfoCollection=" + paymentInfoCollection + "]";
 	}
 
-	public Role getRole() {
-		return role;
+	public boolean hasRole(String rolename) {
+		for (Role role: roles) {
+			if (role.getName().equals(rolename))
+				return true;
+		}
+		return false;
 	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-//	public Collection<Role> getRoles() {
-//		return roles;
+	
+//	public Role getRole() {
+//		return role;
 //	}
 //
-//	public void setRoles(Collection<Role> roles) {
-//		this.roles = roles;
+//	public void setRole(Role role) {
+//		this.role = role;
 //	}
+
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
+	}
 	
 }

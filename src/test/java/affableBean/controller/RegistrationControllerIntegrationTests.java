@@ -95,7 +95,7 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPagePostSuccess() throws Exception {
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user = new Member("j", "j@j.com", "j@j.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
+		Member user = new Member("j", "j@j.com", "j@j.com", "Abcde01!@", false, Arrays.asList(userRole));
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword());
 		System.out.println("userDto: " + userDto);
@@ -116,7 +116,7 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPagePostPasswordMismatch() throws Exception {
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user = new Member("k", "k@k.com", "k@k.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
+		Member user = new Member("k", "k@k.com", "k@k.com", "Abcde01!@", false, Arrays.asList(userRole));
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword()+"!");
 		System.out.println("userDto: " + userDto);
@@ -137,9 +137,9 @@ public class RegistrationControllerIntegrationTests {
 	@Test
 	public void testNewMemberRegistrationPagePostEmailInUse() throws Exception {
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user1 = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
+		Member user1 = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, Arrays.asList(userRole));
 		memberRepo.save(user1);
-		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
+		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, Arrays.asList(userRole));
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword());
 		System.out.println("userDto: " + userDto);

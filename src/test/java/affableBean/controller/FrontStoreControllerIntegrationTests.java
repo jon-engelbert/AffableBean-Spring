@@ -114,7 +114,7 @@ public class FrontStoreControllerIntegrationTests {
 		System.out.println("in testCheckout, product: " + product);
 		cart.addItem(product);
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, userRole);	// Arrays.asList(userRole));
+		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, Arrays.asList(userRole));
 		memberRepo.save(user);
 		MemberDto userDto = new MemberDto(user);
 		userDto.setMatchingPassword(user.getPassword());

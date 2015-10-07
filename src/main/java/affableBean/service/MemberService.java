@@ -154,8 +154,8 @@ public class MemberService implements IMemberService{
         user.setCityRegion(accountDto.getCityRegion());
         user.setEmail(accountDto.getEmail());
         Role userRole = roleRepo.findByName("ROLE_USER");
-        user.setRole(userRole);
-//        user.setRoles(new ArrayList<>(Arrays.asList(userRole)));
+//        user.setRole(userRole);
+        user.setRoles(new ArrayList<>(Arrays.asList(userRole)));
         user.setEnabled(false);
 
 //        user.setRoles(Arrays.asList(roleRepo.findByName("ROLE_USER")));

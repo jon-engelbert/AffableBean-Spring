@@ -30,16 +30,16 @@ public class MemberDto {
 		this.username = member.getUsername();
 		this.id = member.getId();
 		this.password = member.getPassword();
-		this.role = member.getRole();
-//		this.roles = member.getRoles();
+//		this.role = member.getRole();
+		this.roles = member.getRoles();
 	}
     
 	private Integer id;
     private String phone;
     private String address;
     private String cityRegion;
-    private Role role;
-//    private Collection<Role> roles;
+//    private Role role;
+    private Collection<Role> roles;
 
     @NotNull
     @Size(min = 1)
@@ -70,16 +70,16 @@ public class MemberDto {
     }
 
 
-//  public Collection<Role> getRoles() {
-//  return roles;
-    public Role getRole() {
-        return role;
+    public Collection<Role> getRoles() {
+    	return roles;
+//    public Role getRole() {
+//        return role;
     }
 
-//    public void setRoles(final Collection<Role> roles) {
-//        this.roles = roles;
-    public void setRole(final Role role) {
-        this.role = role;
+    public void setRoles(final Collection<Role> roles) {
+        this.roles = roles;
+//    public void setRole(final Role role) {
+//        this.role = role;
     }
 
     public String getName() {
@@ -153,7 +153,9 @@ public class MemberDto {
 				+ address + ", cityRegion=" + cityRegion + ", name=" + name
 				+ ", password=" + password + ", matchingPassword="
 				+ matchingPassword + ", email=" + email + ", username="
-				+ username + ", role=" + role + "]";
+				+ username
+//				+ ", role=" + role 
+				+ "]";
 	}
 
 	@Override
@@ -172,7 +174,7 @@ public class MemberDto {
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
+//		result = prime * result + ((role == null) ? 0 : role.hashCode());
 //		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
 		result = prime * result
 				+ ((username == null) ? 0 : username.hashCode());
@@ -228,11 +230,11 @@ public class MemberDto {
 				return false;
 		} else if (!phone.equals(other.phone))
 			return false;
-		if (role == null) {
-			if (other.role != null)
-				return false;
-		} else if (!role.equals(other.role))
-			return false;
+//		if (role == null) {
+//			if (other.role != null)
+//				return false;
+//		} else if (!role.equals(other.role))
+//			return false;
 //		} else if (!roles.equals(other.roles))
 //			return false;
 		if (username == null) {

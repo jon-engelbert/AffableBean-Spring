@@ -124,7 +124,7 @@ public class AdminControllerIntegrationTests {
 	public void testCustomerPage() throws Exception {
 		ArrayList<PaymentInfo> expectedCustomers = new ArrayList<PaymentInfo>();
 		Role userRole = roleRepo.findByName("ROLE_USER");
-		Member newCustomer = new Member("Ted theo", "ted", "t@t.com", "123", true, userRole);	//Arrays.asList(userRole));
+		Member newCustomer = new Member("Ted theo", "ted", "t@t.com", "123", true, Arrays.asList(userRole));
 		customerRepo.deleteAll();
 		customerRepo.save(newCustomer);
 //		when(mockCustomerRepo.findAll()).thenReturn(expectedCustomers);
@@ -150,7 +150,7 @@ public class AdminControllerIntegrationTests {
 	public void testOrderConsole() throws Exception {
 		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
 //		roleRepo.save(newRole);
-		Member member = new Member("jon", "jonny", "jon@jon.com", "123", true, adminRole);	// Arrays.asList(adminRole));
+		Member member = new Member("jon", "jonny", "jon@jon.com", "123", true, Arrays.asList(adminRole));
 		memberRepo.save(member);
 		PaymentInfo paymentInfo = new PaymentInfo(member.getName(), "123 street", "aa", "1111222233334444");
 		paymentInfo.setOwner(member);

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import affableBean.domain.Member;
-import affableBean.domain.Privilege;
+//import affableBean.domain.Privilege;
 import affableBean.domain.Role;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.RoleRepository;
@@ -66,10 +66,10 @@ public class MyUserDetailsService implements UserDetailsService {
             	return new User(" ", " ", authorities);
                 // return new org.springframework.security.core.userdetails.User(" ", " ", true, true, true, true, getAuthorities(Arrays.asList(roleRepository.findByName("ROLE_USER"))));
             }
-            logger.info("In MyUserDetailsService#loadUserByUsername, done with findOneByEmail: user.role " + user.getRole().toString());
+            logger.info("In MyUserDetailsService#loadUserByUsername, done with findOneByEmail: user.roles " + user.getRoles().toString());
 
-            if (!user.getRole().getName().equals("ROLE_USER"))
-            	authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
+            if (user.hasRole("ROLE_ADMIN"))
+            	authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         	return new User(user.getEmail(), user.getPassword(), authorities);
 //            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.getEnabled(), true, true, true, (Collection<? extends GrantedAuthority>) Arrays.asList(user.getRole()));	//getAuthorities(user.getRoles()));
         } catch (final Exception e) {

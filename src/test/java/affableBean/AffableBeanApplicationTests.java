@@ -50,8 +50,8 @@ public class AffableBeanApplicationTests {
 	@Transactional
 	public void testSaveCustomer() {
 		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
-		Member cust = new Member("Thien", "thienman@gmail.com", "thienman@gmail.com", "123", true, adminRole);
-//		Member cust = new Member("Thien", "thienman@gmail.com", "thienman@gmail.com", "123", true, Arrays.asList(adminRole));
+//		Member cust = new Member("Thien", "thienman@gmail.com", "thienman@gmail.com", "123", true, adminRole);
+		Member cust = new Member("Thien", "thienman@gmail.com", "thienman@gmail.com", "123", true, Arrays.asList(adminRole));
 
 		Member custReturned = customerService.saveAndFlush(cust);
 		System.out.println("******" + custReturned.getPhone());
