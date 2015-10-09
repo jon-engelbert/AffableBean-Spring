@@ -31,7 +31,7 @@
 										<td th:text="${member.name}"></td>
 										<td th:text="${member.username}"></td>
 										<td th:text="${member.enabled}"></td>
-										<td th:text="${member.role.id}"></td>
+										<td th:text="${member.roles.iterator().next().getName()}"></td>
 									</tr>
 								</tbody>
 							</table>

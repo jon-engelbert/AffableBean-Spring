@@ -1,51 +1,119 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/headTag :: headTag">...
 </head>
 <body>
-	<script>
-
-		function validate() {
-			var isValid = true;
+<!-- <script src="/js/pwstrength.js"></script> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+	$('form').submit(function(event) {
+		register(event);
+	});
 	
-			if (($('#email').val() == "") || ($('#email').val() == null ) ) {
-	            alert("Email is required");
-	            isValid = false;
-			}
-	
-			if (($('#password').val() == "") || ($('#email').val() == null ) ) {
-	            alert("Please enter a password");
-	            isValid = false;
-	        } else if ($('#password').val() != $('#matchingPassword').val()) {
-	          alert("passwords do not match");
-	          isValid = false;
-			}
-			$.ajax(
-		        {
-		            url: 'checkEmail',  
-		            data: 'email=' + $('#email').val(),  
-		            dataType: 'html',
-		            type: "GET",
-		            async:false,
-		            success: function( data )
-		            {
-		                if (data.indexOf("exists") != -1) {
-		                    alert("email address already registered");
-		                    isValid = false;
-		                }
-		            }
+    var pwMatches = $('div#pwMatches').text();
+	$(":password").keyup(function(){
+		if($("#password").val() != $("#matchingPassword").val()){
+	        $("#globalError").show().html(pwMatches);
+	    }else{
+	    	$("#globalError").html("").hide();
+	    }
+	});
+	/* options = {
+		    common: {minChar:8},
+		    ui: {
+		    	showVerdictsInsideProgressBar:true,
+		    	showErrors:true,
+		    	errorMessages:{
+		    		  wordLength: '<spring:message code="error.wordLength"/>',
+		    		  wordNotEmail: '<spring:message code="error.wordNotEmail"/>',
+		    		  wordSequences: '<spring:message code="error.wordSequences"/>',
+		    		  wordLowercase: '<spring:message code="error.wordLowercase"/>',
+		    		  wordUppercase: '<spring:message code="error.wordUppercase"/>',
+		    	      wordOneNumber: '<spring:message code="error.wordOneNumber"/>',
+		    		  wordOneSpecialChar: '<spring:message code="error.wordOneSpecialChar"/>'
+		    		}
 		    	}
-		    );
-	        
-	        if (isValid) {
-		        return true;
-		    } else {
-			    return false;
-			}
+		};
+	 $('#password').pwstrength(options); */
+});
 
-		}
-	</script>
+function register(event) {
+	event.preventDefault();
+    $(".alert").html("").hide();
+    $(".error-list").html("");
+    var pwMatches = $('div#pwMatches').text();
+    if($("#password").val() != $("#matchingPassword").val()){
+    	$("#globalError").show().html(pwMatches);
+    	return;
+    }
+    var formData= $('form').serialize();
+	var token1 = $('input#csrf-token').attr("content"); 			
+
+    var checkPassword = function(str)
+    {
+      var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+      return re.test(str);
+    };
+    if(!checkPassword(this.password.value)) {
+      alert("The password you have entered is not valid!");
+      this.password.focus();
+      event.preventDefault();
+      return;
+    }
+
+    $.ajax(
+        {
+            url: '/user/registration',  
+            data: formData,  
+            dataType: 'html',
+            type: "POST",
+            beforeSend: function (request)
+            {
+                request.setRequestHeader("X-CSRF-TOKEN", token1);
+            },
+            success: function( data )
+            {
+            	var dataHash = JSON.parse(data);
+            	if (dataHash["status"] == "success")
+					window.location.href = "/registration/successRegister";
+            	else if (dataHash["status"] == "failure") {
+            		$.each(dataHash["errorMessageList"], function(key, value) {
+            		    /* alert(key + ' ' + value); */
+		                $("#"+key+"Error").show().html(value);
+            		});
+ 		            /* $("#globalError").show().html("not sure what to do, failure"); */
+				}
+
+            },
+			fail: function(data) 
+			{
+		        if(data.responseJSON.error.indexOf("MailError") > -1)
+		        {
+		            window.location.href = "/registration/emailError";
+		        }
+		        else if(data.responseJSON.error == "UserAlreadyExist"){
+		            $("#emailError").show().html(data.responseJSON.message);
+		        }
+		        else if(data.responseJSON.error.indexOf("InternalError") > -1){
+		            window.location.href = "/login.html" + "?message=" + data.responseJSON.message;
+		        }
+		        else{
+		        	var errors = $.parseJSON(data.responseJSON.message);
+		            $.each( errors, function( index,item ){
+		                $("#"+item.field+"Error").show().html(item.defaultMessage);
+		            });
+		            errors = $.parseJSON(data.responseJSON.error);
+		            $.each( errors, function( index,item ){
+		                $("#globalError").show().append(item.defaultMessage+"<br/>");
+		            });
+		        }
+			}
+    	});
+}
+</script>
 	<div id="main">
 		<div id="header" th:include="fragments/bodyHeader :: bodyHeader">
 			...</div>
@@ -55,11 +123,51 @@
 		<span class="error" th:if="${error}">There was a problem updating this customer</span> 
 		<span class="error" th:if="${passwordNoMatchError}">Passwords do not match</span> 
 		<span class="error" th:if="${emailExists}">This email address has already been registered</span>
-
-		<form id="customerForm" th:action="@{/newMemberSubmit}"
-			th:object="${memberDto}" method="post" >
+		<!-- <input type="hidden" id= "csrf-token" th:name="${_csrf.parameterName}" th:content="${_csrf.token}" /> -->
+		<input type="hidden"  id= "csrf-token"
+		th:name="${_csrf != null ? _csrf.parameterName : 'testing'}" 
+		th:content="${_csrf != null ? _csrf.token : 'testing'}" />
+		<div id="pwMatches" style="display: none;" th:text="#{PasswordMatches.user}"></div>
+		<form th:action="@{/}"
+			th:object="${memberDto}" method="POST" >
 			<!-- onsubmit="return validate();"> -->
 			<input type="hidden" name="id" th:value="*{id}" />
+                <div class="form-group row" >
+                    <label class="col-sm-5" th:text="|#{customerName}:|"></label>
+                    <span class="col-sm-5"><input type="text" th:field="*{name}" required="required"/></span>
+                    <span id="customerError" class="alert alert-danger col-sm-4" style="display:none"></span>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5" th:text="|#{email}:|"></label>
+                    <span class="col-sm-5"><input type="email" th:field="*{email}" required="required"/></span>                    
+                    <span id="emailError" class="alert alert-danger col-sm-4" style="display:none"></span>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5" th:text="|#{phone}:|"></label>
+                    <span class="col-sm-5"><input type="text" th:field="*{phone}"/></span>                    
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5" th:text="|#{address}:|"></label>
+                    <span class="col-sm-5"><input type="text" th:field="*{address}"/></span>                    
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5" th:text="|#{cityRegion}:|"></label>
+                    <span class="col-sm-5"><input type="text" th:field="*{cityRegion}"/></span>                    
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5" th:text="|#{label.user.password}:|" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" ></label>
+                    <span class="col-sm-5"><input class="form-control" th:field="*{password}" value="" type="password" required="required"/></span>
+                    <span id="passwordError" class="alert alert-danger col-sm-4" style="display:none"></span>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5" th:text="|#{label.user.confirmPass}:|"></label>
+                    <span class="col-sm-5"><input class="form-control" th:field="*{matchingPassword}" value="" type="password" required="required"/></span>
+                    <span id="globalError" class="alert alert-danger col-sm-4" style="display:none"></span>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-primary" th:text="#{label.form.submit}">
+                </button>
+
 			<table class="formTable">
 				<tr th:if="${#vars['validationErrorFlag'] != null}">
 					<td colspan="2" style="text-align: left" class="error smallText">
@@ -85,49 +193,6 @@
 					</td>
 				</tr>
 
-				<tr>
-					<td><label for="name" th:text="|#{customerName}:|">name</label></td>
-					<td class="inputField"><input type="text" th:field="*{name}" />
-					</td>
-				</tr>
-				<tr>
-					<td><label for="email" th:text="|#{email}:|">email</label></td>
-					<td class="inputField"><input type="text" th:field="*{email}" />
-					</td>
-				</tr>
-				<tr>
-					<td><label for="phone" th:text="|#{phone}:|"></label></td>
-					<td class="inputField"><input type="text" th:field="*{phone}" />
-					</td>
-				</tr>
-				<tr>
-					<td><label for="address" th:text="|#{address}:|">address</label></td>
-					<td class="inputField"><input type="text"
-						th:field="*{address}" /></td>
-				</tr>
-				<tr>
-					<td><label for="cityRegion" th:text="|#{cityRegion}:|">cityRegion</label></td>
-					<td class="inputField"><input type="text"
-						th:field="*{cityRegion}" /> <!-- 		                    
-						<span th:text="#{prague}"></span>
-		                    <select name="cityRegion">
-								<option th:each="regionNumber : ${#numbers.sequence(1,10)}" th:value="${regionNumber}" th:text="${regionNumber}" th:selected="${session.customerLoggedIn.cityRegion eq (regionNumber)}"></option>
-		                    </select>
- --></td>
-				</tr>
-				<tr>
-					<td><label for="password">password:</label></td>
-					<td class="inputField"><input type="password"
-						th:field="*{password}" /></td>
-				</tr>
-				<tr>
-					<td><label for="matchingPassword">confirm password:</label></td>
-					<td class="inputField"><input type="password"
-						th:field="*{matchingPassword}" /></td>
-				</tr>
-				<tr>
-					<td colspan="2"><input type="submit" value="submit" /></td>
-				</tr>
 			</table>
 		</form>
 

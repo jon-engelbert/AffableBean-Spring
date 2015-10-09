@@ -19,6 +19,9 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,6 +37,7 @@ import affableBean.repository.MemberRepository;
 import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.RoleRepository;
 import affableBean.service.MemberDto;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AffableBeanApplication.class)
@@ -86,7 +90,11 @@ public class RegistrationControllerIntegrationTests {
 
 	@Test
 	public void testNewMemberRegistrationPageGet() throws Exception {
-		mockMvc.perform(get("/newMember")).andExpect(
+		HttpSessionCsrfTokenRepository httpSessionCsrfTokenRepository = new HttpSessionCsrfTokenRepository();
+		CsrfToken csrfToken = httpSessionCsrfTokenRepository.generateToken(new MockHttpServletRequest());
+		mockMvc
+			.perform(get("/newMember").with(csrf().asHeader()))
+			.andExpect(
 				view().name("registration/memberregistration"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("text/html;charset=UTF-8"));
@@ -103,7 +111,7 @@ public class RegistrationControllerIntegrationTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 //				.sessionAttr("memberDto", userDto)	// didn't work
 				.param("name", userDto.getName())
-				.param("username", userDto.getUsername())
+//				.param("username", userDto.getUsername())
 				.param("email", userDto.getEmail())
 				.param("password", userDto.getPassword())
 				.param("matchingPassword", userDto.getPassword())
@@ -124,7 +132,7 @@ public class RegistrationControllerIntegrationTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 //				.sessionAttr("memberDto", userDto)	// didn't work
 				.param("name", userDto.getName())
-				.param("username", userDto.getUsername())
+//				.param("username", userDto.getUsername())
 				.param("email", userDto.getEmail())
 				.param("password", userDto.getPassword())
 				.param("matchingPassword", userDto.getMatchingPassword())
@@ -147,7 +155,7 @@ public class RegistrationControllerIntegrationTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 //				.sessionAttr("memberDto", userDto)	// didn't work
 				.param("name", userDto.getName())
-				.param("username", userDto.getUsername())
+//				.param("username", userDto.getUsername())
 				.param("email", userDto.getEmail())
 				.param("password", userDto.getPassword())
 				.param("matchingPassword", userDto.getPassword())

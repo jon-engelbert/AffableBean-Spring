@@ -136,7 +136,7 @@ public class AdminControllerIntegrationTests {
 	@Test
 	public void testMemberConsole() throws Exception {
 //		Role adminRole = roleRepo.findByName("ROLE_ADMIN");
-//		Member newMember = new Member("jon", "jonny@jonny.com", "jonny@jonny.com", "123", true, adminRole);
+//		Member newMember = new Member("jon", "jonny@jonny.com", "jonny@jonny.com", "123", true,  Arrays.asList(adminRole));
 //		memberRepo.save(newMember);
 		long listSize = memberRepo.count();
 		mockMvc.perform(get("/admin/member")).andExpect(view().name("admin/member"))

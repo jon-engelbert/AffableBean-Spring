@@ -147,7 +147,7 @@ public class MemberService implements IMemberService{
         final Member user = new Member();
 
         user.setName(accountDto.getName());
-        user.setUsername(accountDto.getUsername());
+//        user.setUsername(accountDto.getUsername());
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setAddress(accountDto.getAddress());
         user.setPhone(accountDto.getPhone());

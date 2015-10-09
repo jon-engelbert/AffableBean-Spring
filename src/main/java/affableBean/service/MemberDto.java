@@ -27,11 +27,11 @@ public class MemberDto {
 		this.address = member.getAddress();
 		this.cityRegion = member.getCityRegion();
 		this.name = member.getName();
-		this.username = member.getUsername();
 		this.id = member.getId();
 		this.password = member.getPassword();
-//		this.role = member.getRole();
 		this.roles = member.getRoles();
+//		this.role = member.getRole();
+//		this.username = member.getUsername();
 	}
     
 	private Integer id;
@@ -57,10 +57,10 @@ public class MemberDto {
     @Size(min = 1)
     private String email;
 
-    @NotNull
-    @Size(min = 1)
-    private String username;
-
+//    @NotNull
+//    @Size(min = 1)
+//    private String username;
+//
     public String getEmail() {
         return email;
     }
@@ -139,21 +139,21 @@ public class MemberDto {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
+//	public String getUsername() {
+//		return username;
+//	}
+//
+//	public void setUsername(String username) {
+//		this.username = username;
+//	}
 
 	@Override
 	public String toString() {
 		return "MemberDto [id=" + id + ", phone=" + phone + ", address="
 				+ address + ", cityRegion=" + cityRegion + ", name=" + name
 				+ ", password=" + password + ", matchingPassword="
-				+ matchingPassword + ", email=" + email + ", username="
-				+ username
+				+ matchingPassword + ", email=" + email + ""
+//				+ ", username=" + username
 //				+ ", role=" + role 
 				+ "]";
 	}
@@ -176,8 +176,7 @@ public class MemberDto {
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 //		result = prime * result + ((role == null) ? 0 : role.hashCode());
 //		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-		result = prime * result
-				+ ((username == null) ? 0 : username.hashCode());
+//		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -237,11 +236,11 @@ public class MemberDto {
 //			return false;
 //		} else if (!roles.equals(other.roles))
 //			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
+//		if (username == null) {
+//			if (other.username != null)
+//				return false;
+//		} else if (!username.equals(other.username))
+//			return false;
 		return true;
 	}
 

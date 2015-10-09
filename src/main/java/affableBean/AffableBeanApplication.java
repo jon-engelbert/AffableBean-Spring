@@ -12,13 +12,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.transaction.interceptor.TransactionInterceptor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -97,7 +93,7 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
         registry.addViewController("/user/updatePassword").setViewName("registration/updatePassword");
 //        registry.addViewController("/registration/forgotPassword");
         registry.addViewController("/registration/emailError");
+        registry.addViewController("/registration/successRegister");
     }
-    
     
 }

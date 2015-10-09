@@ -1,6 +1,8 @@
 package affableBean.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -29,6 +31,8 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +52,7 @@ import affableBean.service.IMemberService;
 import affableBean.service.MemberDto;
 import affableBean.service.MemberService;
 import affableBean.validation.EmailExistsException;
+import affableBean.validation.ValidationResponse;
 
 @Controller
 public class RegistrationController {
@@ -108,55 +113,89 @@ public class RegistrationController {
 		
 	}
 	
-    private Member createMemberAccount(final MemberDto accountDto, ModelMap mm) {
+    private Member createMemberAccount(final MemberDto accountDto) { // , ModelMap mm) {
         Member registered = null;
         LOGGER.info("in createMemberAccount");
         try {
-        	accountDto.setUsername(accountDto.getEmail());
+        	accountDto.setName(accountDto.getEmail());
             registered = userService.registerNewMemberAccount(accountDto);
         } catch (final EmailExistsException e) {
         	LOGGER.info("throwing EmailExistsException");
-        	mm.put("emailExists", true);
+//        	mm.put("emailExists", true);
             return null;
         }
         return registered;
     }
     
-	@RequestMapping(value = "/newMemberSubmit", method = RequestMethod.POST)
-	public String newMemberSubmit(@Valid final MemberDto memberDto,
-			final BindingResult bindingResult, 
-			@RequestParam("matchingPassword") String matchingPassword,
-			HttpServletRequest request,
-			ModelMap mm) {
+    // Registration
 
-		LOGGER.info("Registering user account with information: {}", memberDto);
-		mm.put("memberDto", memberDto);
+    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+    @ResponseBody
+    public ValidationResponse registerMemberAccount(@Valid final MemberDto accountDto, 
+    		Errors errors, final HttpServletRequest request)  {
+        ValidationResponse res = new ValidationResponse();
+        HashMap<String, String> errorMessages = new HashMap<String, String>();
+		if (errors.getErrorCount() > 0) {
+			for (FieldError fieldError : errors.getFieldErrors()) {
+                errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
+				LOGGER.warn("Errors: " + fieldError.getField() + "  " + fieldError.getDefaultMessage());
+			}
+            res.setErrorMessageList(errorMessages);
+            res.setStatus("failure");
+			return res;
+		}
+        LOGGER.debug("Registering user account with information: {}", accountDto);
+        LOGGER.info("Registering user account with information: {}", accountDto);
+        final Member registered = createMemberAccount(accountDto);	// , mm);
+        if (registered == null) {
+            throw new UserAlreadyExistException();
+        }
+        final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
+        res.setStatus("success");
+        return res;
+    }
 
-		if (!memberDto.getPassword().equals(matchingPassword)) {
-			mm.put("passwordNoMatchError", true);
-			return "registration/memberregistration"; 
-		}
-		final Member registered = createMemberAccount(memberDto, mm);
-		if (registered == null) {
-			LOGGER.info("Registering user account , registered == null");
-			
-			return "registration/memberregistration";
-		}
-		try {
-			final String appUrl = "http://" + request.getServerName() + ":"
-					+ request.getServerPort() + request.getContextPath();
-			LOGGER.info("about to publish OnRegistrationCompleteEvent , "
-					+ appUrl);
-			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(
-					registered, request.getLocale(), appUrl));
-		} catch (final Exception ex) {
-			LOGGER.warn("Unable to register user", ex);
-			 return "registration/emailError";
-//			 return new ModelAndView("registration/emailError", "memberDto", memberDto);
-//			return "front_store/memberregistration";
-		}
-		return "registration/successRegister";
-	}
+//	@RequestMapping(value = "/newMemberSubmit", method = RequestMethod.POST)
+//	public String newMemberSubmit(@Valid final MemberDto memberDto, Errors errors,
+////			final BindingResult bindingResult, 
+////			@RequestParam("matchingPassword") String matchingPassword,
+//			HttpServletRequest request,
+//			ModelMap mm) {
+//
+//		LOGGER.info("Registering user account with information: {}", memberDto);
+//		mm.put("memberDto", memberDto);
+//
+//		if (errors.hasErrors()) {
+//			LOGGER.warn("Errors: ", errors.toString());
+//			mm.put("passwordNoMatchError", true);
+//			return "registration/memberregistration";
+//		}
+////		if (!memberDto.getPassword().equals(matchingPassword)) {
+////			mm.put("passwordNoMatchError", true);
+////			return "registration/memberregistration"; 
+////		}
+//		final Member registered = createMemberAccount(memberDto, mm);
+//		if (registered == null) {
+//			LOGGER.info("Registering user account , registered == null");
+//			
+//			return "registration/memberregistration";
+//		}
+//		try {
+//			final String appUrl = "http://" + request.getServerName() + ":"
+//					+ request.getServerPort() + request.getContextPath();
+//			LOGGER.info("about to publish OnRegistrationCompleteEvent , "
+//					+ appUrl);
+//			eventPublisher.publishEvent(new OnRegistrationCompleteEvent(
+//					registered, request.getLocale(), appUrl));
+//		} catch (final Exception ex) {
+//			LOGGER.warn("Unable to register user", ex);
+//			 return "registration/emailError";
+////			 return new ModelAndView("registration/emailError", "memberDto", memberDto);
+////			return "front_store/memberregistration";
+//		}
+//		return "registration/successRegister";
+//	}
 	
 	// this comes from ajax call in memberregistration.html
 	@RequestMapping("/checkEmail")
@@ -168,23 +207,6 @@ public class RegistrationController {
 		}
 		return "unregistered";
 	}
-
-    // Registration
-
-//    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-//    @ResponseBody
-//    public GenericResponse registerMemberAccount(@Valid final MemberDto accountDto, final HttpServletRequest request, ModelMap mm) {
-//        LOGGER.debug("Registering user account with information: {}", accountDto);
-//
-//        final Member registered = createMemberAccount(accountDto, mm);
-//        if (registered == null) {
-//            throw new UserAlreadyExistException();
-//        }
-//        final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
-//
-//        return new GenericResponse("success");
-//    }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(final Locale locale, final Model model, @RequestParam("token") final String token) {
