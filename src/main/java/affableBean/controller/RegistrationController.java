@@ -33,6 +33,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,6 +52,7 @@ import affableBean.repository.MemberRepository;
 import affableBean.service.IMemberService;
 import affableBean.service.MemberDto;
 import affableBean.service.MemberService;
+import affableBean.service.PasswordDto;
 import affableBean.validation.EmailExistsException;
 import affableBean.validation.ValidationResponse;
 
@@ -131,7 +133,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
     @ResponseBody
-    public ValidationResponse registerMemberAccount(@Valid final MemberDto accountDto, 
+    public ValidationResponse registerMemberAccount(@Valid @ModelAttribute("member") final MemberDto accountDto, 
     		Errors errors, final HttpServletRequest request)  {
         ValidationResponse res = new ValidationResponse();
         HashMap<String, String> errorMessages = new HashMap<String, String>();
@@ -148,7 +150,10 @@ public class RegistrationController {
         LOGGER.info("Registering user account with information: {}", accountDto);
         final Member registered = createMemberAccount(accountDto);	// , mm);
         if (registered == null) {
-            throw new UserAlreadyExistException();
+            errorMessages.put("email", "Email already exists");
+            res.setErrorMessageList(errorMessages);
+            res.setStatus("failure");
+			return res;
         }
         final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), appUrl));
@@ -210,6 +215,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     public String confirmRegistration(final Locale locale, final Model model, @RequestParam("token") final String token) {
+		LOGGER.info("confirmRegistration");
         final VerificationToken verificationToken = userService.getVerificationToken(token);
         if (verificationToken == null) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
@@ -268,13 +274,6 @@ public class RegistrationController {
 		// return "registration/successRegister";
     }
 
-    @RequestMapping(value = "/user/updatePassword", method = RequestMethod.GET)
-    public String showChangePasswordPage(final Model model) {
-        LOGGER.info("in showChangePasswordPage");
-        model.addAttribute("pass", "");
-        model.addAttribute("passConfirm", "");
-        return "/registration/updatePassword";
-    }
     
     @RequestMapping(value = "/registration/forgotPassword", method = RequestMethod.GET)
     public String showForgotPasswordPage(HttpSession session, final HttpServletRequest request, HttpServletResponse response, final Model model) {
@@ -295,12 +294,32 @@ public class RegistrationController {
         return "/registration/forgotPassword";
     }
     
-    @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
-    public String changePassword(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
-        LOGGER.info("in changePassword, token: " + token);
+    @RequestMapping(value = "/user/getNewPasswordFromExisting", method = RequestMethod.GET)
+    public String getNewPassworFromExistingPage(final ModelMap mm) {
+        LOGGER.info("in getNewPasswordFromExistingPage");
+        PasswordDto passwordDto = new PasswordDto();
+		mm.put("passwordDto", passwordDto);
+//        model.addAttribute("passConfirm", "");
+//        return "/registration/updatePassword";
+        return "/registration/getNewPasswordFromExisting";
+    }
+    
+    @RequestMapping(value = "/user/getNewPasswordFromScratch", method = RequestMethod.GET)
+    public String getNewPasswordFromScratchPage(final ModelMap mm) {
+        LOGGER.info("in getNewPasswordFromExistingPage");
+        PasswordDto passwordDto = new PasswordDto();
+		mm.put("passwordDto", passwordDto);
+//        model.addAttribute("passConfirm", "");
+//        return "/registration/updatePassword";
+        return "/registration/getNewPasswordFromScratch";
+    }
+    
+    @RequestMapping(value = "/user/getNewPasswordFromEmail", method = RequestMethod.GET)
+    public String getNewPasswordFromEmail(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
+        LOGGER.info("in getNewPasswordFromEmail, token: " + token);
         final PasswordResetToken passToken = userService.getPasswordResetToken(token);
         final Member user = passToken.getMember();
-        LOGGER.info("in changePassword, user: " + user);
+        LOGGER.info("in getNewPasswordFromScratch, user: " + user);
         if (passToken == null || user.getId() != id) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
@@ -315,42 +334,73 @@ public class RegistrationController {
 
         final Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, userDetailsService.loadUserByUsername(user.getEmail()).getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
-        LOGGER.info("about to redirect:/updatePassword.html");
+        LOGGER.info("about to redirect:/getNewPasswordFromScratch.html");
 
-        return "redirect:/user/updatePassword.html?lang=" + locale.getLanguage();
+        return "redirect:/user/getNewPasswordFromScratch.html?lang=" + locale.getLanguage();
     }
 
-    @RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/savePasswordFromScratch", method = RequestMethod.POST)
 //  @PreAuthorize("hasRole('READ_PRIVILEGE')")
 //  @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseBody
-    public GenericResponse savePassword(final Locale locale, @RequestParam("password") final String password) {
-        LOGGER.info("in savePassword");
+    public ValidationResponse savePasswordFromScratch(final Locale locale, @Valid final PasswordDto passwordDto, 
+    		Errors errors) {
+        LOGGER.info("in savePasswordFromScratch");
+        ValidationResponse res = new ValidationResponse();
+        HashMap<String, String> errorMessages = new HashMap<String, String>();
+		if (errors.getErrorCount() > 0) {
+			for (FieldError fieldError : errors.getFieldErrors()) {
+                errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
+				LOGGER.warn("Errors: " + fieldError.getField() + "  " + fieldError.getDefaultMessage());
+			}
+            res.setErrorMessageList(errorMessages);
+            res.setStatus("failure");
+			return res;
+		}
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
         LOGGER.info("in savePassword, username: " + userName);
         Member member = userService.getMemberByEmail(userName);
         LOGGER.info("in savePassword, member: " + member);
-        userService.changeMemberPassword(member, password);
-        return new GenericResponse(messages.getMessage("message.resetPasswordSuc", null, locale));
+        userService.changeMemberPassword(member, passwordDto.getPassword());
+        res.setStatus(messages.getMessage("message.resetPasswordSuc", null, locale));
+        return res;
     }
 
     // change user password
 
-    @RequestMapping(value = "/user/updatePassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/savePasswordFromExisting", method = RequestMethod.POST)
 //    @PreAuthorize("hasRole('READ_PRIVILEGE')")
     @ResponseBody
-    public GenericResponse changeMemberPassword(final Locale locale, @RequestParam("password") final String password, @RequestParam("oldpassword") final String oldPassword) {
-        LOGGER.info("in changeMemberPassword");
+    public ValidationResponse savePasswordFromExisting(final Locale locale, @Valid final PasswordDto passwordDto, 
+    		Errors errors, final HttpServletRequest request)  {
+        LOGGER.info("in savePasswordFromExisting");
+        ValidationResponse res = new ValidationResponse();
+        HashMap<String, String> errorMessages = new HashMap<String, String>();
+		if (errors.getErrorCount() > 0) {
+			for (FieldError fieldError : errors.getFieldErrors()) {
+                errorMessages.put(fieldError.getField(), fieldError.getDefaultMessage());
+				LOGGER.warn("Errors: " + fieldError.getField() + "  " + fieldError.getDefaultMessage());
+			}
+            res.setErrorMessageList(errorMessages);
+            res.setStatus("failure");
+			return res;
+		}
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String userName = auth.getName();
-        LOGGER.info("in changeMemberPassword, username: " + userName);
+        LOGGER.info("in savePasswordFromExisting, username: " + userName);
         final Member user = userService.getMemberByEmail(userName);
-        if (!userService.checkIfValidOldPassword(user, oldPassword)) {
-            throw new InvalidOldPasswordException();
+        if (!userService.checkIfValidOldPassword(user, passwordDto.getOldPassword())) {
+            errorMessages.put("oldPassword", "Invalid Old Password");
+			LOGGER.warn("Errors: " + "oldPassword," + " Invalid Old Password");
+            res.setErrorMessageList(errorMessages);
+            res.setStatus("failure");
+			return res;
         }
-        userService.changeMemberPassword(user, password);
-        return new GenericResponse(messages.getMessage("message.updatePasswordSuc", null, locale));
+        userService.changeMemberPassword(user, passwordDto.getPassword());
+        res.setStatus("success");
+        return res;
     }
 
     // NON-API
@@ -367,7 +417,7 @@ public class RegistrationController {
     }
 
     private final SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final Member user) {
-        final String url = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
+        final String url = contextPath + "/user/getNewPasswordFromEmail?id=" + user.getId() + "&token=" + token;
         final String message = messages.getMessage("message.resetPassword", null, locale);
         final SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(user.getEmail());

@@ -90,7 +90,7 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
     }
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/user/updatePassword").setViewName("registration/updatePassword");
+//        registry.addViewController("/user/updatePassword").setViewName("registration/updatePassword");
 //        registry.addViewController("/registration/forgotPassword");
         registry.addViewController("/registration/emailError");
         registry.addViewController("/registration/successRegister");

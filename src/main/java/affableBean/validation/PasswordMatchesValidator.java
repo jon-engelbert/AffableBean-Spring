@@ -4,6 +4,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import affableBean.service.MemberDto;
+import affableBean.service.PasswordDto;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
 
@@ -14,9 +15,20 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public boolean isValid(final Object obj, final ConstraintValidatorContext context) {
-        final MemberDto user = (MemberDto) obj;
-        System.out.println("in PasswordMatchesValidator: " + user.getPassword() + ", " + user.getMatchingPassword() + ", " + user.getPassword().equals(user.getMatchingPassword()));
-        return user.getPassword().equals(user.getMatchingPassword());
+        MemberDto user = null;
+        PasswordDto pwDto = null;
+        String password = "", match = "";
+        if (obj instanceof MemberDto) {
+        	user = (MemberDto) obj;
+        	password = user.getPassword();
+        	match = user.getMatchingPassword();
+        	System.out.println("MemberDto Password: " + password + ", Match: " + match);
+        } else if (obj instanceof PasswordDto) {
+        	pwDto = (PasswordDto) obj;
+        	password = pwDto.getPassword();
+        	match = pwDto.getMatchingPassword();
+        	System.out.print("PasswordDTO password: " + password + ", Match: " + match);
+        }
+    	return password.equals(match) && !password.isEmpty();
     }
-
 }

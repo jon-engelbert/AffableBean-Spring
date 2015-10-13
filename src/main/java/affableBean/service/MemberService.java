@@ -147,7 +147,7 @@ public class MemberService implements IMemberService{
         final Member user = new Member();
 
         user.setName(accountDto.getName());
-//        user.setUsername(accountDto.getUsername());
+        user.setUsername(accountDto.getEmail());
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setAddress(accountDto.getAddress());
         user.setPhone(accountDto.getPhone());
@@ -157,7 +157,7 @@ public class MemberService implements IMemberService{
 //        user.setRole(userRole);
         user.setRoles(new ArrayList<>(Arrays.asList(userRole)));
         user.setEnabled(false);
-
+        LOGGER.info("about to save member, registerNewMemberAccount");
 //        user.setRoles(Arrays.asList(roleRepo.findByName("ROLE_USER")));
         Member newMember = memberRepo.save(user);
         LOGGER.info("new member: " + newMember);

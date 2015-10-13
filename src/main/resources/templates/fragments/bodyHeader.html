@@ -74,7 +74,7 @@
                     </div>
                     <div class="headerWidget" id="login">
                     	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() != null}">Signed In (<a th:href="@{/logout}">logout</a>)</span>
-                    	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() != null}"><a th:href="@{/user/updatePassword}">Change Password</a></span>
+                    	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() != null}"><a th:href="@{/user/getNewPasswordFromExisting}">Change Password</a></span>
 <!--                     	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() != null && #httpServletRequest.isUserInRole("ADMIN")}"><a href="/admin" th:href="@{/admin}">Admin</a></span>
  -->
                      	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() == null}"><a href="/login" th:href="@{/login}">Login</a> | <a th:href="@{/newMember}">Register</a></span>                    
