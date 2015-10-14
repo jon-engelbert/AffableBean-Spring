@@ -22,12 +22,12 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
         	user = (MemberDto) obj;
         	password = user.getPassword();
         	match = user.getMatchingPassword();
-        	System.out.println("MemberDto Password: " + password + ", Match: " + match);
+        	System.out.println("MemberDto Password: " + password + ", Match: " + match + ", member:" + user.toString());
         } else if (obj instanceof PasswordDto) {
         	pwDto = (PasswordDto) obj;
         	password = pwDto.getPassword();
         	match = pwDto.getMatchingPassword();
-        	System.out.print("PasswordDTO password: " + password + ", Match: " + match);
+        	System.out.print("PasswordDTO password: " + password + ", Match: " + match + ", password:" + pwDto.toString());
         }
     	return password.equals(match) && !password.isEmpty();
     }

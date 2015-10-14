@@ -18,7 +18,7 @@
 				<div id="widgetBar"></div>
 	
 				<a href="../home"> <img src="../img/logo.png"
-					th:src="@{/img/logo.png}" alt="Affable Bean logo" id="adminLogo"> </img>
+					th:src="@{/img/logo.png}" alt="Affable Bean logo" id="adminLogo"/> 
 				</a> <img src="../img/logoText.png" th:src="@{/img/logoText.png}" id="logoText" alt="the affable bean"></img>
                     	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() != null}">Signed In (<a th:href="@{/logout}">logout</a>)</span>
                     	<span class="horizontalMargin" th:if="${#httpServletRequest.getRemoteUser() == null}"><a href="/login" th:href="@{/login}">Login</a> | <a th:href="@{/newMember}">Register</a></span>

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
@@ -15,18 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import affableBean.domain.Member;
 import affableBean.domain.PasswordResetToken;
-import affableBean.domain.PaymentInfo;
 import affableBean.domain.Role;
 import affableBean.domain.VerificationToken;
 import affableBean.repository.MemberRepository;
 import affableBean.repository.PasswordResetTokenRepository;
-import affableBean.repository.PaymentInfoRepository;
 import affableBean.repository.RoleRepository;
 import affableBean.repository.VerificationTokenRepository;
 import affableBean.validation.EmailExistsException;

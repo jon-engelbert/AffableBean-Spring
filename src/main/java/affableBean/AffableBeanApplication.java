@@ -96,4 +96,20 @@ public class AffableBeanApplication extends WebMvcConfigurerAdapter {
         registry.addViewController("/registration/successRegister");
     }
     
+//    @Bean
+//    public ViewResolver cnViewResolver(ContentNegotiationManager cnm) {
+//        final ContentNegotiatingViewResolver cnvr = new ContentNegotiatingViewResolver();
+//        cnvr.setContentNegotiationManager(cnm);
+//        return cnvr;
+//    }
+//    
+//    @Override
+//    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+//    	configurer.defaultContentType(MediaType.TEXT_HTML);
+//    }
+//    
+//    @Bean
+//    public ViewResolver beanNameViewResolver() {
+//       return new BeanNameViewResolver();
+    
 }

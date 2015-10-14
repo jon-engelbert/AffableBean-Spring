@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +35,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,8 +107,10 @@ public class RegistrationController {
         LOGGER.info("in newMember: " + userService.getCustomerFromRequest(request));
 		Member newMember = userService.getCustomerFromRequest(request);
 		MemberDto memberDto = new MemberDto();
-		if (newMember != null)
-			memberDto = new MemberDto(newMember);
+		if (newMember != null) {
+			memberDto = new MemberDto();
+			memberDto.CopyFromModel(newMember);
+		}
         LOGGER.info("in newMember, memberDto: " + memberDto);
 
 		mm.put("memberDto", memberDto);
@@ -131,10 +135,13 @@ public class RegistrationController {
     
     // Registration
 
-    @RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+//    @RequestMapping(value = "/user/registration", method = RequestMethod.POST, consumes="application/json")
+    @RequestMapping(value = "/user/registration", method = RequestMethod.POST, consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ValidationResponse registerMemberAccount(@Valid @ModelAttribute("member") final MemberDto accountDto, 
+//    public ValidationResponse registerMemberAccount(@Valid @RequestBody MemberDto memberDto, 
+    public ValidationResponse registerMemberAccount(@Valid @ModelAttribute MemberDto memberDto, 
     		Errors errors, final HttpServletRequest request)  {
+        LOGGER.debug("Registering user account with information: {}", memberDto);
         ValidationResponse res = new ValidationResponse();
         HashMap<String, String> errorMessages = new HashMap<String, String>();
 		if (errors.getErrorCount() > 0) {
@@ -146,9 +153,8 @@ public class RegistrationController {
             res.setStatus("failure");
 			return res;
 		}
-        LOGGER.debug("Registering user account with information: {}", accountDto);
-        LOGGER.info("Registering user account with information: {}", accountDto);
-        final Member registered = createMemberAccount(accountDto);	// , mm);
+        LOGGER.info("Registering user account with information: {}", memberDto);
+        final Member registered = createMemberAccount(memberDto);	// , mm);
         if (registered == null) {
             errorMessages.put("email", "Email already exists");
             res.setErrorMessageList(errorMessages);
@@ -343,7 +349,7 @@ public class RegistrationController {
 //  @PreAuthorize("hasRole('READ_PRIVILEGE')")
 //  @PreAuthorize("hasRole('ROLE_USER')")
     @ResponseBody
-    public ValidationResponse savePasswordFromScratch(final Locale locale, @Valid final PasswordDto passwordDto, 
+    public ValidationResponse savePasswordFromScratch(final Locale locale, @Valid @ModelAttribute final PasswordDto passwordDto, 
     		Errors errors) {
         LOGGER.info("in savePasswordFromScratch");
         ValidationResponse res = new ValidationResponse();
@@ -372,7 +378,7 @@ public class RegistrationController {
     @RequestMapping(value = "/user/savePasswordFromExisting", method = RequestMethod.POST)
 //    @PreAuthorize("hasRole('READ_PRIVILEGE')")
     @ResponseBody
-    public ValidationResponse savePasswordFromExisting(final Locale locale, @Valid final PasswordDto passwordDto, 
+    public ValidationResponse savePasswordFromExisting(final Locale locale, @Valid @ModelAttribute final PasswordDto passwordDto, 
     		Errors errors, final HttpServletRequest request)  {
         LOGGER.info("in savePasswordFromExisting");
         ValidationResponse res = new ValidationResponse();

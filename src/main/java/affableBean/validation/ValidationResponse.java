@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class ValidationResponse {
 	 private String status;
-	 private HashMap errorMessageList;
+	 private HashMap<String, String> errorMessageList;
 
 	 public String getStatus() {
 	   return status;
@@ -13,10 +13,10 @@ public class ValidationResponse {
 	 public void setStatus(String status) {
 	   this.status = status;
 	 }
-	 public HashMap getErrorMessageList() {
+	 public HashMap<String, String> getErrorMessageList() {
 	   return this.errorMessageList;
 	 }
-	 public void setErrorMessageList(HashMap errorMessageList) {
+	 public void setErrorMessageList(HashMap<String, String> errorMessageList) {
 	   this.errorMessageList = errorMessageList;
 	 }
 	}

@@ -12,7 +12,6 @@ $(document).ready(function () {
 	$('form').submit(function(event) {
 		register(event);
 	});
-	
     var pwMatches = $('div#pwMatches').text();
 	$(":password").keyup(function(){
 		if($("#password").val() != $("#matchingPassword").val()){
@@ -49,6 +48,7 @@ function register(event) {
     	$("#globalError").show().html(pwMatches);
     	return;
     }
+    var email= $("#email").val();
     var formData= $('form').serialize();
 	var token1 = $('input#csrf-token').attr("content"); 			
 
@@ -66,21 +66,29 @@ function register(event) {
 
     $.ajax(
         {
+            contentType: "application/json", 
             url: '/user/registration',  
+            /* {memberDto: formData} */
             data: formData,  
-            dataType: 'html',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            /* data: formData,   */
+            dataType: 'json',
             type: "POST",
-            beforeSend: function (request)
+            /* headers: { 
+                'Accept': 'application/json',
+                'Content-Type': 'application/json' 
+            }, */
+            /* beforeSend: function (request)
             {
                 request.setRequestHeader("X-CSRF-TOKEN", token1);
-            },
+            }, */
             success: function( data )
             {
-            	var dataHash = JSON.parse(data);
-            	if (dataHash["status"] == "success")
+            	/* var dataHash = JSON.parse(data); */
+            	if (data["status"] == "success")
 					window.location.href = "/registration/successRegister";
-            	else if (dataHash["status"] == "failure") {
-            		$.each(dataHash["errorMessageList"], function(key, value) {
+            	else if (data["status"] == "failure") {
+            		$.each(data["errorMessageList"], function(key, value) {
             		    /* alert(key + ' ' + value); */
 		                $("#"+key+"Error").show().html(value);
             		});
@@ -124,14 +132,14 @@ function register(event) {
 		<span class="error" th:if="${passwordNoMatchError}">Passwords do not match</span> 
 		<span class="error" th:if="${emailExists}">This email address has already been registered</span>
 		<!-- <input type="hidden" id= "csrf-token" th:name="${_csrf.parameterName}" th:content="${_csrf.token}" /> -->
-		<input type="hidden"  id= "csrf-token"
+		<!-- <input type="hidden"  id= "csrf-token"
 		th:name="${_csrf != null ? _csrf.parameterName : 'testing'}" 
-		th:content="${_csrf != null ? _csrf.token : 'testing'}" />
+		th:content="${_csrf != null ? _csrf.token : 'testing'}" /> -->
 		<div id="pwMatches" style="display: none;" th:text="#{PasswordMatches.user}"></div>
 		<form th:action="@{/}"
 			th:object="${memberDto}" method="POST" >
 			<!-- onsubmit="return validate();"> -->
-			<input type="hidden" name="id" th:value="*{id}" />
+			<input type="hidden" th:field="*{id}" />
                 <div class="form-group row" >
                     <label class="col-sm-5" th:text="|#{customerName}:|"></label>
                     <span class="col-sm-5"><input type="text" th:field="*{name}" required="required"/></span>

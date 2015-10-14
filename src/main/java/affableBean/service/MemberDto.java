@@ -1,6 +1,8 @@
 package affableBean.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -16,12 +18,10 @@ import affableBean.validation.ValidPassword;
 
 @PasswordMatches
 public class MemberDto {
-    public MemberDto() {
-		super();
-	}
 
-    public MemberDto(Member member) {
-		super();
+    public void CopyFromModel(Member member) {
+//		super();
+		System.out.println("In CopyFromModel for MemberDto fromMember");
 		this.email = member.getEmail();
 		this.phone = member.getPhone();
 		this.address = member.getAddress();
@@ -29,17 +29,20 @@ public class MemberDto {
 		this.name = member.getName();
 		this.id = member.getId();
 		this.password = member.getPassword();
-		this.roles = member.getRoles();
+//		this.roles = new ArrayList<String>();
+//		for (Role role: member.getRoles()) 
+//			this.roles.add(role.getName());
 //		this.role = member.getRole();
 //		this.username = member.getUsername();
 	}
     
-	private Integer id;
+	private Integer id = -1;
+//    private String _csrf;
     private String phone;
     private String address;
     private String cityRegion;
 //    private Role role;
-    private Collection<Role> roles;
+//    private List<String> roles;
 
     @NotNull
     @Size(min = 1)
@@ -70,17 +73,17 @@ public class MemberDto {
     }
 
 
-    public Collection<Role> getRoles() {
-    	return roles;
+//    public Collection<String> getRoles() {
+//    	return roles;
 //    public Role getRole() {
 //        return role;
-    }
+//    }
 
-    public void setRoles(final Collection<Role> roles) {
-        this.roles = roles;
+//    public void setRoles(final List<String> roles) {
+//        this.roles = roles;
 //    public void setRole(final Role role) {
 //        this.role = role;
-    }
+//    }
 
     public String getName() {
         return name;
@@ -149,7 +152,10 @@ public class MemberDto {
 
 	@Override
 	public String toString() {
-		return "MemberDto [id=" + id + ", phone=" + phone + ", address="
+		return "MemberDto ["  
+				+ "id=" + id 
+				+ "phone=" + phone
+				+ ", address="
 				+ address + ", cityRegion=" + cityRegion + ", name=" + name
 				+ ", password=" + password + ", matchingPassword="
 				+ matchingPassword + ", email=" + email + ""

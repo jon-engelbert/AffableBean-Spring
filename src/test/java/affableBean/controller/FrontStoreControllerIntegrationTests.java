@@ -116,7 +116,8 @@ public class FrontStoreControllerIntegrationTests {
 		Role userRole = roleRepo.findByName("ROLE_USER");
 		Member user = new Member("jon", "jon@jon.com", "jon@jon.com", "Abcde01!@", false, Arrays.asList(userRole));
 		memberRepo.save(user);
-		MemberDto userDto = new MemberDto(user);
+		MemberDto userDto = new MemberDto();
+		userDto.CopyFromModel(user);
 		userDto.setMatchingPassword(user.getPassword());
 		mockSession.setAttribute("cart", cart);
 		System.out.println("about to get checkout");
