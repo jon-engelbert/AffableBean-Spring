@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Arrays;
 
@@ -37,6 +38,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.hamcrest.Matchers.*;
 
 import affableBean.AffableBeanApplication;
 import affableBean.domain.Member;
@@ -151,7 +153,8 @@ public class RegistrationControllerIntegrationTests {
 				.andExpect(status().isOk())
 //				.andExpect(jsonPath("$.street").value("12345 Horton Ave"))
 //				.andExpect(view().name("registration/successRegister"))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"));
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"))
+				.andExpect(jsonPath("$.status", is("success")));
 	}
 
 	@Test
@@ -174,7 +177,8 @@ public class RegistrationControllerIntegrationTests {
 				)
 				.andExpect(status().isOk())
 //				.andExpect(view().name("registration/memberregistration"))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"));
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"))
+				.andExpect(jsonPath("$.status", is("failure")));
 	}
 
 	@Test
@@ -200,7 +204,8 @@ public class RegistrationControllerIntegrationTests {
 				// failure....
 				.andExpect(status().isOk())
 //				.andExpect(view().name("registration/memberregistration"))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"));
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"))
+				.andExpect(jsonPath("$.status", is("failure")));
 	}
 
 	@Test
@@ -221,7 +226,8 @@ public class RegistrationControllerIntegrationTests {
 				.andExpect(status().isOk())
 //				.andExpect(jsonPath("$.street").value("12345 Horton Ave"))
 //				.andExpect(view().name("registration/successRegister"))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"));
-	}
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE +";charset=UTF-8"))
+				.andExpect(jsonPath("$.status", is("success")));
+		}
 
 }

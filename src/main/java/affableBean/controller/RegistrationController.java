@@ -369,7 +369,7 @@ public class RegistrationController {
         Member member = userService.getMemberByEmail(userName);
         LOGGER.info("in savePassword, member: " + member);
         userService.changeMemberPassword(member, passwordDto.getPassword());
-        res.setStatus(messages.getMessage("message.resetPasswordSuc", null, locale));
+        res.setStatus("success");
         return res;
     }
 
